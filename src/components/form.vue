@@ -21,140 +21,57 @@
       </b-collapse>
     </b-navbar>
 
-    <b-container>
+    <b-container style="margin-top: 70px;">
       <b-row>
         <b-col></b-col>
         <b-col cols="8">          
           <!-- <b-form @submit="onSubmit" @reset="onReset" v-if="show"> -->
-          <b-form >
-            <b-card style="margin-top: 4.5rem;">
-              <b-form-group id="input-group-3" label="Nama*" label-for="">
-                <b-form-select v-model="name" v-on:change="getSelectedItem">
-                  <option value="null" disabled>Pilih Salah Satu</option>
-                  <option v-for="help in helpers" :key="help.id" v-bind:value="help.value">
-                     {{ help.id }} {{ help.name }}
-                  </option>
-                </b-form-select>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-3" label="Mobil*" label-for="">
-                <b-form-select v-model="cars" v-on:change="getSelectedItem">
-                  <option value="null" disabled>Pilih Salah Satu</option>
-                  <option v-for="help in helpers" :key="help.id" v-bind:value="help.value">
-                     {{ help.id }} {{ help.name }}
-                  </option>
-                </b-form-select>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-3" label="Helper*" label-for="">
-                <b-form-select v-model="helper" v-on:change="getSelectedItem">
-                  <option value="null" disabled>Pilih Salah Satu</option>
-                  <option v-for="help in helpers" :key="help.id" v-bind:value="help.value">
-                     {{ help.id }} {{ help.name }}
-                  </option>
-                </b-form-select>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Kilometer Akhir*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.kilometer"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Total Uang Jalan*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.uang_jalan"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group label="Jumlah Rit*">
-                <b-form-radio v-model="form.rit" name="some-radios" value="1">1 Rit</b-form-radio>
-                <b-form-radio v-model="form.rit" name="some-radios" value="2">2 Rit</b-form-radio>
-                <b-form-radio v-model="form.rit" name="some-radios" value="3">3 Rit</b-form-radio>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Uang Makan*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.uang_makan"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Jumlah Biaya Parkir*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.biaya_parkir"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Rincian Biaya Parkir*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.rincian_biaya_parkir"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Jumlah Biaya Lain-lain*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.kilometer"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Rincian Biaya Lain-lain*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.kilometer"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
-            <b-card class="mt-3">
-              <b-form-group id="input-group-2" label="Saldo E-Toll*" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="number"
-                  v-model="form.rincian_biaya_lain"
-                  required
-                  placeholder="0"
-                ></b-form-input>
-              </b-form-group>
-            </b-card>
+          <div v-for="form in forms" :key= "form.index">
+          <b-card class="mt-3" v-if ="form.type == 'select'">              
+            <b-form-group 
+            id="input-group-3" 
+            :label="form.label + '*'" 
+            label-for="input-3">
+              
+              <b-form-select
+              id="input-3"             
+              :options="form.options"
+              v-model="form.model"
+              required
+            >
+              <template v-slot:first>
+                  <b-form-select-option value="" disabled>--Pilih {{form.label}} --</b-form-select-option>
+              </template>
 
-            <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block">Submit</b-button>
-         </b-form>
+            </b-form-select>
+          </b-form-group>
+          </b-card>
+          <b-card class="mt-3" v-if ="form.type == 'number'">
+            <b-form-group
+              id="input-group-1"
+              :label="form.label + '*'"
+              label-for="input-1"
+              description=""
+            >
+              <b-form-input
+                id="input-1"
+                type="number"
+                required
+                placeholder=""
+              ></b-form-input>
+            </b-form-group>
+          </b-card>
+          <b-card class="mt-3" v-if ="form.type == 'radio'">
+            <b-form-group :label="form.label + '*'">
+             <div v-for="rit in form.options" :key="rit.index">
+                <b-form-radio  name="some-radios" :value="form.options.value">{{rit.name}}</b-form-radio>
+             </div>
+              
+            </b-form-group>
+          </b-card>
+          </div>
+
+            <b-button type="submit" variant="warning" @click="add()" class="my-3 btn-lg btn-block">Submit</b-button>
           
         </b-col>
         <b-col></b-col>
@@ -167,50 +84,151 @@
 <script>
 import axios from 'axios'
 export default {
-  data() {
+    data(){
       return {
-        form: {
-          name: null,
-          car: null,
-          helper: null,
-          kilometer: null,
-          uang_jalan: null,
-          uang_makan: null,
-          biaya_parkir: null,
-          rincian_biaya_parkir: null,
-          biaya_lain: null,
-          rincian_biaya_lain: null,
-          rit: null
-
+        dataForm:{
+          supir:''
         },
-        names: [{ text: 'Pilih salah satu', value: null }, 'Herdi', 'Syukron', 'Roni',],
-        cars: [{ text: 'Pilih salah satu', value: null }, 'L300', 'Engkel', 'Dobel',],
-        helpers: [],
-        show: true
+        forms: [
+          {
+            'label': 'Supir ',
+            'type' : 'select',
+            'model': '',
+            'options': []
+          },
+          {
+            'label': 'Mobil ',
+            'type' : 'select',
+            'options': []
+          },
+          {
+            'label': 'Helper ',
+            'type' : 'select',
+            'options': []
+          },
+          {
+            'label': 'Kilometer Akhir ',
+            'type': 'number'
+          },
+          {
+            'label': 'Total Uang Jalan ',
+            'type': 'number'
+          },
+          {
+            'label': 'Jumlah Rit ',
+            'type': 'radio',
+            'options': []
+          },
+          {
+            'label': 'Uang Makan ',
+            'type': 'number'
+          },
+          {
+            'label': 'Jumlah Biaya Parkir ',
+            'type': 'number'
+          },
+          {
+            'label': 'Rincian Biaya Parkir ',
+            'type': 'number'
+          },
+          {
+            'label': 'Jumlah Biaya Lain-lain ',
+            'type': 'number'
+          },
+          {
+            'label': 'Rincian Biaya Lain-lain',
+            'type': 'number'
+          },
+          {
+            'label': 'Saldo E-Toll',
+            'type': 'number'
+          }
+        ],
       }
     },
+
     mounted() {
-    this.load()
-  },
-  methods: {
-    load(){
+      this.loadSupirData(),
+      this.loadMobilData(),
+      this.loadHelperData(),
+      this.loadRitData()
+    },
+    methods: {
+    loadSupirData(){
         axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
-        this.helpers = res.data //respon dari rest api dimasukan ke helpers
-        console.log(this.helpers)
+        this.forms[0].options = res.data //respon dari rest api dimasukan ke helpers
+        
+        console.log(this.forms[0].options)
+        
+              
+        this.forms[0].options.forEach((element) => {
+          element.text = element.name, 
+          element.value = element.name
+        })
+        
+      }).catch ((err) => {
+        console.log(err);
+      })
+    },
+    loadMobilData(){
+        axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
+        this.forms[1].options = res.data //respon dari rest api dimasukan ke helpers
+        console.log(this.forms[1].options)
+        
+              
+        this.forms[1].options.forEach((element) => {
+          element.text = element.name, 
+          element.value = element.name
+        })
+        
+      }).catch ((err) => {
+        console.log(err);
+      })
+    },
+    loadHelperData(){
+        axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
+        this.forms[2].options = res.data //respon dari rest api dimasukan ke helpers
+        console.log(this.forms[2].options)
+        
+              
+        this.forms[2].options.forEach((element) => {
+          element.text = element.name, 
+          element.value = element.name
+        })
+        
+      }).catch ((err) => {
+        console.log(err);
+      })
+    },
+    loadRitData(){
+        axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
+        this.forms[5].options = res.data //respon dari rest api dimasukan ke helpers
+        console.log(this.forms[5].options)
+        
+              
+        this.forms[5].options.forEach((element) => {
+          element.text = element.name, 
+          element.value = element.name
+        })
+        
       }).catch ((err) => {
         console.log(err);
       })
     }
-   }
+   },
+   
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .bg-white{
-background: rgb(229,229,229);
-background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%, rgba(85,136,255,1) 100%);
-}
+  min-height: 100vh;
+  min-width: 100vw;
+  position: absolute;
+  background: rgb(229,229,229);
+  background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%, rgba(85,136,255,1) 100%);
+  }
 .navbar{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
