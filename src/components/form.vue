@@ -1,3 +1,4 @@
+  
 <template>
 <div class="bg-white"> 
   <div>
@@ -162,6 +163,7 @@ export default {
       this.loadHelperData(),
       this.loadRitData()
     },
+
     methods: {
     loadSupirData(){
         axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
@@ -242,9 +244,9 @@ export default {
    },
    
   }
+}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .bg-white{
   min-height: 100vh;
