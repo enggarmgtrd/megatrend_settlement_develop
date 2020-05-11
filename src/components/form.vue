@@ -64,7 +64,7 @@
           <b-card class="mt-3" v-if ="form.type == 'radio'">
             <b-form-group :label="form.label + '*'">
              <div v-for="rit in form.options" :key="rit.index">
-                <b-form-radio  name="some-radios" :value="form.options.value">{{rit.name}}</b-form-radio>
+                <b-form-radio v-model="form.model" name="some-radios" :value="rit.value">{{rit.name}}</b-form-radio>
              </div>
               
             </b-form-group>
@@ -86,9 +86,6 @@ import axios from 'axios'
 export default {
     data(){
       return {
-        dataForm:{
-          supir:''
-        },
         forms: [
           {
             'label': 'Supir ',
@@ -99,51 +96,63 @@ export default {
           {
             'label': 'Mobil ',
             'type' : 'select',
+            'model': '',
             'options': []
           },
           {
             'label': 'Helper ',
             'type' : 'select',
+            'model': '',
             'options': []
           },
           {
             'label': 'Kilometer Akhir ',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           },
           {
             'label': 'Total Uang Jalan ',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           },
           {
             'label': 'Jumlah Rit ',
             'type': 'radio',
+            'model': '',
             'options': []
           },
           {
             'label': 'Uang Makan ',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           },
           {
             'label': 'Jumlah Biaya Parkir ',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           },
           {
             'label': 'Rincian Biaya Parkir ',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           },
           {
             'label': 'Jumlah Biaya Lain-lain ',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           },
           {
             'label': 'Rincian Biaya Lain-lain',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           },
           {
             'label': 'Saldo E-Toll',
-            'type': 'number'
+            'type': 'number',
+            'model': '',
           }
         ],
+        dataForm:[]
       }
     },
 
@@ -214,7 +223,22 @@ export default {
       }).catch ((err) => {
         console.log(err);
       })
-    }
+    },
+    add(){
+      this.dataForm.push({
+        supir : this.forms[0].model,
+        mobil : this.forms[1].model,
+        helper : this.forms[2].model,
+        kilometerAkhir : this.forms[3].model,
+        totalUangJalan : this.forms[4].model,
+        jumlahRit : this.forms[5].model,
+        uangMakan : this.forms[6].model,
+        rincianBiayaParkir : this.forms[7].model,
+        jumlahBiayaLain : this.forms[8].model,
+        rincianBiayaLain : this.forms[9].model,
+        saldoEtoll : this.forms[10].model
+      })
+      return console.log(this.dataForm)
    },
    
   }
