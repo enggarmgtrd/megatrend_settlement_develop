@@ -29,13 +29,15 @@
           required
         ></b-form-input>
       </b-form-group>
-      <router-link to='/form' class="btn login-btn btn-block">Login</router-link>
+      <b-button @click="login()">login</b-button>
+      <!-- <router-link to='/form' class="btn login-btn btn-block">Login</router-link> -->
     </b-form>
   </b-card>
 </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
       return {
@@ -48,6 +50,12 @@ export default {
       }
     },
     methods: {
+      login(){
+        axios.post('https://fleet.megatrend.xyz/api/login', {nip: '2000s1', password: 'admian'}).then(res=>{
+  console.log(res.data);
+  
+        })
+      }
     }
   }
 </script>
