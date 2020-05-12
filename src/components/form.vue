@@ -109,48 +109,48 @@ export default {
           {
             'label': 'Kilometer Akhir ',
             'type': 'number',
-            'model': '',
+            'model': 0
           },
           {
             'label': 'Total Uang Jalan ',
             'type': 'number',
-            'model': '',
+            'model': 0
           },
           {
             'label': 'Jumlah Rit ',
             'type': 'radio',
-            'model': '',
+            'model': 0
             'options': []
           },
           {
             'label': 'Uang Makan ',
             'type': 'number',
-            'model': '',
+            'model': 0
           },
           {
             'label': 'Jumlah Biaya Parkir ',
             'type': 'number',
-            'model': '',
+            'model': 0
           },
           {
             'label': 'Rincian Biaya Parkir ',
             'type': 'number',
-            'model': '',
+            'model': 0
           },
           {
             'label': 'Jumlah Biaya Lain-lain ',
             'type': 'number',
-            'model': '',
+            'model': 0
           },
           {
             'label': 'Rincian Biaya Lain-lain',
             'type': 'number',
-            'model': '',
+            'model': 0
           },
           {
             'label': 'Saldo E-Toll',
             'type': 'number',
-            'model': '',
+            'model': 0
           }
         ],
         dataForm:[]
