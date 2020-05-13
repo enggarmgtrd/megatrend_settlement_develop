@@ -3,7 +3,7 @@ import Form from './components/form.vue';
 
 const routes = [
     { path: '/', component: Login },
-    { path: '/form', component: Form },
+    { path: '/form',name: 'form', component: Form },
 ];
 
 export default routes;

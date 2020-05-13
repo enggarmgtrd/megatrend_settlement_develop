@@ -55,7 +55,24 @@
               </b-row>
               <b-row class="mt-3">
                 <b-col>
-                  <b-table striped hover :items="tableBiaya" :fields="fieldsTableBiaya"></b-table>
+                  <table class="table table-striped table-hovered border-bottom">
+                    <thead>
+                      <tr>
+                        <th  v-for="ftb in fieldsTableBiaya" :key="ftb.index">{{ftb}}</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="!tableBiaya.length">      
+                       <td colspan="4" class=" text-center"><h5>No Data</h5></td>                    
+                    </tbody>
+                    <tbody>
+                      <tr v-for="tb in tableBiaya" :key="tb.index">
+                        <td>{{tb.jenis_biaya}}</td>
+                        <td>{{tb.jumlah_biaya}}</td>
+                        <td>{{tb.keterangan}}</td>
+                        <td><h4 class="delete-row ml-3" @click="deleteTable(tb.index)">&times;</h4></td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </b-col>
               </b-row>
               <b-row>
@@ -76,6 +93,7 @@
                 <b-form-input
                   id="input-1"
                   type="number"
+                  v-model="form.model"
                   required
                   placeholder=""
                 ></b-form-input>
@@ -172,22 +190,22 @@ export default {
           {
             'label': 'Kilometer Akhir ',
             'type': 'number',
-            'model': 0
+            'model': null
           },
           {
             'label': 'Saldo E-Toll',
             'type': 'number',
-            'model': 0
+            'model': null
           },
           {
             'label': 'Total Uang Jalan ',
             'type': 'number',
-            'model': 0
+            'model': null
           },
           {
             'label': 'Jumlah Rit ',
             'type': 'radio',
-            'model': 0,
+            'model': null,
             'options': [
               {
                 name: '1',
@@ -206,7 +224,7 @@ export default {
           {
             'label': 'Uang Makan ',
             'type': 'number',
-            'model': 0
+            'model': null
           },
           {
             'type': 'table'
@@ -239,8 +257,8 @@ export default {
             'model': ''
           }
         ],
-        dataForm:{},
-        fieldsTableBiaya: ['jenis_biaya', 'jumlah_biaya', 'keterangan'],
+        dataForm:[],
+        fieldsTableBiaya: ['Jenis Biaya', 'Jumlah Biaya', 'Keterangan', 'Action'],
         tableBiaya: []
       }
     },
@@ -303,12 +321,10 @@ export default {
         totalUangJalan : this.forms[4].model,
         jumlahRit : this.forms[5].model,
         uangMakan : this.forms[6].model,
-        rincianBiayaParkir : this.forms[7].model,
-        jumlahBiayaLain : this.forms[8].model,
-        rincianBiayaLain : this.forms[9].model,
+        tableBiaya: this.tableBiaya
         
       }
-      return console.log(this.dataForm.jumlahRit)
+      return console.log(this.dataForm)
    },
    tambahJumlahBiaya(){
      this.tableBiaya.push({
@@ -323,6 +339,9 @@ export default {
 
      return this.$refs['tambahJumlahBiaya'].hide()
 
+   },
+   deleteTable(index){
+     this.tableBiaya.splice(index,1)
    }
    
   }
@@ -344,5 +363,11 @@ export default {
 }
 .form-logo{
   width: 10rem;
+}
+
+.delete-row{
+  color:red;
+  font-weight: 800;
+  cursor: pointer;
 }
 </style>

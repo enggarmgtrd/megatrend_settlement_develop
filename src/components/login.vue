@@ -14,7 +14,7 @@
       >
         <b-form-input
           id="input-1"
-          v-model="form.email"
+          v-model="form.nip"
           type="email"
           required
           placeholder="Contoh : abc@gmail.com"
@@ -24,7 +24,7 @@
       <b-form-group id="input-group-2" label="Massukkan Password" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.name"
+          v-model="form.password"
           type="password"
           required
         ></b-form-input>
@@ -42,18 +42,19 @@ export default {
   data() {
       return {
         form: {
-          email: '',
-          name: '',
-          
+          nip: '',
+          password: '',      
         }
         
       }
     },
     methods: {
       login(){
-        axios.post('https://fleet.megatrend.xyz/api/login', {nip: '2000s1', password: 'admian'}).then(res=>{
-  console.log(res.data);
-  
+        axios.post('https://fleet.megatrend.xyz/api/login', this.form).then(res=>{
+        console.log(res.data);
+        if(res.data.nip == this.form.nip){
+          this.$router.push('form');
+        }
         })
       }
     }
