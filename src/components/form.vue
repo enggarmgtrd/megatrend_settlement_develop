@@ -50,12 +50,17 @@
             <b-card class="mt-3" v-if ="form.type =='table'">
               <b-row>
                 <b-col class="text-right">
-                  <b-button variant="warning" @click="$bvModal.show('tambahJumlahBiaya')">Tambah Jumlah Biaya</b-button>
+                  <b-button variant="warning" @click="showModal()">Tambah Jumlah Biaya</b-button>
                 </b-col>
               </b-row>
               <b-row class="mt-3">
                 <b-col>
                   <b-table striped hover :items="tableBiaya" :fields="fieldsTableBiaya"></b-table>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col class="text-right">
+                    <h4>Total Biaya : {{totalBiaya}}</h4>
                 </b-col>
               </b-row>
             </b-card>
@@ -92,7 +97,7 @@
 
         <!-- MODAL -->
         <div>
-          <b-modal id="tambahJumlahBiaya" hide-footer>
+          <b-modal ref="tambahJumlahBiaya" hide-footer>
             <template v-slot:modal-title>
               Tambah Jumlah Biaya
             </template>
@@ -102,7 +107,7 @@
                     <b-form-input
                       id="input-2"
                       type="number"
-                      v-model="formJB.model"
+                      v-model.number="formJB.model"
                       required
                       placeholder="0"
                     ></b-form-input>
@@ -205,33 +210,13 @@ export default {
           },
           {
             'type': 'table'
-          },
-          {
-            'label': 'Jumlah Biaya Parkir ',
-            'type': 'number',
-            'model': 0
-          },
-          {
-            'label': 'Rincian Biaya Parkir ',
-            'type': 'number',
-            'model': 0
-          },
-          {
-            'label': 'Jumlah Biaya Lain-lain ',
-            'type': 'number',
-            'model': 0
-          },
-          {
-            'label': 'Rincian Biaya Lain-lain',
-            'type': 'number',
-            'model': 0
           }
         ],
         formJumlahBiaya:[
           {
             'label': 'Jumlah Biaya',
             'type': 'number',
-            'model': 0
+            'model': null
           },
           {
             'label': 'Jenis Biaya ',
@@ -265,7 +250,19 @@ export default {
       this.loadHelperData()
     },
 
+    computed: {
+      totalBiaya: function(){
+
+              return this.tableBiaya.reduce(function(total, item){
+                return total + item.jumlah_biaya; 
+              },0);
+            },
+    },
+
     methods: {
+      showModal() {
+        this.$refs['tambahJumlahBiaya'].show()
+      },
     loadMobilData(){
         axios.get('https://fleet.megatrend.xyz/api/coba').then(res => {
         this.forms[0].options = res.data.fleets //respon dari rest api dimasukan ke helpers
@@ -319,9 +316,13 @@ export default {
        jenis_biaya: this.formJumlahBiaya[1].model,
        keterangan: this.formJumlahBiaya[2].model
      })
-     this.formJumlahBiaya[0].model = ''
+     this.formJumlahBiaya[0].model = null
      this.formJumlahBiaya[1].model = ''
      this.formJumlahBiaya[2].model = ''
+     console.log(this.tableBiaya)
+
+     return this.$refs['tambahJumlahBiaya'].hide()
+
    }
    
   }
