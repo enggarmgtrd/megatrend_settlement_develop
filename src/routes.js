@@ -2,10 +2,12 @@ import Login from './components/login.vue';
 import Form from './components/form.vue';
 
 const routes = [
-    { path: '/login',
+    { path: '/',
+      alias: '/login',
       name: 'login', 
       component: Login 
     },
+    
 
     { path: '/form',
       name: 'form', 

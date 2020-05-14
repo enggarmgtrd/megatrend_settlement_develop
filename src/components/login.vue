@@ -54,6 +54,7 @@ export default {
         console.log(res.data);
         if(res.data.nip == this.form.nip){
           window.localStorage.setItem('token', res.data.token);
+          window.localStorage.setItem('id', res.data.id);
           window.localStorage.setItem('name', res.data.name);
           this.$router.push('form');
         }

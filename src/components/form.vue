@@ -8,6 +8,7 @@
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
+
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
@@ -16,7 +17,7 @@
               {{user}}
             </template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
-           <b-dropdown-item><b-link @click="logout()">Logout</b-link></b-dropdown-item>
+           <b-dropdown-item  @click="logout()"><b-link>Logout</b-link></b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -24,38 +25,89 @@
 
     <b-container style="margin-top: 70px;">
       <b-row class="justify-content-md-center">
-        <b-col cols="8" >          
+        <b-col cols="8" >
+
+          <!-- FORM SETTLEMENT -->
           <div v-for="form in forms" :key= "form.index">
+
+            <!-- FORM SELECT -->
             <b-card class="mt-3" v-if ="form.type == 'select'">              
               <b-form-group 
-              id="input-group-3" 
-              :label="form.label + '*'" 
-              label-for="input-3">
+                id="input-group-3" 
+                :label="form.label + '*'" 
+                label-for="input-3">
                 
                 <b-form-select
-                id="input-3"             
-                :options="form.options"
-                v-model="form.model"
-                required
-              >
-                <template v-slot:first>
-                    <b-form-select-option value="" disabled>--Pilih {{form.label}} --</b-form-select-option>
-                </template>
+                  id="input-3"             
+                  :options="form.options"
+                  v-model="form.model"
+                  required
+                >
 
-              </b-form-select>
-            </b-form-group>
+                  <template v-slot:first>
+                    <b-form-select-option value="" disabled>--Pilih {{form.label}} --</b-form-select-option>
+                  </template>
+
+                </b-form-select>
+              </b-form-group>
             </b-card>
+            <!-- FORM SELECT -->
+
+            <!-- FORM INPUT -->
+            <b-card class="mt-3" v-if ="form.type == 'number'">
+              <b-form-group
+                id="input-group-1"
+                :label="form.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+              <!-- Currency without prefix & suffix -->
+              <currency-input v-if="form.label == 'Kilometer Akhir '"
+                class="form-control"
+                v-model.number="form.model"
+                :currency="null"
+                locale="de"
+                :distraction-free="true"
+                placeholder="0"
+              />
+              <!-- END Currency without prefix & suffix -->
+              
+              <!-- Currency with prefix & suffix -->
+              <currency-input v-if="form.label != 'Kilometer Akhir '"
+                class="form-control"
+                v-model.number="form.model"
+                :currency="{prefix:'Rp. ', suffix:null}"
+                locale="de"
+                :distraction-free="true"
+                placeholder="0"
+              />
+              <!-- END Currency with prefix & suffix -->
+              </b-form-group>
+            </b-card>
+            <!-- END FORM INPUT -->
+            
+            <!-- FORM RADIO -->
+            <b-card class="mt-3" v-if ="form.type == 'radio'">
+              <b-form-group :label="form.label + '*'">
+                <div v-for="rit in form.options" :key="rit.index">
+                    <b-form-radio v-model="form.model" name="some-radios" :value="rit.value">{{rit.name}}</b-form-radio>
+                </div>
+              </b-form-group>
+            </b-card>
+            <!-- END FORM RADIO -->
 
             <!-- TABLE BIAYA -->
             <b-card class="mt-3" v-if ="form.type =='table'">
+
               <b-row>
                 <b-col class="text-right">
                   <b-button variant="warning" @click="showModal()">Tambah Jumlah Biaya</b-button>
                 </b-col>
               </b-row>
+
               <b-row class="mt-3">
                 <b-col>
-                  <table class="table table-striped table-hovered border-bottom">
+                  <table class="table table-striped table-hovered table-bordered">
                     <thead>
                       <tr>
                         <th  v-for="ftb in fieldsTableBiaya" :key="ftb.index">{{ftb}}</th>
@@ -75,43 +127,18 @@
                   </table>
                 </b-col>
               </b-row>
+
               <b-row>
                 <b-col class="text-right">
                     <h4>Total Biaya : {{totalBiaya | currency}}</h4>
                 </b-col>
-              </b-row>
+              </b-row>              
             </b-card>
-            <!-- END TABLE BIAYA -->
-
-            <b-card class="mt-3" v-if ="form.type == 'number'">
-              <b-form-group
-                id="input-group-1"
-                :label="form.label + '*'"
-                label-for="input-1"
-                description=""
-              >
-              <currency-input
-                class="form-control"
-                v-model.number="form.model"
-                currency="IDR"
-                locale="de"
-                placeholder="0"
-              />
-              </b-form-group>
-            </b-card>
-        
-            <b-card class="mt-3" v-if ="form.type == 'radio'">
-              <b-form-group :label="form.label + '*'">
-              <div v-for="rit in form.options" :key="rit.index">
-                  <b-form-radio v-model="form.model" name="some-radios" :value="rit.value">{{rit.name}}</b-form-radio>
-              </div>
-                
-              </b-form-group>
-            </b-card>
-
+            <!-- END TABLE BIAYA -->            
           </div>
             <b-button type="submit" variant="warning" @click="add()" class="my-3 btn-lg btn-block">Submit</b-button>         
         </b-col>
+        <!-- END FORM SETTLEMENT -->
 
         <!-- MODAL -->
         <div>
@@ -125,7 +152,8 @@
                     <currency-input
                       class="form-control"
                       v-model.number="formJB.model"
-                      currency="IDR"
+                      :currency="{prefix:'Rp. ',suffix:null}"
+                      :distraction-free="true"
                       locale="de"
                       placeholder="0"
                     />
@@ -175,6 +203,7 @@ export default {
     data(){
       return {
         user: '',
+
         forms: [
           {
             'label': 'Mobil ',
@@ -231,6 +260,7 @@ export default {
             'type': 'table'
           }
         ],
+
         formJumlahBiaya:[
           {
             'label': 'Jumlah Biaya',
@@ -258,10 +288,17 @@ export default {
             'model': ''
           }
         ],
+
         dataForm:[],
-        fieldsTableBiaya: ['Jenis Biaya', 'Jumlah Biaya', 'Keterangan', 'Action'],
+
+        fieldsTableBiaya: ['Jenis Biaya', 'Jumlah Biaya', 'Keterangan', ''],
+
         tableBiaya: []
       }
+    },
+
+    created(){
+       this.checkUser()
     },
 
     mounted() {
@@ -270,80 +307,116 @@ export default {
     },
 
     computed: {
+      //--------------------------------------------------
       totalBiaya: function(){
         return this.tableBiaya.reduce(function(total, item){
           return total + item.jumlah_biaya; 
         },0);
       }
+      //--------------------------------------------------
     },
 
-    methods: {  
+    methods: {
+      // -------------------------------------------------
+      checkUser(){
+        if( !window.localStorage.getItem('token')){
+          this.$router.push('login'); 
+        }
+      },
+      // -------------------------------------------------
+
+      //-------------------------------------------------- 
       userData(){
         this.user = window.localStorage.getItem('name');
       },
-    showModal() {
+      //-------------------------------------------------- 
+
+      //--------------------------------------------------
+      showModal() {
         this.$refs['tambahJumlahBiaya'].show()
       },
-    loadData(){
-        axios.get('https://fleet.megatrend.xyz/api/coba').then(res => {
-        this.forms[0].options = res.data.fleets
-        this.forms[1].options = res.data.helpers 
+      //--------------------------------------------------
+
+      //--------------------------------------------------
+      loadData(){
+        let token = window.localStorage.getItem('token')
+        let id = window.localStorage.getItem('id')
+        let config = {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }
+        axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
+          this.forms[0].options = res.data.fleets
+          this.forms[1].options = res.data.helpers 
         
-        this.forms[0].options.forEach((element) => {
-          element.text = element.no, 
-          element.value = element.id
-        })
+          this.forms[0].options.forEach((element) => {
+            element.text = element.no, 
+            element.value = element.id
+          })
               
-        this.forms[1].options.forEach((element) => {
-          element.text = element.name, 
-          element.value = element.name
-        })
-        
-      }).catch ((err) => {
+          this.forms[1].options.forEach((element) => {
+            element.text = element.name, 
+            element.value = element.name
+          })
+        console.log(res)
+        }).catch ((err) => {
         console.log(err);
-      })
-    },
-    add(){
-      this.dataForm = {
-        mobil : this.forms[0].model,
-        helper : this.forms[1].model,
-        kilometerAkhir : this.forms[2].model,
-        saldoEtoll : this.forms[3].model,
-        totalUangJalan : this.forms[4].model,
-        jumlahRit : this.forms[5].model,
-        uangMakan : this.forms[6].model,
-        tableBiaya: this.tableBiaya
-        
+        })  
+      },
+      //--------------------------------------------------
+
+      //--------------------------------------------------
+      add(){
+        this.dataForm = {
+          mobil : this.forms[0].model,
+          helper : this.forms[1].model,
+          kilometerAkhir : this.forms[2].model,
+          saldoEtoll : this.forms[3].model,
+          totalUangJalan : this.forms[4].model,
+          jumlahRit : this.forms[5].model,
+          uangMakan : this.forms[6].model,
+          tableBiaya: this.tableBiaya
+          
+        }
+        return console.log(this.dataForm)
+      },
+      //--------------------------------------------------
+
+      //--------------------------------------------------
+      tambahJumlahBiaya(){
+        this.tableBiaya.push({
+          jumlah_biaya: this.formJumlahBiaya[0].model,
+          jenis_biaya: this.formJumlahBiaya[1].model,
+          keterangan: this.formJumlahBiaya[2].model
+        })
+        this.formJumlahBiaya[0].model = null
+        this.formJumlahBiaya[1].model = ''
+        this.formJumlahBiaya[2].model = ''
+        console.log(this.tableBiaya)
+
+        return this.$refs['tambahJumlahBiaya'].hide()
+
+      },
+      
+      //--------------------------------------------------
+      deleteTable(index){
+        this.tableBiaya.splice(index,1)
+      },
+      //--------------------------------------------------
+
+      //--------------------------------------------------
+      logout(){ 
+        localStorage.clear();
+        this.$router.push('login');  
       }
-      return console.log(this.dataForm)
-   },
-   tambahJumlahBiaya(){
-     this.tableBiaya.push({
-       jumlah_biaya: this.formJumlahBiaya[0].model,
-       jenis_biaya: this.formJumlahBiaya[1].model,
-       keterangan: this.formJumlahBiaya[2].model
-     })
-     this.formJumlahBiaya[0].model = null
-     this.formJumlahBiaya[1].model = ''
-     this.formJumlahBiaya[2].model = ''
-     console.log(this.tableBiaya)
-
-     return this.$refs['tambahJumlahBiaya'].hide()
-
-   },
-   deleteTable(index){
-     this.tableBiaya.splice(index,1)
-   },
-   logout(){ 
-     localStorage.clear();
-     this.$router.push('login');  
-   }
-   
+      //--------------------------------------------------
   }
 }
 </script>
 
 <style scoped>
+
 .bg-white{
   min-height: 100vh;
   min-width: 100vw;
@@ -351,11 +424,13 @@ export default {
   background: rgb(229,229,229);
   background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%, rgba(85,136,255,1) 100%);
   }
+
 .navbar{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   background: #fff !important;
 }
+
 .form-logo{
   width: 10rem;
 }
@@ -365,4 +440,5 @@ export default {
   font-weight: 800;
   cursor: pointer;
 }
+
 </style>
