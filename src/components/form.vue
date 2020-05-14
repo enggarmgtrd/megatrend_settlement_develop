@@ -13,10 +13,10 @@
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template v-slot:button-content>
-              User
+              {{user}}
             </template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
-           <b-dropdown-item><b-link to="/">Logout</b-link></b-dropdown-item>
+           <b-dropdown-item><b-link @click="logout()">Logout</b-link></b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -77,7 +77,7 @@
               </b-row>
               <b-row>
                 <b-col class="text-right">
-                    <h4>Total Biaya : {{totalBiaya}}</h4>
+                    <h4>Total Biaya : {{totalBiaya | currency}}</h4>
                 </b-col>
               </b-row>
             </b-card>
@@ -90,13 +90,13 @@
                 label-for="input-1"
                 description=""
               >
-                <b-form-input
-                  id="input-1"
-                  type="number"
-                  v-model="form.model"
-                  required
-                  placeholder=""
-                ></b-form-input>
+              <currency-input
+                class="form-control"
+                v-model.number="form.model"
+                currency="IDR"
+                locale="de"
+                placeholder="0"
+              />
               </b-form-group>
             </b-card>
         
@@ -122,13 +122,13 @@
               <div v-for="formJB in formJumlahBiaya" :key="formJB.index">
                 <b-col v-if="formJB.type == 'number'">
                   <b-form-group id="input-group-2" label="Jumlah Biaya" label-for="input-2">
-                    <b-form-input
-                      id="input-2"
-                      type="number"
+                    <currency-input
+                      class="form-control"
                       v-model.number="formJB.model"
-                      required
+                      currency="IDR"
+                      locale="de"
                       placeholder="0"
-                    ></b-form-input>
+                    />
                   </b-form-group>
                 </b-col>
                 <b-col v-if="formJB.type == 'select'">
@@ -174,6 +174,7 @@ import axios from 'axios'
 export default {
     data(){
       return {
+        user: '',
         forms: [
           {
             'label': 'Mobil ',
@@ -264,44 +265,34 @@ export default {
     },
 
     mounted() {
-      this.loadMobilData(),
-      this.loadHelperData()
+      this.loadData(),
+      this.userData()
     },
 
     computed: {
       totalBiaya: function(){
-
-              return this.tableBiaya.reduce(function(total, item){
-                return total + item.jumlah_biaya; 
-              },0);
-            },
+        return this.tableBiaya.reduce(function(total, item){
+          return total + item.jumlah_biaya; 
+        },0);
+      }
     },
 
-    methods: {
-      showModal() {
+    methods: {  
+      userData(){
+        this.user = window.localStorage.getItem('name');
+      },
+    showModal() {
         this.$refs['tambahJumlahBiaya'].show()
       },
-    loadMobilData(){
+    loadData(){
         axios.get('https://fleet.megatrend.xyz/api/coba').then(res => {
-        this.forms[0].options = res.data.fleets //respon dari rest api dimasukan ke helpers
-        console.log(res.data)
-        console.log(this.forms[1].options)
+        this.forms[0].options = res.data.fleets
+        this.forms[1].options = res.data.helpers 
         
-              
         this.forms[0].options.forEach((element) => {
           element.text = element.no, 
           element.value = element.id
         })
-        
-      }).catch ((err) => {
-        console.log(err);
-      })
-    },
-    loadHelperData(){
-        axios.get('https://fleet.megatrend.xyz/api/coba').then(res => {
-        this.forms[1].options = res.data.helpers //respon dari rest api dimasukan ke helpers
-        console.log(this.forms[1].options)
-        
               
         this.forms[1].options.forEach((element) => {
           element.text = element.name, 
@@ -342,6 +333,10 @@ export default {
    },
    deleteTable(index){
      this.tableBiaya.splice(index,1)
+   },
+   logout(){ 
+     localStorage.clear();
+     this.$router.push('login');  
    }
    
   }

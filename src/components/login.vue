@@ -53,6 +53,8 @@ export default {
         axios.post('https://fleet.megatrend.xyz/api/login', this.form).then(res=>{
         console.log(res.data);
         if(res.data.nip == this.form.nip){
+          window.localStorage.setItem('token', res.data.token);
+          window.localStorage.setItem('name', res.data.name);
           this.$router.push('form');
         }
         })
