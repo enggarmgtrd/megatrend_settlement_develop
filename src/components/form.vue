@@ -78,8 +78,9 @@
                 v-model.number="form.model"
                 :currency="{prefix:'Rp. ', suffix:null}"
                 locale="de"
-                :distraction-free="true"
+                :distraction-free="false"
                 placeholder="0"
+                :precision="{min: 0,max: 20}"
               />
               <!-- END Currency with prefix & suffix -->
               </b-form-group>
@@ -136,7 +137,7 @@
             </b-card>
             <!-- END TABLE BIAYA -->            
           </div>
-            <b-button type="submit" variant="warning" @click="add()" class="my-3 btn-lg btn-block">Submit</b-button>         
+            <b-button type="submit" variant="warning" @click="addForm()" class="my-3 btn-lg btn-block">Submit</b-button>         
         </b-col>
         <!-- END FORM SETTLEMENT -->
 
@@ -291,14 +292,14 @@ export default {
 
         dataForm:[],
 
-        fieldsTableBiaya: ['Jenis Biaya', 'Jumlah Biaya', 'Keterangan', ''],
+        fieldsTableBiaya: ['Mobil', 'Jumlah Biaya', 'Keterangan', 'Action'],
 
         tableBiaya: []
       }
     },
 
     created(){
-       this.checkUser()
+       this.checkUserNotLogin()
     },
 
     mounted() {
@@ -318,7 +319,7 @@ export default {
 
     methods: {
       // -------------------------------------------------
-      checkUser(){
+      checkUserNotLogin(){
         if( !window.localStorage.getItem('token')){
           this.$router.push('login'); 
         }
@@ -367,7 +368,7 @@ export default {
       //--------------------------------------------------
 
       //--------------------------------------------------
-      add(){
+      addForm(){
         this.dataForm = {
           mobil : this.forms[0].model,
           helper : this.forms[1].model,
@@ -379,7 +380,7 @@ export default {
           tableBiaya: this.tableBiaya
           
         }
-        return console.log(this.dataForm)
+        return this.$router.push('dashboard')
       },
       //--------------------------------------------------
 
@@ -418,8 +419,7 @@ export default {
 <style scoped>
 
 .bg-white{
-  min-height: 100vh;
-  min-width: 100vw;
+  width: 100%;
   position: absolute;
   background: rgb(229,229,229);
   background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%, rgba(85,136,255,1) 100%);

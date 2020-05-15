@@ -18,6 +18,7 @@
           type="email"
           required
           placeholder="Contoh : abc@gmail.com"
+          v-on:keyup.enter="login()"
         ></b-form-input>
       </b-form-group>
 
@@ -27,6 +28,7 @@
           v-model="form.password"
           type="password"
           required
+          v-on:keyup.enter="login()"
         ></b-form-input>
       </b-form-group>
       <b-button @click="login()">login</b-button>
@@ -48,7 +50,17 @@ export default {
         
       }
     },
+    created(){
+      this.checkUserLogin()
+    },
     methods: {
+      // -------------------------------------------------
+      checkUserLogin(){
+        if( window.localStorage.getItem('token')){
+          this.$router.push('form'); 
+        }
+      },
+      // -------------------------------------------------
       login(){
         axios.post('https://fleet.megatrend.xyz/api/login', this.form).then(res=>{
         console.log(res.data);
@@ -56,7 +68,7 @@ export default {
           window.localStorage.setItem('token', res.data.token);
           window.localStorage.setItem('id', res.data.id);
           window.localStorage.setItem('name', res.data.name);
-          this.$router.push('form');
+          this.$router.push('dashboard');
         }
         })
       }
