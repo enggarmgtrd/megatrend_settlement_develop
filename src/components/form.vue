@@ -61,16 +61,20 @@
                 label-for="input-1"
                 description=""
               >
+              <ValidationProvider rules="min:3" :name="form.label" v-slot="{ errors }"  v-if="form.label == 'Kilometer Akhir '">
               <!-- Currency without prefix & suffix -->
-              <currency-input v-if="form.label == 'Kilometer Akhir '"
+              <currency-input
                 class="form-control"
                 v-model.number="form.model"
                 :currency="null"
                 locale="de"
-                :distraction-free="true"
+                :distraction-free="false"
                 placeholder="0"
+                :precision="{min: 0,max: 20}"
               />
+              <span>{{ errors[0] }}</span>
               <!-- END Currency without prefix & suffix -->
+              </ValidationProvider>
               
               <!-- Currency with prefix & suffix -->
               <currency-input v-if="form.label != 'Kilometer Akhir '"
@@ -119,9 +123,9 @@
                     </tbody>
                     <tbody>
                       <tr v-for="tb in tableBiaya" :key="tb.index">
-                        <td>{{tb.jenis_biaya}}</td>
-                        <td>{{tb.jumlah_biaya}}</td>
-                        <td>{{tb.keterangan}}</td>
+                        <td>{{tb.fleet_trip_cost_type_id}}</td>
+                        <td>{{tb.amount}}</td>
+                        <td>{{tb.description}}</td>
                         <td><h4 class="delete-row ml-3" @click="deleteTable(tb.index)">&times;</h4></td>
                       </tr>
                     </tbody>
@@ -203,6 +207,7 @@ import axios from 'axios'
 export default {
     data(){
       return {
+        id: 0,
         user: '',
 
         forms: [
@@ -275,11 +280,11 @@ export default {
             'options': [
               {
                 'text': 'Biaya Parkir',
-                'value': 'Biaya Parkir',
+                'value': 1,
               },
               {
                 'text': 'Biaya Lain-lain',
-                'value': 'Biaya lain-lain',
+                'value':2,
               }
             ]
           },
@@ -304,6 +309,7 @@ export default {
 
     mounted() {
       this.loadData(),
+      this.userIdData(),
       this.userData()
     },
 
@@ -327,6 +333,9 @@ export default {
       // -------------------------------------------------
 
       //-------------------------------------------------- 
+      userIdData(){
+        this.id = parseInt(window.localStorage.getItem('id'),10);
+      },
       userData(){
         this.user = window.localStorage.getItem('name');
       },
@@ -358,7 +367,7 @@ export default {
               
           this.forms[1].options.forEach((element) => {
             element.text = element.name, 
-            element.value = element.name
+            element.value = element.id
           })
         console.log(res)
         }).catch ((err) => {
@@ -370,26 +379,34 @@ export default {
       //--------------------------------------------------
       addForm(){
         this.dataForm = {
-          mobil : this.forms[0].model,
-          helper : this.forms[1].model,
-          kilometerAkhir : this.forms[2].model,
-          saldoEtoll : this.forms[3].model,
-          totalUangJalan : this.forms[4].model,
-          jumlahRit : this.forms[5].model,
-          uangMakan : this.forms[6].model,
-          tableBiaya: this.tableBiaya
-          
+          fleet_id : this.forms[0].model,
+          user_id: this.id,
+          helper_id : this.forms[1].model,
+          mileage : this.forms[2].model,
+          pocket_money : this.forms[4].model,
+          emoney_balance : this.forms[3].model,
+          costs: this.tableBiaya      
         }
-        return this.$router.push('dashboard')
+        let token = window.localStorage.getItem('token')
+        let config = {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }
+        axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
+          console.log(res)
+        })
+        return this.$router.push('dashboard'),
+        console.log(this.dataForm)
       },
       //--------------------------------------------------
 
       //--------------------------------------------------
       tambahJumlahBiaya(){
         this.tableBiaya.push({
-          jumlah_biaya: this.formJumlahBiaya[0].model,
-          jenis_biaya: this.formJumlahBiaya[1].model,
-          keterangan: this.formJumlahBiaya[2].model
+          fleet_trip_cost_type_id: this.formJumlahBiaya[1].model,
+          amount: this.formJumlahBiaya[0].model,
+          description: this.formJumlahBiaya[2].model
         })
         this.formJumlahBiaya[0].model = null
         this.formJumlahBiaya[1].model = ''

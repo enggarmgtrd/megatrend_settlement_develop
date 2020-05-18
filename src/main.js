@@ -6,7 +6,30 @@ import routes from './routes';
 import axios from 'axios'
 import VueCurrencyInput from 'vue-currency-input'
 import VueCurrencyFilter from 'vue-currency-filter'
+import './validation.js'
 
+// Vee-Validate---------
+import {
+  ValidationObserver,
+  ValidationProvider,
+  extend,
+  localize
+} from "vee-validate";
+import en from "vee-validate/dist/locale/en.json";
+import * as rules from "vee-validate/dist/rules";
+
+// Install VeeValidate rules and localization
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule]);
+});
+
+localize("en", en);
+
+// Install VeeValidate components globally
+Vue.component("ValidationObserver", ValidationObserver);
+Vue.component("ValidationProvider", ValidationProvider);
+
+// End Vee-Validate-----------
 
 //VueCurrencyFilter
 Vue.use(VueCurrencyFilter,{

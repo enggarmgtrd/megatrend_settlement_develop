@@ -42,6 +42,19 @@
                         <th  v-for="ftd in fieldsTableDashboard" :key="ftd.index">{{ftd}}</th>
                       </tr>
                     </thead>
+                    <tbody>
+                      <tr v-for="df in dataForm" :key="df.index">
+                        <td></td>
+                        <td>{{df.fleet_id}}</td>
+                        <td>{{df.helper_id}}</td>
+                        <td>{{df.mileage}}</td>
+                        <td>{{df.emoney_balance}}</td>
+                        <td>{{df.costs[0].amount}}</td>
+                        <td>{{df.pocket_money}}</td>
+                        <td>{{df.totalCost}}</td>
+                        <td><h4 class="delete-row ml-3" @click="deleteTable(tb.index)">&times;</h4></td>
+                      </tr>
+                    </tbody>
                   </table>
                 </b-col>
               </b-row>             
@@ -56,7 +69,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 export default {
     data(){
       return {
@@ -71,7 +84,8 @@ export default {
     },
 
     mounted() {
-      this.userData()
+      this.userData(),
+      this.loadDataDashboard()
     },
 
     computed: {
@@ -79,6 +93,21 @@ export default {
     },
 
     methods: {
+      loadDataDashboard(){
+        let token = window.localStorage.getItem('token')
+        let id = window.localStorage.getItem('id')
+        let config = {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }
+        axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
+        this.dataForm = res.data.fleet_trips
+        console.log(this.dataForm)
+        }).catch ((err) => {
+        console.log(err);
+        })  
+      },
       // -------------------------------------------------
       checkUserNotLogin(){
         if( !window.localStorage.getItem('token')){

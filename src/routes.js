@@ -1,6 +1,7 @@
 import Login from './components/login.vue';
 import Form from './components/form.vue';
 import Dashboard from './components/dashboard.vue';
+import Val from './components/val.vue';
 
 const routes = [
     { path: '/login',
@@ -12,6 +13,10 @@ const routes = [
     { path: '/form',
       name: 'form', 
       component: Form
+    },
+    { path: '/val',
+      name: 'val', 
+      component: Val
     },
 
     { path: '/',
