@@ -1,9 +1,7 @@
 import { extend } from 'vee-validate';
+import { required } from 'vee-validate/dist/rules';
 
-extend('min', {
-    validate(value, { length }) {
-      return value.length >= length;
-    },
-    params: ['length'],
-    message: '{_field_} harus diisi minimal {length} karakter'
-  });
+extend('required', {
+  ...required,
+  message: '*{_field_} tidak boleh kosong'
+});

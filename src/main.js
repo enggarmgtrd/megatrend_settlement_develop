@@ -13,7 +13,7 @@ import {
   ValidationObserver,
   ValidationProvider,
   extend,
-  localize
+  localize 
 } from "vee-validate";
 import en from "vee-validate/dist/locale/en.json";
 import * as rules from "vee-validate/dist/rules";

@@ -28,6 +28,8 @@
         <b-col cols="8" >
 
           <!-- FORM SETTLEMENT -->
+          <ValidationObserver v-slot="{ handleSubmit }">
+            <form @submit.prevent="handleSubmit(addForm)">
           <div v-for="form in forms" :key= "form.index">
 
             <!-- FORM SELECT -->
@@ -36,19 +38,20 @@
                 id="input-group-3" 
                 :label="form.label + '*'" 
                 label-for="input-3">
-                
-                <b-form-select
-                  id="input-3"             
-                  :options="form.options"
-                  v-model="form.model"
-                  required
-                >
-
-                  <template v-slot:first>
-                    <b-form-select-option value="" disabled>--Pilih {{form.label}} --</b-form-select-option>
-                  </template>
-
-                </b-form-select>
+                <ValidationProvider rules="required" :name="form.label" v-slot="{ classes,errors }" :bails="false">
+                  <div class="control" :class="classes">
+                    <b-form-select
+                      id="input-3"             
+                      :options="form.options"
+                      v-model="form.model"
+                    >
+                    <template v-slot:first>
+                      <b-form-select-option value="" disabled>--Pilih {{form.label}} --</b-form-select-option>
+                    </template>
+                    </b-form-select>
+                    <span>{{ errors[0] }}</span>
+                  </div>
+                </ValidationProvider>
               </b-form-group>
             </b-card>
             <!-- FORM SELECT -->
@@ -61,32 +64,40 @@
                 label-for="input-1"
                 description=""
               >
-              <ValidationProvider rules="min:3" :name="form.label" v-slot="{ errors }"  v-if="form.label == 'Kilometer Akhir '">
+              <ValidationProvider rules="required" :name="form.label" v-slot="{ classes,errors }" :bails="false"  v-if="form.label == 'Kilometer Akhir '">
               <!-- Currency without prefix & suffix -->
-              <currency-input
-                class="form-control"
-                v-model.number="form.model"
-                :currency="null"
-                locale="de"
-                :distraction-free="false"
-                placeholder="0"
-                :precision="{min: 0,max: 20}"
-              />
-              <span>{{ errors[0] }}</span>
+              <div class="control" :class="classes">
+                <currency-input            
+                  class="form-control"
+                  :class="classes"
+                  v-model.number="form.model"
+                  :currency="null"
+                  locale="de"
+                  :distraction-free="false"
+                  placeholder="0"
+                  :precision="{min: 0,max: 20}"
+                />
+                <span>{{ errors[0] }}</span>
+              </div>
               <!-- END Currency without prefix & suffix -->
               </ValidationProvider>
-              
+
+              <ValidationProvider rules="required" :name="form.label" v-slot="{ classes,errors }" :bails="false"  v-if="form.label != 'Kilometer Akhir '">
               <!-- Currency with prefix & suffix -->
-              <currency-input v-if="form.label != 'Kilometer Akhir '"
-                class="form-control"
-                v-model.number="form.model"
-                :currency="{prefix:'Rp. ', suffix:null}"
-                locale="de"
-                :distraction-free="false"
-                placeholder="0"
-                :precision="{min: 0,max: 20}"
-              />
+              <div class="control" :class="classes">
+                <currency-input v-if="form.label != 'Kilometer Akhir '"
+                  class="form-control"
+                  v-model.number="form.model"
+                  :currency="{prefix:'Rp. ', suffix:null}"
+                  locale="de"
+                  :distraction-free="false"
+                  placeholder="0"
+                  :precision="{min: 0,max: 20}"
+                />
+                <span>{{ errors[0] }}</span>
+              </div>
               <!-- END Currency with prefix & suffix -->
+               </ValidationProvider>
               </b-form-group>
             </b-card>
             <!-- END FORM INPUT -->
@@ -105,8 +116,11 @@
             <b-card class="mt-3" v-if ="form.type =='table'">
 
               <b-row>
+                <b-col class="text-left py-1">
+                  <h4>Table Biaya</h4>
+                </b-col>
                 <b-col class="text-right">
-                  <b-button variant="warning" @click="showModal()">Tambah Jumlah Biaya</b-button>
+                  <b-button variant="warning" @click="showModalTambahJumlahBiaya()">Tambah Jumlah Biaya</b-button>
                 </b-col>
               </b-row>
 
@@ -138,12 +152,18 @@
                     <h4>Total Biaya : {{totalBiaya | currency}}</h4>
                 </b-col>
               </b-row>              
+              <b-row v-if="!tableBiayaError">
+                <h6 class="pl-3 text-danger">*Table Biaya tidak boleh kosong</h6>
+              </b-row>
             </b-card>
             <!-- END TABLE BIAYA -->            
           </div>
-            <b-button type="submit" variant="warning" @click="addForm()" class="my-3 btn-lg btn-block">Submit</b-button>         
+            <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block">Submit</b-button> 
+            </form>
+          </ValidationObserver>   
+          <!-- END FORM SETTLEMENT -->     
         </b-col>
-        <!-- END FORM SETTLEMENT -->
+        
 
         <!-- MODAL -->
         <div>
@@ -151,32 +171,45 @@
             <template v-slot:modal-title>
               Tambah Jumlah Biaya
             </template>
+            <ValidationObserver v-slot="{ handleSubmit }">
+            <form @submit.prevent="handleSubmit(tambahJumlahBiaya)">
               <div v-for="formJB in formJumlahBiaya" :key="formJB.index">
                 <b-col v-if="formJB.type == 'number'">
-                  <b-form-group id="input-group-2" label="Jumlah Biaya" label-for="input-2">
-                    <currency-input
-                      class="form-control"
-                      v-model.number="formJB.model"
-                      :currency="{prefix:'Rp. ',suffix:null}"
-                      :distraction-free="true"
-                      locale="de"
-                      placeholder="0"
-                    />
+                  <b-form-group id="input-group-2" :label="formJB.label" label-for="input-2">
+                    <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false" >
+                      <!-- Currency with prefix & suffix -->
+                      <div class="control" :class="classes">
+                        <currency-input
+                          class="form-control"
+                          v-model.number="formJB.model"
+                          :currency="{prefix:'Rp. ',suffix:null}"
+                          :distraction-free="false"
+                          locale="de"
+                          placeholder="0"
+                        />
+                        <span>{{ errors[0] }}</span>
+                      </div>
+                    </ValidationProvider>
                   </b-form-group>
                 </b-col>
                 <b-col v-if="formJB.type == 'select'">
                   <b-form-group id="input-group-3" label="Jenis Biaya" label-for="input-3">
-                    <b-form-select
-                      id="input-3"
-                      v-model="formJB.model"
-                      :options="formJB.options"
-                      required
-                      style="width: 100%"
-                    >
-                    <template v-slot:first>
-                        <b-form-select-option value="" disabled>--Pilih Biaya--</b-form-select-option>
-                    </template>
-                    </b-form-select>
+                    <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false">
+                      <div class="control" :class="classes">
+                        <b-form-select
+                          id="input-3"
+                          v-model="formJB.model"
+                          :options="formJB.options"
+                          style="width: 100%"
+                        >
+                        
+                        <template v-slot:first>
+                            <b-form-select-option value="" disabled>--Pilih Biaya--</b-form-select-option>
+                        </template>
+                        </b-form-select>
+                        <span>{{ errors[0] }}</span>
+                      </div>
+                    </ValidationProvider>
                   </b-form-group>
                 </b-col>
                 <b-col v-if="formJB.type == 'textArea'">
@@ -191,7 +224,9 @@
                   ></b-form-textarea>
               </b-col>
               </div>
-            <b-button class="mt-3 btn-warning" block @click="tambahJumlahBiaya()">Simpan</b-button>
+            <b-button type="submit" class="mt-3 btn-warning">Simpan</b-button>
+            </form>
+            </ValidationObserver>
           </b-modal>
         </div>
         <!-- END MODAL -->
@@ -209,7 +244,7 @@ export default {
       return {
         id: 0,
         user: '',
-
+        tableBiayaError: true,
         forms: [
           {
             'label': 'Mobil ',
@@ -297,7 +332,7 @@ export default {
 
         dataForm:[],
 
-        fieldsTableBiaya: ['Mobil', 'Jumlah Biaya', 'Keterangan', 'Action'],
+        fieldsTableBiaya: ['Jenis Biaya', 'Jumlah Biaya', 'Keterangan', 'Action'],
 
         tableBiaya: []
       }
@@ -342,8 +377,11 @@ export default {
       //-------------------------------------------------- 
 
       //--------------------------------------------------
-      showModal() {
+      showModalTambahJumlahBiaya() {
         this.$refs['tambahJumlahBiaya'].show()
+        this.formJumlahBiaya[0].model = null
+        this.formJumlahBiaya[1].model = ''
+        this.formJumlahBiaya[2].model = ''
       },
       //--------------------------------------------------
 
@@ -378,26 +416,41 @@ export default {
 
       //--------------------------------------------------
       addForm(){
-        this.dataForm = {
-          fleet_id : this.forms[0].model,
-          user_id: this.id,
-          helper_id : this.forms[1].model,
-          mileage : this.forms[2].model,
-          pocket_money : this.forms[4].model,
-          emoney_balance : this.forms[3].model,
-          costs: this.tableBiaya      
+        if(this.tableBiaya != ''){
+
+          this.dataForm = {
+            fleet_id : this.forms[0].model,
+            user_id: this.id,
+            helper_id : this.forms[1].model,
+            mileage : this.forms[2].model,
+            pocket_money : this.forms[4].model,
+            emoney_balance : this.forms[3].model,
+            costs: this.tableBiaya      
+          },
+        // let token = window.localStorage.getItem('token')
+        // let config = {
+        //   headers: {
+        //     'Authorization': 'Bearer ' + token
+        //   }
+        // }
+        // axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
+        //   console.log(res)
+        // })
+        // return this.$router.push('dashboard'),
+          console.log(this.dataForm),
+          this.forms[0].model =''
+          this.forms[1].model =''
+          this.forms[2].model =null
+          this.forms[3].model =null
+          this.forms[4].model =null
+          this.forms[5].model =null
+          this.forms[6].model =null
+          this.forms[7].model =null
+          this.tableBiayaError = true
         }
-        let token = window.localStorage.getItem('token')
-        let config = {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }
-        axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
-          console.log(res)
-        })
-        return this.$router.push('dashboard'),
-        console.log(this.dataForm)
+      else{
+        this.tableBiayaError = false
+      }
       },
       //--------------------------------------------------
 
@@ -408,9 +461,6 @@ export default {
           amount: this.formJumlahBiaya[0].model,
           description: this.formJumlahBiaya[2].model
         })
-        this.formJumlahBiaya[0].model = null
-        this.formJumlahBiaya[1].model = ''
-        this.formJumlahBiaya[2].model = ''
         console.log(this.tableBiaya)
 
         return this.$refs['tambahJumlahBiaya'].hide()
@@ -433,7 +483,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .bg-white{
   width: 100%;
@@ -458,4 +508,51 @@ export default {
   cursor: pointer;
 }
 
+.control{
+    width: 100%
+    span{
+      display: block
+    }
+    input{
+      padding: 5px 10px
+    }
+    &.invalid{
+      input, span{
+        color: #EB0600;
+        font-size: 14px;
+      }
+      input{
+        border: 1px #EB0600 solid
+      }
+    }
+    &.valid{
+      input, span{
+        color: #045929
+      }
+      input{
+        border: 1px #045929 solid
+      }
+    }
+
+    select{
+      padding: 5px 10px
+    }
+    &.invalid{
+      select, span{
+        color: #EB0600;
+        font-size: 14px;
+      }
+      select{
+        border: 1px #EB0600 solid
+      }
+    }
+    &.valid{
+      select, span{
+        color: #045929
+      }
+      select{
+        border: 1px #045929 solid
+      }
+    }
+  }
 </style>
