@@ -1,5 +1,4 @@
 <template>
-<div class="bg-white"> 
   <b-card class="login-form">
     <div>
       <b-img :src="require('../assets/logo-mega-full.png')" fluid alt="Responsive image" class="login-logo"></b-img>
@@ -35,7 +34,6 @@
       <!-- <router-link to='/form' class="btn login-btn btn-block">Login</router-link> -->
     </b-form>
   </b-card>
-</div>
 </template>
 
 <script>
@@ -78,12 +76,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.bg-white{
-  height: 100vh;
-  width: 100vw;
-background: rgb(229,229,229);
-background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%, rgba(85,136,255,1) 100%);
-}
+
 .login-logo{
   position: absolute;
   left: 47%;
@@ -101,13 +94,13 @@ background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%,
 }
 
 .login-form{
-  position: relative;
+  position: absolute;
   background: #fff;
   min-height: 20rem;
   width: 30rem;
-  top: 30%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%); 
+  transform: translate(-50%, -50%); 
 }
 
 .login-form-input{

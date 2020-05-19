@@ -1,6 +1,5 @@
   
 <template>
-<div class="bg-white"> 
   <div>
     <b-navbar toggleable="lg" type="light" variant="light" class="fixed-top border-bottom">
       <b-navbar-brand href="#">
@@ -23,8 +22,8 @@
       </b-collapse>
     </b-navbar>
 
-    <b-container style="margin-top: 70px;">
-      <b-row class="justify-content-md-center">
+    <b-container>
+      <b-row class="justify-content-md-center mt-3">
         <b-col cols="12" > 
            <b-card>
             <b-card class="mt-3">
@@ -65,7 +64,6 @@
       </b-row>
     </b-container>
   </div>
-</div>
 </template>
 
 <script>
@@ -139,14 +137,6 @@ export default {
 </script>
 
 <style scoped>
-
-.bg-white{
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background: rgb(229,229,229);
-  background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%, rgba(85,136,255,1) 100%);
-  }
 
 .navbar{
   padding-top: 0 !important;

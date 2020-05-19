@@ -1,6 +1,4 @@
-  
 <template>
-<div class="bg-white"> 
   <div>
     <b-navbar toggleable="lg" type="light" variant="light" class="fixed-top border-bottom">
       <b-navbar-brand href="#">
@@ -23,13 +21,13 @@
       </b-collapse>
     </b-navbar>
 
-    <b-container style="margin-top: 70px;">
+    <b-container>
       <b-row class="justify-content-md-center">
         <b-col cols="8" >
 
           <!-- FORM SETTLEMENT -->
-          <ValidationObserver v-slot="{ handleSubmit }">
-            <form @submit.prevent="handleSubmit(addForm)">
+          <ValidationObserver ref="form">
+            <form @submit.prevent="addForm">
           <div v-for="form in forms" :key= "form.index">
 
             <!-- FORM SELECT -->
@@ -234,7 +232,7 @@
       </b-row>
     </b-container>
   </div>
-</div>
+
 </template>
 
 <script>
@@ -420,11 +418,39 @@ export default {
 
       //Adform
       addForm(){
-        // Cek apakah semua form dan table Biaya sudah terisi
-        if(this.tableBiaya != ''){
-
-        // Jika berhasil maka:
-
+        
+        this.$refs.form.validate().then(success => {
+        if (!success && this.tableBiaya.length == 0) {
+          this.tableBiayaError =false
+          Swal.fire({
+          icon: 'error',
+          title: 'Data gagal disimpan',
+          showConfirmButton: false,
+          timer: 1500
+        })         
+          return;
+        }
+        else if(!success && this.tableBiaya.length > 0){
+          this.tableBiayaError =true
+          Swal.fire({
+          icon: 'error',
+          title: 'Data gagal disimpan',
+          showConfirmButton: false,
+          timer: 1500
+          })
+          return;
+        }
+        else if(success && this.tableBiaya.length == 0){
+          this.tableBiayaError =false
+          Swal.fire({
+          icon: 'error',
+          title: 'Data gagal disimpan',
+          showConfirmButton: false,
+          timer: 1500
+          })
+          return;
+        }
+        else{
           // Simpan data ke database
           this.dataForm = {
             fleet_id : this.forms[0].model,
@@ -445,6 +471,7 @@ export default {
           axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
             console.log(res)
           })
+          console.log(this.dataForm);
           
         
         // Tampilkan Alert Jika data Berhasil Disimpan
@@ -459,21 +486,7 @@ export default {
         // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
         this.$router.push('dashboard')
         }
-  
-
-      // Jika data Gagal disimpan
-      else{
-        // Rubah state TableBiayaError menjadi false agar tampil notice jika table biaya masih kosong
-        this.tableBiayaError = false
-
-        // setelah itu tampilkan Alert Gagal menyimpan Data
-        Swal.fire({
-          icon: 'error',
-          title: 'Data gagal disimpan',
-          showConfirmButton: false,
-          timer: 1500
-        })
-      }
+      });
 
       },
       // End Add Form--------------------------------------------------
@@ -486,6 +499,7 @@ export default {
           description: this.formJumlahBiaya[2].model
         })
         console.log(this.tableBiaya)
+        this.tableBiayaError = true
 
         return this.$refs['tambahJumlahBiaya'].hide()
 
@@ -509,12 +523,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.bg-white{
-  width: 100%;
-  position: absolute;
-  background: rgb(229,229,229);
-  background: linear-gradient(180deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%, rgba(85,136,255,1) 100%);
-  }
+
 
 .navbar{
   padding-top: 0 !important;
