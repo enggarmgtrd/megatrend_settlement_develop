@@ -239,6 +239,10 @@
 
 <script>
 import axios from 'axios'
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2'
+
+
 export default {
     data(){
       return {
@@ -414,10 +418,14 @@ export default {
       },
       //--------------------------------------------------
 
-      //--------------------------------------------------
+      //Adform
       addForm(){
+        // Cek apakah semua form dan table Biaya sudah terisi
         if(this.tableBiaya != ''){
 
+        // Jika berhasil maka:
+
+          // Simpan data ke database
           this.dataForm = {
             fleet_id : this.forms[0].model,
             user_id: this.id,
@@ -426,33 +434,49 @@ export default {
             pocket_money : this.forms[4].model,
             emoney_balance : this.forms[3].model,
             costs: this.tableBiaya      
-          },
-        // let token = window.localStorage.getItem('token')
-        // let config = {
-        //   headers: {
-        //     'Authorization': 'Bearer ' + token
-        //   }
-        // }
-        // axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
-        //   console.log(res)
-        // })
-        // return this.$router.push('dashboard'),
-          console.log(this.dataForm),
-          this.forms[0].model =''
-          this.forms[1].model =''
-          this.forms[2].model =null
-          this.forms[3].model =null
-          this.forms[4].model =null
-          this.forms[5].model =null
-          this.forms[6].model =null
-          this.forms[7].model =null
-          this.tableBiayaError = true
+          }
+
+          let token = window.localStorage.getItem('token')
+          let config = {
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          }
+          axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
+            console.log(res)
+          })
+          
+        
+        // Tampilkan Alert Jika data Berhasil Disimpan
+          Swal.fire({
+          icon: 'success',
+          title: 'Data berhasil disimpan',
+          showConfirmButton: false,
+          timer: 1500
+        })
+
+
+        // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
+        this.$router.push('dashboard')
         }
+  
+
+      // Jika data Gagal disimpan
       else{
+        // Rubah state TableBiayaError menjadi false agar tampil notice jika table biaya masih kosong
         this.tableBiayaError = false
+
+        // setelah itu tampilkan Alert Gagal menyimpan Data
+        Swal.fire({
+          icon: 'error',
+          title: 'Data gagal disimpan',
+          showConfirmButton: false,
+          timer: 1500
+        })
       }
+
       },
-      //--------------------------------------------------
+      // End Add Form--------------------------------------------------
 
       //--------------------------------------------------
       tambahJumlahBiaya(){
