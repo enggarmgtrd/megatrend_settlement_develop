@@ -43,7 +43,7 @@ Vue.component("ValidationProvider", ValidationProvider);
 Vue.use(VueCurrencyFilter,{
   symbol : 'Rp',
   thousandsSeparator: '.',
-  fractionCount: 2,
+  fractionCount: 0,
   fractionSeparator: ',',
   symbolPosition: 'front',
   symbolSpacing: true

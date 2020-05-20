@@ -2,20 +2,24 @@
   <div>
     <b-navbar toggleable="lg" type="light" variant="light" class="fixed-top border-bottom">
       <b-navbar-brand href="#">
-        <router-link to="/"><b-img :src="require('../assets/logo-mega-full.png')" fluid alt="Responsive image" class="form-logo"></b-img></router-link>
+        <router-link to="/"><b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="form-logo"></b-img></router-link>
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
 
         <!-- Right aligned nav items -->
+        
         <b-navbar-nav class="ml-auto">
+          <b-nav-item>
+              <b-icon-columns-gap class="text-bold"></b-icon-columns-gap><span class="font-weight-bold"> Scan Barcode</span>
+          </b-nav-item>
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template v-slot:button-content>
               {{user}}
             </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-           <b-dropdown-item  @click="logout()"><b-link>Logout</b-link></b-dropdown-item>
+            <b-dropdown-item><router-link to="/profile"><b-icon-person></b-icon-person> Profile </router-link></b-dropdown-item>
+            <b-dropdown-item @click="logout()"><b-icon-box-arrow-right></b-icon-box-arrow-right> Logout </b-dropdown-item> 
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -23,7 +27,7 @@
 
     <b-container>
       <b-row class="justify-content-md-center">
-        <b-col cols="8" >
+        <b-col lg="8" sm="12">
 
           <!-- FORM SETTLEMENT -->
           <ValidationObserver ref="form">
@@ -118,16 +122,16 @@
                   <h4>Table Biaya</h4>
                 </b-col>
                 <b-col class="text-right">
-                  <b-button variant="warning" @click="showModalTambahJumlahBiaya()">Tambah Jumlah Biaya</b-button>
+                  <b-button class="btn-mega" @click="showModalTambahJumlahBiaya()">Tambah Jumlah Biaya</b-button>
                 </b-col>
               </b-row>
 
               <b-row class="mt-3">
-                <b-col>
-                  <table class="table table-striped table-hovered table-bordered">
+                <b-col class="table-responsive">
+                  <table class="text-center table table-striped table-hovered table-bordered">
                     <thead>
                       <tr>
-                        <th  v-for="ftb in fieldsTableBiaya" :key="ftb.index">{{ftb}}</th>
+                        <th v-for="ftb in fieldsTableBiaya" :key="ftb.index">{{ftb}}</th>
                       </tr>
                     </thead>
                     <tbody v-if="!tableBiaya.length">      
@@ -136,9 +140,11 @@
                     <tbody>
                       <tr v-for="tb in tableBiaya" :key="tb.index">
                         <td>{{tb.fleet_trip_cost_type_id}}</td>
-                        <td>{{tb.amount}}</td>
+                        <td>{{tb.amount | currency}}</td>
                         <td>{{tb.description}}</td>
-                        <td><h4 class="delete-row ml-3" @click="deleteTable(tb.index)">&times;</h4></td>
+                        <td>
+                          <b-button class="btn-sm btn-mega-2"><b-icon-trash-fill></b-icon-trash-fill></b-button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -156,7 +162,14 @@
             </b-card>
             <!-- END TABLE BIAYA -->            
           </div>
-            <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block">Submit</b-button> 
+            <b-row>
+              <b-col cols="8">
+                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block btn-mega">Submit</b-button> 
+              </b-col>
+              <b-col cols="4">
+                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-mega-2 btn-block" @click="back()">Back</b-button> 
+              </b-col>
+            </b-row>
             </form>
           </ValidationObserver>   
           <!-- END FORM SETTLEMENT -->     
@@ -183,6 +196,7 @@
                           :currency="{prefix:'Rp. ',suffix:null}"
                           :distraction-free="false"
                           locale="de"
+                          :precision="{min: 0,max: 20}"
                           placeholder="0"
                         />
                         <span>{{ errors[0] }}</span>
@@ -220,9 +234,10 @@
                     rows="3"
                     max-rows="6"
                   ></b-form-textarea>
+                  <b-button type="submit" class="mt-3 btn btn-block btn-lg btn-mega">Simpan</b-button>
               </b-col>
               </div>
-            <b-button type="submit" class="mt-3 btn-warning">Simpan</b-button>
+            
             </form>
             </ValidationObserver>
           </b-modal>
@@ -314,16 +329,7 @@ export default {
             'label': 'Jenis Biaya ',
             'type' : 'select',
             'model': '',
-            'options': [
-              {
-                'text': 'Biaya Parkir',
-                'value': 1,
-              },
-              {
-                'text': 'Biaya Lain-lain',
-                'value':2,
-              }
-            ]
+            'options': []
           },
           {
             'label': 'Keterangan',
@@ -399,6 +405,7 @@ export default {
         axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
           this.forms[0].options = res.data.fleets
           this.forms[1].options = res.data.helpers 
+          this.formJumlahBiaya[1].options = res.data.costTypes
         
           this.forms[0].options.forEach((element) => {
             element.text = element.no, 
@@ -407,6 +414,10 @@ export default {
               
           this.forms[1].options.forEach((element) => {
             element.text = element.name, 
+            element.value = element.id
+          })
+          this.formJumlahBiaya[1].options.forEach((element) => {
+            element.text = element.name,
             element.value = element.id
           })
         console.log(res)
@@ -497,6 +508,8 @@ export default {
       },
       // End Add Form--------------------------------------------------
 
+     
+
       //--------------------------------------------------
       tambahJumlahBiaya(){
         this.tableBiaya.push({
@@ -509,6 +522,11 @@ export default {
 
         return this.$refs['tambahJumlahBiaya'].hide()
 
+      },
+      
+       // Back Button----------------------------------
+      back(){
+        this.$router.push('dashboard')
       },
       
       //--------------------------------------------------

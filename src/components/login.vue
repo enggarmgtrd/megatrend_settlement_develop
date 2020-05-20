@@ -1,43 +1,54 @@
 <template>
-  <b-card class="login-form">
+  <b-card class="login-form ">
     <div>
-      <b-img :src="require('../assets/logo-mega-full.png')" fluid alt="Responsive image" class="login-logo"></b-img>
+      <b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="login-logo"></b-img>
     </div>
-    <p class="login-title">Form Settlement Login</p>
-    <!-- <b-form @submit="onSubmit" @reset="onReset" class="login-form-input"> -->
-    <b-form class="login-form-input">
+    <ValidationObserver v-slot="{ handleSubmit }">
+    <form @submit.prevent="handleSubmit(login)">
+    <div class="login-form-input">
       <b-form-group
         id="input-group-1"
         label="Masukkan Email:"
         label-for="input-1"
       >
+       <ValidationProvider rules="required" name="Email" v-slot="{ classes,errors }" :bails="false">
+        <div class="control" :class="classes">
         <b-form-input
           id="input-1"
           v-model="form.nip"
-          type="email"
-          required
+          type="text"
           placeholder="Contoh : abc@gmail.com"
           v-on:keyup.enter="login()"
         ></b-form-input>
+        <span>{{ errors[0] }}</span>
+        </div>
+       </ValidationProvider>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Massukkan Password" label-for="input-2">
+        <ValidationProvider rules="required" name="Password" v-slot="{ classes,errors }" :bails="false">
+        <div class="control" :class="classes">
         <b-form-input
           id="input-2"
           v-model="form.password"
           type="password"
-          required
           v-on:keyup.enter="login()"
         ></b-form-input>
+        <span>{{ errors[0] }}</span>
+        </div>
+       </ValidationProvider>
       </b-form-group>
-      <b-button @click="login()">login</b-button>
-      <!-- <router-link to='/form' class="btn login-btn btn-block">Login</router-link> -->
-    </b-form>
+      <b-button type="submit" class="login-btn btn-block btn-lg">Login</b-button>
+    </div>
+      </form>
+    </ValidationObserver>
   </b-card>
 </template>
 
 <script>
 import axios from 'axios'
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2'
 export default {
   data() {
       return {
@@ -67,6 +78,13 @@ export default {
           window.localStorage.setItem('id', res.data.id);
           window.localStorage.setItem('name', res.data.name);
           window.localStorage.setItem('admin', res.data.is_admin);
+
+          Swal.fire({
+          icon: 'success',
+          title: 'Selamat Bekerja ' + res.data.name,
+          showConfirmButton: false,
+          timer: 1500
+        })
           this.$router.push('dashboard');
         }
         })
@@ -76,32 +94,27 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
 
 .login-logo{
   position: absolute;
-  left: 47%;
+  left: 50%;
   transform: translateX(-50%);
-  width: 40%;
+  width: 60%;
 }
 
-.login-title{
-  font-weight: 700;
-  position: absolute;
-  top: 15.5%;
-  left: 56.9%;
-  color:#173b8f;
-  transform: translateX(-50%);
-}
 
 .login-form{
+  border-radius: 0px !important;
   position: absolute;
   background: #fff;
   min-height: 20rem;
-  width: 30rem;
+  width: 25rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); 
+
+  
 }
 
 .login-form-input{
@@ -111,14 +124,28 @@ export default {
 
 .login-btn{
   color: #fff;
-  background: rgb(229,229,229);
-  background: linear-gradient(45deg, rgba(229,229,229,1) 0%, rgba(0,36,120,1) 0%, rgba(23,59,143,1) 51%);
-  transition: .2s;
-}
-
-.login-btn:hover{
-  background: linear-gradient(45deg, rgba(229,229,229,1) 0%, rgb(1, 29, 95) 0%, rgba(23,59,143,1) 51%);
+  font-weight: 500;
+  background: rgb(43,184,152);
+  background: linear-gradient(-45deg, rgba(43,184,152,1) 0%, rgba(51,95,106,1) 30%, rgba(52,84,100,1) 50%, rgba(53,73,94,1) 70%, rgba(43,184,152,1) 100%)!important;
+  border-radius: 0px !important;
+  border: none !important;
+  -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
   
+  &:hover{
+     background-position: 358px 0 !important;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    
+  }
+  &:focus{
+    outline: none;
+    box-shadow: none !important;
+  }
 }
 
 </style>
