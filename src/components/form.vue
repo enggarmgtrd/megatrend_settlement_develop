@@ -420,16 +420,19 @@ export default {
       addForm(){
         
         this.$refs.form.validate().then(success => {
+        // Jika Form DAN Table Biaya kosong, GAGALKAN
         if (!success && this.tableBiaya.length == 0) {
           this.tableBiayaError =false
           Swal.fire({
-          icon: 'error',
+            icon: 'error',
           title: 'Data gagal disimpan',
           showConfirmButton: false,
           timer: 1500
         })         
           return;
         }
+
+        // Jika Form Kosong TAPI Table Biaya ada isinya, GAGALKAN
         else if(!success && this.tableBiaya.length > 0){
           this.tableBiayaError =true
           Swal.fire({
@@ -440,6 +443,8 @@ export default {
           })
           return;
         }
+
+        // Jika Form ada isinya TAPI Table Biaya Kosong, GAGALKAN
         else if(success && this.tableBiaya.length == 0){
           this.tableBiayaError =false
           Swal.fire({
@@ -450,6 +455,7 @@ export default {
           })
           return;
         }
+        
         else{
           // Simpan data ke database
           this.dataForm = {

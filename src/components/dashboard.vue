@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                       <tr v-for="df in dataForm" :key="df.index">
-                        <td></td>
+                        <td>{{df.date}}</td>
                         <td>{{df.fleet_id}}</td>
                         <td>{{df.helper_id}}</td>
                         <td>{{df.mileage}}</td>
@@ -73,7 +73,8 @@ export default {
       return {
         user: '',
         dataForm:[],
-        fieldsTableDashboard: ['Tanggal','Mobil', 'Helper', 'Kilometer Akhir', 'Saldo E-Toll','Total Uang Jalan', 'Uang Makan', 'Total Biaya Parkir', 'Action']
+        fieldsTableDashboardSupir: ['Tanggal','Mobil', 'Helper', 'Kilometer Akhir', 'Saldo E-Toll','Total Uang Jalan', 'Uang Jalan', 'Total Biaya', 'Action'],
+        fieldsTableDashboardAdmin: ['Tanggal','Supir','Mobil', 'Helper', 'Kilometer Akhir', 'Saldo E-Toll','Total Uang Jalan', 'Uang Jalan', 'Total Biaya', 'Action']
       }
     },
 
@@ -87,10 +88,18 @@ export default {
     },
 
     computed: {
-      
+      fieldsTableDashboard(){
+        let isAdmin = window.localStorage.getItem('admin')
+        if(isAdmin == 'true'){
+          return this.fieldsTableDashboardAdmin
+        }else{
+          return this.fieldsTableDashboardSupir
+        }
+      }
     },
 
     methods: {
+      
       loadDataDashboard(){
         let token = window.localStorage.getItem('token')
         let id = window.localStorage.getItem('id')

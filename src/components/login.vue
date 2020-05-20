@@ -66,6 +66,7 @@ export default {
           window.localStorage.setItem('token', res.data.token);
           window.localStorage.setItem('id', res.data.id);
           window.localStorage.setItem('name', res.data.name);
+          window.localStorage.setItem('admin', res.data.is_admin);
           this.$router.push('dashboard');
         }
         })
