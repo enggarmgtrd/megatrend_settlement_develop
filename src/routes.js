@@ -15,6 +15,12 @@ const routes = [
       name: 'form', 
       component: Form
     },
+
+    { path: '/form-update/:dataForm_id',
+      name: 'form-update', 
+      component: Form
+    },
+
     { path: '/val',
       name: 'val', 
       component: Val

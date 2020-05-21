@@ -8,7 +8,6 @@
     <div class="login-form-input">
       <b-form-group
         id="input-group-1"
-        label="Masukkan Email:"
         label-for="input-1"
       >
        <ValidationProvider rules="required" name="Email" v-slot="{ classes,errors }" :bails="false">
@@ -17,7 +16,7 @@
           id="input-1"
           v-model="form.nip"
           type="text"
-          placeholder="Contoh : abc@gmail.com"
+          placeholder="Masukkan Email"
           v-on:keyup.enter="login()"
         ></b-form-input>
         <span>{{ errors[0] }}</span>
@@ -25,13 +24,14 @@
        </ValidationProvider>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Massukkan Password" label-for="input-2">
+      <b-form-group id="input-group-2"  label-for="input-2">
         <ValidationProvider rules="required" name="Password" v-slot="{ classes,errors }" :bails="false">
         <div class="control" :class="classes">
         <b-form-input
           id="input-2"
           v-model="form.password"
           type="password"
+          placeholder="Masukkan Password"
           v-on:keyup.enter="login()"
         ></b-form-input>
         <span>{{ errors[0] }}</span>
@@ -87,6 +87,14 @@ export default {
         })
           this.$router.push('dashboard');
         }
+        else{
+          Swal.fire({
+          icon: 'error',
+          title: 'Maaf, Email atau password Yang Dimasukkan Salah',
+          showConfirmButton: false,
+          timer: 2000
+        })
+        }
         })
       }
     }
@@ -108,7 +116,7 @@ export default {
   border-radius: 0px !important;
   position: absolute;
   background: #fff;
-  min-height: 20rem;
+  padding: 10px 0 0px 0;
   width: 25rem;
   top: 50%;
   left: 50%;
@@ -118,7 +126,7 @@ export default {
 }
 
 .login-form-input{
-  margin-top: 5rem;
+  margin-top: 6.5rem;
   margin-bottom: .8rem;
 }
 
