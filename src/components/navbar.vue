@@ -10,17 +10,12 @@
             <!-- Right aligned nav items -->
             
             <b-navbar-nav class="ml-auto">
-            <b-nav-item>
+            <b-nav-item class="text-mega">
                 <b-icon-columns-gap class="text-bold"></b-icon-columns-gap><span class="font-weight-bold"> Scan Barcode</span>
             </b-nav-item>
-            <b-nav-item-dropdown right>
-                <!-- Using 'button-content' slot -->
-                <template v-slot:button-content>
-                {{user}}
-                </template>
-                <b-dropdown-item><router-link to="/profile"><b-icon-person></b-icon-person> Profile </router-link></b-dropdown-item>
-                <b-dropdown-item @click="logout()"><b-icon-box-arrow-right></b-icon-box-arrow-right> Logout </b-dropdown-item> 
-            </b-nav-item-dropdown>
+            <b-nav-item @click="logout()">
+                <b-icon-box-arrow-right class="text-bold"></b-icon-box-arrow-right><span class="font-weight-bold"> Logout</span>
+            </b-nav-item>
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
@@ -66,5 +61,19 @@ export default {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   background: #fff !important;
+
+  .text-mega .nav-link {
+    color:#2bb898 !important;
+    transition: .3s;
+    &:hover{
+      color: #1e816a !important;
+    }
+  }
+
+  .navbar-toggler{
+    border: 0px !important;
+    box-shadow: none !important;
+    outline: none;
+  }
 }
 </style>

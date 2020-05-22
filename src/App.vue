@@ -23,7 +23,7 @@ export default {
   padding: 70px 0 20px 0;
   width: 100%;
   min-height: 100vh;
-  background: rgb(43,184,152);
+  background: #2bb898;
   background: linear-gradient(180deg, rgba(43,184,152,1) 0%, rgba(53,73,94,1) 100%, rgba(0,212,255,1) 100%);
   }
 
@@ -55,19 +55,23 @@ export default {
   .text-mega{
   color: #2bb898 !important;
   font-weight: 500 !important;
+
+    &:hover{
+     color: #1e816a !important;
+    }
   }
   
   .btn-mega{
   color: #fff;
   font-weight: 500 !important;
   color: #fff !important;
-  background: rgb(43,184,152) !important;
+  background: #2bb898 !important;
   border-radius: 0px !important;
   border: none !important;
   
   
   &:hover{
-     background: rgb(30, 129, 106) !important;
+     background: #1e816a !important;
      transition: .5s;
     
   }
