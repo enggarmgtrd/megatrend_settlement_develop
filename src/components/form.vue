@@ -140,10 +140,10 @@
           </div>
             <b-row>
               <b-col cols="8">
-                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block btn-mega">Submit</b-button> 
+                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block btn-mega">Simpan</b-button> 
               </b-col>
               <b-col cols="4">
-                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-mega-2 btn-block" @click="back()">Back</b-button> 
+                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-mega-2 btn-block" @click="back()">Kembali</b-button> 
               </b-col>
             </b-row>
             </form>
@@ -210,7 +210,7 @@
                     rows="3"
                     max-rows="6"
                   ></b-form-textarea>
-                  <b-button type="submit" class="mt-3 btn btn-block btn-lg btn-mega">Simpan</b-button>
+                  <b-button type="submit" class="mt-3 btn btn-block btn-lg btn-mega">Tambahkan</b-button>
               </b-col>
               </div>
             

@@ -1,7 +1,5 @@
 <template>
   <div>
-    <navbar></navbar>
-
     <b-container>
       <b-row class="justify-content-md-center mt-3">
         <b-col cols="12" > 
@@ -19,11 +17,8 @@
 
 <script>
 // import axios from 'axios'
-import Navbar from './navbar'
 export default {
-  components: {
-    Navbar
-  },
+  name: 'profile'
     
 }
 </script>

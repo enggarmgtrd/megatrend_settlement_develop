@@ -53,6 +53,7 @@
 <script>
 import axios from 'axios'
 import Navbar from './navbar'
+import Swal from 'sweetalert2'
 export default {
   components:{
     Navbar
@@ -115,9 +116,15 @@ export default {
           'Authorization': 'Bearer ' + token
         }
       }
-      axios.delete('https://fleet.megatrend.xyz/api/user/'+id, config).then(res =>{
-        this.dataForm.splice(id, 1)
+      axios.delete('https://fleet.megatrend.xyz/api/fleet-trip/'+id, config).then(res =>{
         console.log(res)
+        Swal.fire({
+          icon: 'success',
+          title: 'Data berhasil dihapus',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        return this.loadDataDashboard()
       });
     },
 
