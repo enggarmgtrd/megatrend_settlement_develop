@@ -338,7 +338,7 @@ export default {
         return this.tableBiaya.reduce(function(total, item){
           return total + item.amount; 
         },0);
-      }
+      },
 /* ----------------------- End menampilkan Total Biaya pada table---------------------- */     
     },
 
@@ -369,9 +369,13 @@ export default {
           }
         }
         axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
+          console.log(res.data);
+          
           this.forms[0].options = res.data.fleets
           this.forms[1].options = res.data.helpers 
           this.formJumlahBiaya[1].options = res.data.costTypes
+          console.log(this.formJumlahBiaya);
+          
         
           this.forms[0].options.forEach((element) => {
             element.text = element.no, 

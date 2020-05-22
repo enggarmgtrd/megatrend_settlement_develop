@@ -16,7 +16,7 @@
               <!-- Table Dashboard -->
               <b-row class="mt-3">
                 <b-col class="table-responsive">
-                  <table class="text-center table table-striped table-hovered table-bordered">
+                  <!-- <table class="text-center table table-striped table-hovered table-bordered">
                     <thead>
                       <tr>
                         <th  v-for="ftd in fieldsTableDashboard" :key="ftd.index">{{ftd}}</th>
@@ -25,9 +25,9 @@
                     <tbody>
                       <tr v-for="df in dataForm" :key="df.id">
                         <td>{{df.date}}</td>
-                        <td>{{df.fleet_id}}</td>
-                        <td>{{df.helper_id}}</td>
-                        <td>{{df.mileage}}</td>
+                        <td>{{df.fleet.no}}</td>
+                        <td>{{df.helper.name}}</td>
+                        <td>{{mileAgeFormat(df.mileage)}}</td>
                         <td>{{df.emoney_balance | currency}}</td>
                         <td>{{df.costs[0].amount | currency}}</td>
                         <td>{{df.pocket_money | currency}}</td>
@@ -38,7 +38,22 @@
                         </td>
                       </tr>
                     </tbody>
-                  </table>
+                  </table> -->
+                  <b-table :items="dataForm" :fields="fieldsTableDashboard">
+                    <template v-slot:cell(fleet)="data">
+                      {{ data.item.fleet.no}}
+                    </template>
+                    <template v-slot:cell(helper)="data">
+                      {{ data.item.helper.name}}
+                    </template>
+                    <template v-slot:cell(costs)="data">
+                      {{ data.item.costs[0].amount}}
+                    </template>
+                    <template v-slot:cell(action)="row">
+                      <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataForm(row.item, row.index, $event.target)"><b-icon-pencil></b-icon-pencil></b-button>
+                    </template>
+                    
+                  </b-table>
                 </b-col>
               </b-row>             
             </b-card>
@@ -62,7 +77,7 @@ export default {
     return {
       user:'',
       dataForm:[],
-      fieldsTableDashboardSupir: ['Tanggal','Mobil', 'Helper', 'Kilometer Akhir', 'Saldo E-Toll','Total Uang Jalan', 'Uang Jalan', 'Total Biaya', 'Action'],
+      fieldsTableDashboardSupir: ['date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost', 'action'],
       fieldsTableDashboardAdmin: ['Tanggal','Supir','Mobil', 'Helper', 'Kilometer Akhir', 'Saldo E-Toll','Total Uang Jalan', 'Uang Jalan', 'Total Biaya', 'Action']
     }
   },
@@ -85,9 +100,15 @@ export default {
         return this.fieldsTableDashboardSupir
       }
     }
+    
   },
 
   methods: {
+
+    mileAgeFormat(value) {
+        let val = (value/1).toFixed().replace('.', ',')
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    },
     
     userData(){
       this.user = window.localStorage.getItem('name');
