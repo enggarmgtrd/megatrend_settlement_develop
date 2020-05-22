@@ -129,10 +129,10 @@ export default {
 }
 
 .control{
-    // width: 100%
-    // span{
-    //   display: block
-    // }
+    width: 100%
+    span{
+      display: block
+    }
     input{
       padding: 5px 10px
     }

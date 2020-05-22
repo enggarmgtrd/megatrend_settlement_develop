@@ -6,39 +6,51 @@
     <ValidationObserver v-slot="{ handleSubmit }">
     <form @submit.prevent="handleSubmit(login)">
     <div class="login-form-input">
-      <b-form-group
-        id="input-group-1"
-        label="Masukkan Email:"
-        label-for="input-1"
-      >
-       <ValidationProvider rules="required" name="Email" v-slot="{ classes,errors }" :bails="false">
+      <ValidationProvider rules="required" name="Email" v-slot="{ classes,errors }" :bails="false">
         <div class="control" :class="classes">
-        <b-form-input
-          id="input-1"
-          v-model="form.nip"
-          type="text"
-          placeholder="Contoh : abc@gmail.com"
-          v-on:keyup.enter="login()"
-        ></b-form-input>
-        <span>{{ errors[0] }}</span>
+          <b-input-group
+            id="input-group-1"
+            label-for="input-1"
+          >      
+            <b-form-input
+              id="input-1"
+              v-model="form.nip"
+              type="text"
+              placeholder="Masukkan Email"
+              v-on:keyup.enter="login()"
+            ></b-form-input>
+            <b-input-group-prepend is-text>
+              <b-icon icon="person-fill" class="form-icon"></b-icon>
+            </b-input-group-prepend>       
+          </b-input-group>
+          <span>{{ errors[0] }}</span>
         </div>
-       </ValidationProvider>
-      </b-form-group>
+      </ValidationProvider>
 
-      <b-form-group id="input-group-2" label="Massukkan Password" label-for="input-2">
-        <ValidationProvider rules="required" name="Password" v-slot="{ classes,errors }" :bails="false">
+      <ValidationProvider rules="required" name="Password" v-slot="{ classes,errors }" :bails="false">
         <div class="control" :class="classes">
-        <b-form-input
-          id="input-2"
-          v-model="form.password"
-          type="password"
-          v-on:keyup.enter="login()"
-        ></b-form-input>
-        <span>{{ errors[0] }}</span>
+          <b-input-group
+            id="input-group-1"
+            label-for="input-1"
+          >      
+            <b-form-input
+              id="input-1"
+              v-model="form.password"
+              type="password"
+              class="mt-3"
+              placeholder="Masukkan Password"
+              v-on:keyup.enter="login()"
+            ></b-form-input>
+            <b-input-group-prepend is-text class="mt-3">
+              <b-icon icon="shield-lock-fill" class="form-icon"></b-icon>
+            </b-input-group-prepend>       
+          </b-input-group>
+          <span>{{ errors[0] }}</span>
         </div>
-       </ValidationProvider>
-      </b-form-group>
-      <b-button type="submit" class="login-btn btn-block btn-lg">Login</b-button>
+      </ValidationProvider>
+
+      
+      <b-button type="submit" class="login-btn btn-block btn-lg mt-3">Login</b-button>
     </div>
       </form>
     </ValidationObserver>
@@ -108,18 +120,20 @@ export default {
   border-radius: 0px !important;
   position: absolute;
   background: #fff;
-  min-height: 20rem;
   width: 25rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); 
 
-  
+  .input-group-text{
+    background: #eee !important;
+    border: none !important;
+  }
 }
 
 .login-form-input{
-  margin-top: 5rem;
-  margin-bottom: .8rem;
+  margin-top: 6rem;
+  margin-bottom: .1rem;
 }
 
 .login-btn{

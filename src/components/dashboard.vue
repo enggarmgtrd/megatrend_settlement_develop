@@ -66,16 +66,6 @@ export default {
     }
   },
 
-<<<<<<< HEAD
-    created(){
-       this.checkUserNotLogin(),
-       this.userData(),
-      this.loadDataDashboard()
-    },
-
-    mounted() {
-      
-=======
   created(){
       
   },
@@ -100,7 +90,6 @@ export default {
     
     userData(){
       this.user = window.localStorage.getItem('name');
->>>>>>> 01fc6e8a8c11fafdbd1e04ca2fa3eedbc21380b3
     },
 
     loadDataDashboard(){
@@ -125,41 +114,6 @@ export default {
         headers: {
           'Authorization': 'Bearer ' + token
         }
-<<<<<<< HEAD
-        axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
-        this.dataForm = res.data.fleet_trips
-        console.log(this.dataForm)
-        }).catch ((err) => {
-        console.log(err);
-        })  
-      },
-      
-      checkUserNotLogin(){
-        if( !window.localStorage.getItem('token')){
-          this.$router.push('login'); 
-        }
-      },
-      
-      
-      
-      goToForm(){
-        this.$router.push('form')
-      },
-      
-
-       
-      userData(){
-        this.user = window.localStorage.getItem('name');
-      },
-      
-
-      
-      logout(){ 
-        localStorage.clear();
-        this.$router.push('login');  
-      }
-      
-=======
       }
       axios.delete('https://fleet.megatrend.xyz/api/user/'+id, config).then(res =>{
         this.dataForm.splice(id, 1)
@@ -175,7 +129,6 @@ export default {
       this.$router.push('form')
     },
 
->>>>>>> 01fc6e8a8c11fafdbd1e04ca2fa3eedbc21380b3
   }
 }
 </script>

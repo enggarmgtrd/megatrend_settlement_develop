@@ -13,10 +13,9 @@
 
             <!-- FORM SELECT -->
             <b-card class="mt-3" v-if ="form.type == 'select'">              
-              <b-form-group 
-                id="input-group-3" 
+              <b-form-group  
                 :label="form.label + '*'" 
-                label-for="input-3">
+                >
                 <ValidationProvider rules="required" :name="form.label" v-slot="{ classes,errors }" :bails="false">
                   <div class="control" :class="classes">
                     <b-form-select
@@ -182,7 +181,7 @@
                   </b-form-group>
                 </b-col>
                 <b-col v-if="formJB.type == 'select'">
-                  <b-form-group id="input-group-3" label="Jenis Biaya" label-for="input-3">
+                  <b-form-group  label="Jenis Biaya" >
                     <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false">
                       <div class="control" :class="classes">
                         <b-form-select
@@ -496,7 +495,7 @@ loadDataEdit(){
 /* --------------------------- End Menyimpan Data Form -------------------------- */
 
 
-        /* --------------------------- Menyimpan Data Form -------------------------- */
+        /* --------------------------- Meengupdate Data Form -------------------------- */
               updateForm(){
                 
                 this.$refs.form.validate().then(success => {
@@ -547,14 +546,14 @@ loadDataEdit(){
                       emoney_balance : this.forms[3].model,
                       costs: this.tableBiaya      
                     }
-        
+                    console.log(this)
                     let token = window.localStorage.getItem('token')
                     let config = {
                       headers: {
                         'Authorization': 'Bearer ' + token
                       }
                     }
-                    axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm,this.dataForm, config).then(res=>{
+                    axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, this.dataForm, config).then(res=>{
                       console.log(res)
                     })
                     console.log(this.dataForm);          
@@ -569,7 +568,7 @@ loadDataEdit(){
         
         
                   // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-                    this.$router.push('dashboard')
+                    return this.$router.push('/dashboard')
                   }
                 });
         
@@ -596,7 +595,7 @@ loadDataEdit(){
       },
 
       back(){
-        this.$router.push('dashboard')
+        this.$router.push('/dashboard')
       },
       
      
