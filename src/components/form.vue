@@ -466,6 +466,8 @@ loadDataEdit(){
               costs: this.tableBiaya      
             }
 
+            
+            if (isNaN(this.idEditForm)){
             let token = window.localStorage.getItem('token')
             let config = {
               headers: {
@@ -474,20 +476,44 @@ loadDataEdit(){
             }
             axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
               console.log(res)
-            })
-            console.log(this.dataForm);          
-          
-          // Tampilkan Alert Jika data Berhasil Disimpan
-            Swal.fire({
+
+              // Tampilkan Alert Jika data Berhasil Disimpan
+              Swal.fire({
               icon: 'success',
               title: 'Data berhasil disimpan',
               showConfirmButton: false,
               timer: 1500
             })
 
-
-          // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
+            // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
             this.$router.push('dashboard')
+            })
+            console.log(this.dataForm);          
+          
+            }
+            else{
+            let token = window.localStorage.getItem('token')
+            let config = {
+              headers: {
+                'Authorization': 'Bearer ' + token
+              }
+            }
+            axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, this.dataForm, config).then(res=>{
+                console.log(res)
+                // Tampilkan Alert Jika data Berhasil Disimpan
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Data berhasil disimpan',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+        
+                // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
+                return this.$router.push('/dashboard')
+                })
+            }
+          
+            
           }
         });
 
@@ -496,83 +522,7 @@ loadDataEdit(){
 
 
         /* --------------------------- Meengupdate Data Form -------------------------- */
-              updateForm(){
-                
-                this.$refs.form.validate().then(success => {
-                  // Jika Form DAN Table Biaya kosong, GAGALKAN
-                  if (!success && this.tableBiaya.length == 0) {
-                    this.tableBiayaError =false
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Data gagal disimpan',
-                      showConfirmButton: false,
-                      timer: 1500
-                    })         
-                    return;
-                  }
-        
-                  // Jika Form Kosong TAPI Table Biaya ada isinya, GAGALKAN
-                  else if(!success && this.tableBiaya.length > 0){
-                    this.tableBiayaError =true
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Data gagal disimpan',
-                      showConfirmButton: false,
-                      timer: 1500
-                    })
-                    return;
-                  }
-        
-                  // Jika Form ada isinya TAPI Table Biaya Kosong, GAGALKAN
-                  else if(success && this.tableBiaya.length == 0){
-                    this.tableBiayaError =false
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Data gagal disimpan',
-                      showConfirmButton: false,
-                      timer: 1500
-                    })
-                    return;
-                  }
-                  
-                  else{
-                    // Simpan data ke database
-                    this.dataForm = {
-                      fleet_id : this.forms[0].model,
-                      user_id: this.id,
-                      helper_id : this.forms[1].model,
-                      mileage : this.forms[2].model,
-                      pocket_money : this.forms[4].model,
-                      emoney_balance : this.forms[3].model,
-                      costs: this.tableBiaya      
-                    }
-                    console.log(this)
-                    let token = window.localStorage.getItem('token')
-                    let config = {
-                      headers: {
-                        'Authorization': 'Bearer ' + token
-                      }
-                    }
-                    axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, this.dataForm, config).then(res=>{
-                      console.log(res)
-                    })
-                    console.log(this.dataForm);          
-                  
-                  // Tampilkan Alert Jika data Berhasil Disimpan
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Data berhasil disimpan',
-                      showConfirmButton: false,
-                      timer: 1500
-                    })
-        
-        
-                  // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-                    return this.$router.push('/dashboard')
-                  }
-                });
-        
-              },
+             
         /* --------------------------- End Menyimpan Data Form -------------------------- */
  
 /* --------------------------- Menambah Data Biaya -------------------------- */
