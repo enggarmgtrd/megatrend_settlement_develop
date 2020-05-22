@@ -1,29 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="light" variant="light" class="fixed-top border-bottom">
-      <b-navbar-brand href="#">
-        <router-link to="/"><b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="form-logo"></b-img></router-link>
-      </b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
-
-        <!-- Right aligned nav items -->
-        
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item>
-              <b-icon-columns-gap class="text-bold"></b-icon-columns-gap><span class="font-weight-bold"> Scan Barcode</span>
-          </b-nav-item>
-          <b-nav-item-dropdown right>
-            <!-- Using 'button-content' slot -->
-            <template v-slot:button-content>
-              {{user}}
-            </template>
-            <b-dropdown-item><router-link to="/profile"><b-icon-person></b-icon-person> Profile </router-link></b-dropdown-item>
-            <b-dropdown-item @click="logout()"><b-icon-box-arrow-right></b-icon-box-arrow-right> Logout </b-dropdown-item> 
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+    <navbar></navbar>
 
     <b-container>
       <b-row class="justify-content-md-center">
@@ -143,7 +120,7 @@
                         <td>{{tb.amount | currency}}</td>
                         <td>{{tb.description}}</td>
                         <td>
-                          <b-button class="btn-sm btn-mega-2"><b-icon-trash-fill></b-icon-trash-fill></b-button>
+                          <b-button class="btn-sm btn-mega-2" @click="deleteJumlahBiaya(tb.index)"><b-icon-trash-fill></b-icon-trash-fill></b-button>
                         </td>
                       </tr>
                     </tbody>
@@ -254,13 +231,16 @@
 import axios from 'axios'
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2'
-
+import Navbar from './navbar'
 
 export default {
+  components:{
+    Navbar
+  },
     data(){
       return {
         id: 0,
-        user: '',
+        idEditForm: parseInt(this.$route.params.dataForm_id, 10),
         tableBiayaError: true,
         forms: [
           {
@@ -290,30 +270,30 @@ export default {
             'type': 'number',
             'model': null
           },
-          {
-            'label': 'Jumlah Rit ',
-            'type': 'radio',
-            'model': null,
-            'options': [
-              {
-                name: '1',
-                value: 1
-              },
-              {
-                name: '2',
-                value: 2
-              },
-              {
-                name: '3',
-                value: 3
-              },
-            ]
-          },
-          {
-            'label': 'Uang Makan ',
-            'type': 'number',
-            'model': null
-          },
+          // {
+          //   'label': 'Jumlah Rit ',
+          //   'type': 'radio',
+          //   'model': null,
+          //   'options': [
+          //     {
+          //       name: '1',
+          //       value: 1
+          //     },
+          //     {
+          //       name: '2',
+          //       value: 2
+          //     },
+          //     {
+          //       name: '3',
+          //       value: 3
+          //     },
+          //   ]
+          // },
+          // {
+          //   'label': 'Uang Makan ',
+          //   'type': 'number',
+          //   'model': null
+          // },
           {
             'type': 'table'
           }
@@ -337,63 +317,50 @@ export default {
             'model': ''
           }
         ],
-
         dataForm:[],
-
         fieldsTableBiaya: ['Jenis Biaya', 'Jumlah Biaya', 'Keterangan', 'Action'],
-
         tableBiaya: []
       }
     },
 
     created(){
-       this.checkUserNotLogin()
+       
     },
 
     mounted() {
       this.loadData(),
       this.userIdData(),
-      this.userData()
+      this.loadDataEdit()
     },
 
     computed: {
-      //--------------------------------------------------
-      totalBiaya: function(){
+/* ------------------------- Menampilkan Total Biaya pada table ------------------------ */
+      totalBiaya(){
         return this.tableBiaya.reduce(function(total, item){
-          return total + item.jumlah_biaya; 
+          return total + item.amount; 
         },0);
       }
-      //--------------------------------------------------
+/* ----------------------- End menampilkan Total Biaya pada table---------------------- */     
     },
 
-    methods: {
-      // -------------------------------------------------
-      checkUserNotLogin(){
-        if( !window.localStorage.getItem('token')){
-          this.$router.push('login'); 
-        }
-      },
-      // -------------------------------------------------
 
-      //-------------------------------------------------- 
+    methods: {
+
+/* ------------ Menangkap user id dan merubahnya menjadi integer ------------ */
       userIdData(){
         this.id = parseInt(window.localStorage.getItem('id'),10);
       },
-      userData(){
-        this.user = window.localStorage.getItem('name');
-      },
-      //-------------------------------------------------- 
-
-      //--------------------------------------------------
+/* ------------ End Menangkap user id dan merubahnya menjadi integer ------------ */
+ 
       showModalTambahJumlahBiaya() {
         this.$refs['tambahJumlahBiaya'].show()
         this.formJumlahBiaya[0].model = null
         this.formJumlahBiaya[1].model = ''
         this.formJumlahBiaya[2].model = ''
       },
-      //--------------------------------------------------
+      
 
-      //--------------------------------------------------
+/* ------------------ Mengambil data Json untuk form select ----------------- */
       loadData(){
         let token = window.localStorage.getItem('token')
         let id = window.localStorage.getItem('id')
@@ -420,97 +387,196 @@ export default {
             element.text = element.name,
             element.value = element.id
           })
-        console.log(res)
+        // console.log(res)
         }).catch ((err) => {
-        console.log(err);
+          console.log(err);
         })  
       },
-      //--------------------------------------------------
+/* ------------------ End Mengambil data Json untuk form select ----------------- */
 
-      //Adform
+loadDataEdit(){
+  let token = window.localStorage.getItem('token')
+        let config = {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }
+        axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
+        console.log(res)
+        this.forms[0].model = res.data.fleet.id,
+        this.forms[1].model = res.data.helper.id,
+        this.forms[2].model = res.data.mileage,
+        this.forms[3].model = res.data.emoney_balance
+        this.forms[4].model = res.data.pocket_money
+        this.tableBiaya = res.data.costs
+        }).catch ((err) => {
+          console.log(err);
+        })  
+},
+      
+
+/* --------------------------- Menyimpan Data Form -------------------------- */
       addForm(){
         
         this.$refs.form.validate().then(success => {
-        // Jika Form DAN Table Biaya kosong, GAGALKAN
-        if (!success && this.tableBiaya.length == 0) {
-          this.tableBiayaError =false
-          Swal.fire({
-            icon: 'error',
-          title: 'Data gagal disimpan',
-          showConfirmButton: false,
-          timer: 1500
-        })         
-          return;
-        }
-
-        // Jika Form Kosong TAPI Table Biaya ada isinya, GAGALKAN
-        else if(!success && this.tableBiaya.length > 0){
-          this.tableBiayaError =true
-          Swal.fire({
-          icon: 'error',
-          title: 'Data gagal disimpan',
-          showConfirmButton: false,
-          timer: 1500
-          })
-          return;
-        }
-
-        // Jika Form ada isinya TAPI Table Biaya Kosong, GAGALKAN
-        else if(success && this.tableBiaya.length == 0){
-          this.tableBiayaError =false
-          Swal.fire({
-          icon: 'error',
-          title: 'Data gagal disimpan',
-          showConfirmButton: false,
-          timer: 1500
-          })
-          return;
-        }
-        
-        else{
-          // Simpan data ke database
-          this.dataForm = {
-            fleet_id : this.forms[0].model,
-            user_id: this.id,
-            helper_id : this.forms[1].model,
-            mileage : this.forms[2].model,
-            pocket_money : this.forms[4].model,
-            emoney_balance : this.forms[3].model,
-            costs: this.tableBiaya      
+          // Jika Form DAN Table Biaya kosong, GAGALKAN
+          if (!success && this.tableBiaya.length == 0) {
+            this.tableBiayaError =false
+            Swal.fire({
+              icon: 'error',
+              title: 'Data gagal disimpan',
+              showConfirmButton: false,
+              timer: 1500
+            })         
+            return;
           }
 
-          let token = window.localStorage.getItem('token')
-          let config = {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
+          // Jika Form Kosong TAPI Table Biaya ada isinya, GAGALKAN
+          else if(!success && this.tableBiaya.length > 0){
+            this.tableBiayaError =true
+            Swal.fire({
+              icon: 'error',
+              title: 'Data gagal disimpan',
+              showConfirmButton: false,
+              timer: 1500
+            })
+            return;
           }
-          axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
-            console.log(res)
-          })
-          console.log(this.dataForm);
+
+          // Jika Form ada isinya TAPI Table Biaya Kosong, GAGALKAN
+          else if(success && this.tableBiaya.length == 0){
+            this.tableBiayaError =false
+            Swal.fire({
+              icon: 'error',
+              title: 'Data gagal disimpan',
+              showConfirmButton: false,
+              timer: 1500
+            })
+            return;
+          }
           
-        
-        // Tampilkan Alert Jika data Berhasil Disimpan
-          Swal.fire({
-          icon: 'success',
-          title: 'Data berhasil disimpan',
-          showConfirmButton: false,
-          timer: 1500
-        })
+          else{
+            // Simpan data ke database
+            this.dataForm = {
+              fleet_id : this.forms[0].model,
+              user_id: this.id,
+              helper_id : this.forms[1].model,
+              mileage : this.forms[2].model,
+              pocket_money : this.forms[4].model,
+              emoney_balance : this.forms[3].model,
+              costs: this.tableBiaya      
+            }
+
+            let token = window.localStorage.getItem('token')
+            let config = {
+              headers: {
+                'Authorization': 'Bearer ' + token
+              }
+            }
+            axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
+              console.log(res)
+            })
+            console.log(this.dataForm);          
+          
+          // Tampilkan Alert Jika data Berhasil Disimpan
+            Swal.fire({
+              icon: 'success',
+              title: 'Data berhasil disimpan',
+              showConfirmButton: false,
+              timer: 1500
+            })
 
 
-        // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-        this.$router.push('dashboard')
-        }
-      });
+          // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
+            this.$router.push('dashboard')
+          }
+        });
 
       },
-      // End Add Form--------------------------------------------------
+/* --------------------------- End Menyimpan Data Form -------------------------- */
 
-     
 
-      //--------------------------------------------------
+        /* --------------------------- Menyimpan Data Form -------------------------- */
+              updateForm(){
+                
+                this.$refs.form.validate().then(success => {
+                  // Jika Form DAN Table Biaya kosong, GAGALKAN
+                  if (!success && this.tableBiaya.length == 0) {
+                    this.tableBiayaError =false
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Data gagal disimpan',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })         
+                    return;
+                  }
+        
+                  // Jika Form Kosong TAPI Table Biaya ada isinya, GAGALKAN
+                  else if(!success && this.tableBiaya.length > 0){
+                    this.tableBiayaError =true
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Data gagal disimpan',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                    return;
+                  }
+        
+                  // Jika Form ada isinya TAPI Table Biaya Kosong, GAGALKAN
+                  else if(success && this.tableBiaya.length == 0){
+                    this.tableBiayaError =false
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Data gagal disimpan',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                    return;
+                  }
+                  
+                  else{
+                    // Simpan data ke database
+                    this.dataForm = {
+                      fleet_id : this.forms[0].model,
+                      user_id: this.id,
+                      helper_id : this.forms[1].model,
+                      mileage : this.forms[2].model,
+                      pocket_money : this.forms[4].model,
+                      emoney_balance : this.forms[3].model,
+                      costs: this.tableBiaya      
+                    }
+        
+                    let token = window.localStorage.getItem('token')
+                    let config = {
+                      headers: {
+                        'Authorization': 'Bearer ' + token
+                      }
+                    }
+                    axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm,this.dataForm, config).then(res=>{
+                      console.log(res)
+                    })
+                    console.log(this.dataForm);          
+                  
+                  // Tampilkan Alert Jika data Berhasil Disimpan
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Data berhasil disimpan',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+        
+        
+                  // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
+                    this.$router.push('dashboard')
+                  }
+                });
+        
+              },
+        /* --------------------------- End Menyimpan Data Form -------------------------- */
+ 
+/* --------------------------- Menambah Data Biaya -------------------------- */
       tambahJumlahBiaya(){
         this.tableBiaya.push({
           fleet_trip_cost_type_id: this.formJumlahBiaya[1].model,
@@ -522,41 +588,28 @@ export default {
 
         return this.$refs['tambahJumlahBiaya'].hide()
 
+      },       
+/* --------------------------- End Menambah Data Biaya -------------------------- */
+
+      deleteJumlahBiaya(index){
+        this.tableBiaya.splice(index,1)
       },
-      
-       // Back Button----------------------------------
+
       back(){
         this.$router.push('dashboard')
       },
       
-      //--------------------------------------------------
-      deleteTable(index){
-        this.tableBiaya.splice(index,1)
-      },
-      //--------------------------------------------------
-
-      //--------------------------------------------------
-      logout(){ 
-        localStorage.clear();
-        this.$router.push('login');  
-      }
-      //--------------------------------------------------
+     
   }
 }
 </script>
 
 <style lang="scss" scoped>
 
-
-
 .navbar{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   background: #fff !important;
-}
-
-.form-logo{
-  width: 10rem;
 }
 
 .delete-row{

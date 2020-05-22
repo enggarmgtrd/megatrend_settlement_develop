@@ -129,10 +129,10 @@ export default {
 }
 
 .control{
-    width: 100%
-    span{
-      display: block
-    }
+    // width: 100%
+    // span{
+    //   display: block
+    // }
     input{
       padding: 5px 10px
     }
@@ -176,23 +176,26 @@ export default {
     }
   }
 
-  .dropdown-item{
-    transition: .3s;
-    color: #555;
-    padding-left: 10px !important;
-     
-    &:hover{
-      background: #2bb898 !important;
-      color: #fff !important;
-    }
-
-    a{
-      text-decoration: none;
-      color: #555;
+  .dropdown-menu{
+    border: 0px !important;
+    .dropdown-item{
       transition: .3s;
+      color: #555;
+      padding-left: 10px !important;
+      
       &:hover{
+        background: #2bb898 !important;
         color: #fff !important;
       }
+
+      a{
+        text-decoration: none;
+        color: #555;
+        transition: .3s;
+        &:hover{
+          color: #fff !important;
+        }
+      }
     }
- }
+  }
 </style>
