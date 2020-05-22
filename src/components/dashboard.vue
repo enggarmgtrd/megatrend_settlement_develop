@@ -85,12 +85,13 @@ export default {
     },
 
     created(){
-       this.checkUserNotLogin()
+       this.checkUserNotLogin(),
+       this.userData(),
+      this.loadDataDashboard()
     },
 
     mounted() {
-      this.userData(),
-      this.loadDataDashboard()
+      
     },
 
     computed: {
@@ -121,32 +122,32 @@ export default {
         console.log(err);
         })  
       },
-      // -------------------------------------------------
+      
       checkUserNotLogin(){
         if( !window.localStorage.getItem('token')){
           this.$router.push('login'); 
         }
       },
-      // -------------------------------------------------
       
-      // -------------------------------------------------
+      
+      
       goToForm(){
         this.$router.push('form')
       },
-      // -------------------------------------------------
+      
 
-      //-------------------------------------------------- 
+       
       userData(){
         this.user = window.localStorage.getItem('name');
       },
-      //--------------------------------------------------
+      
 
-      //--------------------------------------------------
+      
       logout(){ 
         localStorage.clear();
         this.$router.push('login');  
       }
-      //--------------------------------------------------
+      
   }
 }
 </script>
