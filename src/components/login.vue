@@ -6,7 +6,7 @@
     <ValidationObserver v-slot="{ handleSubmit }">
     <form @submit.prevent="handleSubmit(login)">
     <div class="login-form-input">
-      <ValidationProvider rules="required" name="Email" v-slot="{ classes,errors }" :bails="false">
+      <ValidationProvider rules="required" name="Username" v-slot="{ classes,errors }" :bails="false">
         <div class="control" :class="classes">
           <b-input-group
             id="input-group-1"
@@ -16,7 +16,7 @@
               id="input-1"
               v-model="form.nip"
               type="text"
-              placeholder="Masukkan Email"
+              placeholder="Masukkan Username"
               v-on:keyup.enter="login()"
             ></b-form-input>
             <b-input-group-prepend is-text>
@@ -75,13 +75,13 @@ export default {
       this.checkUserLogin()
     },
     methods: {
-      // -------------------------------------------------
+     
       checkUserLogin(){
         if( window.localStorage.getItem('token')){
           this.$router.push('form'); 
         }
       },
-      // -------------------------------------------------
+      
       login(){
         axios.post('https://fleet.megatrend.xyz/api/login', this.form).then(res=>{
         console.log(res.data);
@@ -97,7 +97,13 @@ export default {
           showConfirmButton: false,
           timer: 1500
         })
-          this.$router.push('dashboard');
+          this.$router.push('dashboard').catch(err => {console.log(err)});
+        } else{
+          Swal.fire(
+          'Login Gagal !',
+          'Username atau password yang kamu masukkan salah !',
+          'error'
+          )
         }
         })
       }
@@ -105,7 +111,6 @@ export default {
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 
 .login-logo{

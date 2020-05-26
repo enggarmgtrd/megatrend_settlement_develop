@@ -10,36 +10,15 @@
             <b-card class="mt-3">
               <b-row align-h="between">
                 <b-col cols="6"><h4>Selamat Datang <span>{{user}}</span></h4></b-col>
-                <b-col cols="6" class="text-right"><b-button class="btn-mega" @click="goToForm()">Add Form Settlement</b-button></b-col>
+                <b-col cols="6" class="text-right"><b-button class="btn-mega" @click="addDataSettlement()">Add Form Settlement</b-button></b-col>
               </b-row>
 
               <!-- Table Dashboard -->
-              <b-row class="mt-3">
-                <b-col class="table-responsive">
-                  <!-- <table class="text-center table table-striped table-hovered table-bordered">
-                    <thead>
-                      <tr>
-                        <th  v-for="ftd in fieldsTableDashboard" :key="ftd.index">{{ftd}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="df in dataForm" :key="df.id">
-                        <td>{{df.date}}</td>
-                        <td>{{df.fleet.no}}</td>
-                        <td>{{df.helper.name}}</td>
-                        <td>{{mileAgeFormat(df.mileage)}}</td>
-                        <td>{{df.emoney_balance | currency}}</td>
-                        <td>{{df.costs[0].amount | currency}}</td>
-                        <td>{{df.pocket_money | currency}}</td>
-                        <td>{{df.totalCost | currency}}</td>
-                        <td>
-                          <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataForm(df.id)"><b-icon-pencil></b-icon-pencil></b-button>
-                          <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataForm(dataForm, df.id)"><b-icon-trash></b-icon-trash></b-button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table> -->
-                  <b-table :items="dataForm" :fields="fieldsTableDashboard">
+              <b-row class="mt-3">      
+                  <b-table responsive :items="dataForm" class="text-center" hover :fields="fieldsTableDashboard" >
+                    <template v-slot:cell(no)="data">
+                      {{data.item.no}}
+                    </template>
                     <template v-slot:cell(fleet)="data">
                       {{ data.item.fleet.no}}
                     </template>
@@ -49,12 +28,12 @@
                     <template v-slot:cell(costs)="data">
                       {{ data.item.costs[0].amount}}
                     </template>
-                    <template v-slot:cell(action)="row">
-                      <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataForm(row.item, row.index, $event.target)"><b-icon-pencil></b-icon-pencil></b-button>
-                    </template>
-                    
-                  </b-table>
-                </b-col>
+                    <template v-slot:cell(action)="data">
+                      <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataSettlement(data.item.id)"><b-icon-pencil></b-icon-pencil></b-button>
+                      <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
+                    </template>                  
+                                      
+                  </b-table>               
               </b-row>             
             </b-card>
             <!-- END Table Dashboard -->            
@@ -75,20 +54,19 @@ export default {
   },
   data(){
     return {
+      sortDesc: false,
       user:'',
+      nmrDataForm: 1,
       dataForm:[],
-      fieldsTableDashboardSupir: ['date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost', 'action'],
-      fieldsTableDashboardAdmin: ['Tanggal','Supir','Mobil', 'Helper', 'Kilometer Akhir', 'Saldo E-Toll','Total Uang Jalan', 'Uang Jalan', 'Total Biaya', 'Action']
+      fieldsTableDashboardAdmin: [{key: 'no', sortable: true},'date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost', 'action'],
+      fieldsTableDashboardSupir: [{key: 'no', sortable: true},'date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost'],
     }
   },
 
-  created(){
-      
-  },
-
   mounted() {
-    this.loadDataDashboard(),
-    this.userData()
+    this.userData(),
+    this.loadDataDashboard()
+    
   },
 
   computed: {
@@ -99,19 +77,17 @@ export default {
       }else{
         return this.fieldsTableDashboardSupir
       }
-    }
-    
+    }  
   },
 
   methods: {
+    userData(){
+      this.user = window.localStorage.getItem('name');
+    },
 
     mileAgeFormat(value) {
         let val = (value/1).toFixed().replace('.', ',')
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    },
-    
-    userData(){
-      this.user = window.localStorage.getItem('name');
     },
 
     loadDataDashboard(){
@@ -123,40 +99,54 @@ export default {
         }
       }
       axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
-      this.dataForm = res.data.fleet_trips
+      this.dataForm = res.data.fleet_trips.reverse()
+      this.dataForm.forEach((element)=>{
+        element.no = this.nmrDataForm++
+      })
       console.log(this.dataForm)
       }).catch ((err) => {
       console.log(err);
       })  
     },
 
-    deleteDataForm(dataFoem, id){
+    addDataSettlement(){
+      this.$router.push('form')
+    },
+
+    editDataSettlement(index){
+      this.$router.push('form-update/'+index)
+    },
+    
+    deleteDataSettlement(id){
       let token = window.localStorage.getItem('token')
       let config = {
         headers: {
           'Authorization': 'Bearer ' + token
         }
       }
-      axios.delete('https://fleet.megatrend.xyz/api/fleet-trip/'+id, config).then(res =>{
-        console.log(res)
-        Swal.fire({
-          icon: 'success',
-          title: 'Data berhasil dihapus',
-          showConfirmButton: false,
-          timer: 1500
-        })
-        return this.loadDataDashboard()
-      });
+      Swal.fire({
+        title: 'Kamu yakin ?',
+        text: "File yang telah dihapus tidak akan bisa muncul kembali !",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Hapus'
+      }).then((result) => {
+        if (result.value) {
+          axios.delete('https://fleet.megatrend.xyz/api/fleet-trip/'+id, config).then(res =>{
+          console.log(res)
+            Swal.fire({
+              icon: 'success',
+              title: 'Data Berhasil Dihapus',
+              showConfirmButton: false,
+              timer: 1500
+            })  
+          return this.loadDataDashboard()
+          });        
+        }
+       })    
     },
-
-    editDataForm(index){
-      this.$router.push('form-update/'+index)
-    },
-    
-    goToForm(){
-      this.$router.push('form')
-    },
-
   }
 }
 </script>
