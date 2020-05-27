@@ -556,7 +556,7 @@ export default {
         this.$refs['tambahJumlahBiaya'].show()
         
         this.formJumlahBiaya[0].model = this.tableBiaya[index].amount
-        this.formJumlahBiaya[1].model = this.tableBiaya[index].fleet_trip_cost_type_id
+        this.formJumlahBiaya[1].model = this.tableBiaya[index].fleet_trip_cost_type_id.value
         this.formJumlahBiaya[2].model = this.tableBiaya[index].description
       },
 
