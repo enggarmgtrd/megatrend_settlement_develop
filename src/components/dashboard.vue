@@ -9,13 +9,30 @@
            <b-card>
             <b-card class="mt-3">
               <b-row align-h="between">
-                <b-col cols="6"><h4>Selamat Datang <span>{{user}}</span></h4></b-col>
-                <b-col cols="6" class="text-right"><b-button class="btn-mega" @click="addDataSettlement()">Add Form Settlement</b-button></b-col>
+                <b-col cols="8" class="text-right">
+                  <b-form-group
+                    class="mb-0"
+                  >
+                    <b-input-group size="md">
+                      <b-form-input
+                        v-model="filter"
+                        type="search"
+                        id="filterInput"
+                        placeholder="Cari Data Settlement"
+                        style="height: 36px;"
+                      ></b-form-input>
+                      <b-input-group-append>
+                        <b-button :disabled="!filter" @click="filter = ''" class="rounded-0 btn-mega-2" style="height: 36px;"><b-icon icon="search" class="form-icon"></b-icon></b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col cols="4" class="text-right"><b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button></b-col>
               </b-row>
 
               <!-- Table Dashboard -->
               <b-row class="mt-3">      
-                  <b-table responsive :items="dataForm" class="text-center" hover :fields="fieldsTableDashboard" >
+                  <b-table responsive :items="dataForm" class="text-center" hover :fields="fieldsTableDashboard" :filter="filter">
                     <template v-slot:cell(no)="data">
                       {{ data.index + 1 }}
                     </template>
@@ -54,6 +71,7 @@ export default {
   },
   data(){
     return {
+      filter: null,
       sortDesc: false,
       user:'',
       dataForm:[],
@@ -90,7 +108,6 @@ export default {
     },
 
     loadDataDashboard(){
-      console.log(this.nmrDataForm);
       
       let token = window.localStorage.getItem('token')
       let id = window.localStorage.getItem('id')
