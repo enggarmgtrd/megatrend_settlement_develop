@@ -17,7 +17,7 @@
               <b-row class="mt-3">      
                   <b-table responsive :items="dataForm" class="text-center" hover :fields="fieldsTableDashboard" >
                     <template v-slot:cell(no)="data">
-                      {{data.item.no}}
+                      {{ data.index + 1 }}
                     </template>
                     <template v-slot:cell(fleet)="data">
                       {{ data.item.fleet.no}}
@@ -56,10 +56,9 @@ export default {
     return {
       sortDesc: false,
       user:'',
-      nmrDataForm: 1,
       dataForm:[],
-      fieldsTableDashboardAdmin: [{key: 'no', sortable: true},'date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost', 'action'],
-      fieldsTableDashboardSupir: [{key: 'no', sortable: true},'date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost'],
+      fieldsTableDashboardAdmin: ['no',{key: 'date', sortable: true},'fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost', 'action'],
+      fieldsTableDashboardSupir: ['no',{key: 'date', sortable: true},'date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost'],
     }
   },
 
@@ -72,7 +71,7 @@ export default {
   computed: {
     fieldsTableDashboard(){
       let isAdmin = window.localStorage.getItem('admin')
-      if(isAdmin == 'false'){
+      if(isAdmin == 'true'){
         return this.fieldsTableDashboardAdmin
       }else{
         return this.fieldsTableDashboardSupir
@@ -91,6 +90,8 @@ export default {
     },
 
     loadDataDashboard(){
+      console.log(this.nmrDataForm);
+      
       let token = window.localStorage.getItem('token')
       let id = window.localStorage.getItem('id')
       let config = {
@@ -100,9 +101,6 @@ export default {
       }
       axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
       this.dataForm = res.data.fleet_trips.reverse()
-      this.dataForm.forEach((element)=>{
-        element.no = this.nmrDataForm++
-      })
       console.log(this.dataForm)
       }).catch ((err) => {
       console.log(err);

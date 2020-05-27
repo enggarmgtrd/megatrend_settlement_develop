@@ -96,11 +96,20 @@ export default {
         
       }
     }
-    
-  }
-  .img-box{
+    .img-box{
     width: 24px;
     height: 24px;
   }
+  }
+  
+  @media only screen and (max-width: 993px) {
+  .profile .nav-link{
+    padding-bottom: 0px !important;
+  }
+  .profile:nth-child(2) .nav-link{
+      padding-top: 0px !important;
+      margin-bottom: 20px;
+  }
+}
 }
 </style>
