@@ -108,6 +108,9 @@
                     <template v-slot:cell(index)="data">
                       {{ data.index + 1 }}
                     </template>
+                    <template v-slot:cell(fleet_trip_cost_type_id)="data">
+                      {{ data.item.fleet_trip_cost_type_id.name }}
+                    </template>
                     <template v-slot:cell(amount)="data">
                       {{ data.item.amount | currency}}
                     </template>
@@ -301,7 +304,7 @@ export default {
           {
             'label': 'Jenis Biaya ',
             'type' : 'select',
-            'model': '',
+            'model': {},
             'options': []
           },
           {
@@ -366,7 +369,10 @@ export default {
           })
           this.formJumlahBiaya[1].options.forEach((element) => {
             element.text = element.name,
-            element.value = element.id
+            element.value = {
+              id: element.id,
+              name: element.name
+            }
           })
         // console.log(res)
         }).catch ((err) => {
@@ -384,12 +390,18 @@ export default {
           }
           axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
           console.log(res.data)
+           res.data.costs.forEach((element)=>{
+            element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
+              return option.id == element.fleet_trip_cost_type_id
+            })
+          })
           this.forms[0].model = res.data.fleet_id,
           this.forms[1].model = res.data.helper.id,
           this.forms[2].model = res.data.mileage,
           this.forms[3].model = res.data.emoney_balance
           this.forms[4].model = res.data.pocket_money
           this.tableBiaya = res.data.costs
+         
           }).catch ((err) => {
             console.log(err);
           })  
@@ -437,6 +449,9 @@ export default {
           }
           
           else{
+            this.tableBiaya.forEach((element) => {
+                element.fleet_trip_cost_type_id = element.fleet_trip_cost_type_id.id
+              })
             // Simpan data ke database
             this.dataForm = {
               fleet_id : this.forms[0].model,
@@ -445,7 +460,7 @@ export default {
               mileage : this.forms[2].model,
               pocket_money : this.forms[4].model,
               emoney_balance : this.forms[3].model,
-              costs: this.tableBiaya      
+              costs: this.tableBiaya
             }            
             if (isNaN(this.idEditForm)){
             let token = window.localStorage.getItem('token')
