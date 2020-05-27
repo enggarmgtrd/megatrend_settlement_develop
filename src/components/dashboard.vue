@@ -111,12 +111,14 @@ export default {
       
       let token = window.localStorage.getItem('token')
       let id = window.localStorage.getItem('id')
+      console.log(id)
       let config = {
         headers: {
           'Authorization': 'Bearer ' + token
         }
       }
       axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
+      console.log(res)
       this.dataForm = res.data.fleet_trips.reverse()
       console.log(this.dataForm)
       }).catch ((err) => {
