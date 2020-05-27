@@ -72,7 +72,7 @@ export default {
   computed: {
     fieldsTableDashboard(){
       let isAdmin = window.localStorage.getItem('admin')
-      if(isAdmin == 'true'){
+      if(isAdmin == 'false'){
         return this.fieldsTableDashboardAdmin
       }else{
         return this.fieldsTableDashboardSupir

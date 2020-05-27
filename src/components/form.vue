@@ -104,15 +104,26 @@
 
               <b-row class="mt-3">
                 <b-col class="table-responsive">
-                  <b-table responsive :items="tableBiaya" class="text-center" hover :fields="fieldsTableBiaya">
-                    <template v-slot:cell(index)="data">
-                      {{ data.index + 1 }}
-                    </template>
-                    <template v-slot:cell(actions)="data">
-                      <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editJumlahBiaya(data.index)"><b-icon-pencil></b-icon-pencil></b-button>
-                      <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteJumlahBiaya(data.index)"><b-icon-trash></b-icon-trash></b-button>
-                    </template>   
-                  </b-table>
+                  <table class="text-center table table-striped table-hovered table-bordered">
+                    <thead>
+                      <tr>
+                        <th v-for="ftb in fieldsTableBiaya" :key="ftb.index">{{ftb}}</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="!tableBiaya.length">      
+                       <td colspan="4" class=" text-center"><h5>No Data</h5></td>                    
+                    </tbody>
+                    <tbody>
+                      <tr v-for="tb in tableBiaya" :key="tb.index">
+                        <td>{{tb.fleet_trip_cost_type_id}}</td>
+                        <td>{{tb.amount | currency}}</td>
+                        <td>{{tb.description}}</td>
+                        <td>
+                          <b-button class="btn-sm btn-mega-2" @click="deleteJumlahBiaya(tb.index)"><b-icon-trash-fill></b-icon-trash-fill></b-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </b-col>
               </b-row>
 
@@ -230,8 +241,6 @@ export default {
         id: 0,
         idEditForm: parseInt(this.$route.params.dataForm_id, 10),
         tableBiayaError: true,
-        tableBiayaId : 0,
-        updateTableBiaya: null,
         forms: [
           {
             'label': 'Mobil ',
@@ -308,9 +317,13 @@ export default {
           }
         ],
         dataForm:[],
-        fieldsTableBiaya: ['fleet_trip_cost_type_id', 'amount', 'description', 'actions'],
+        fieldsTableBiaya: ['Jenis Biaya', 'Jumlah Biaya', 'Keterangan', 'Action'],
         tableBiaya: []
       }
+    },
+
+    created(){
+       
     },
 
     mounted() {
@@ -320,21 +333,33 @@ export default {
     },
 
     computed: {
-
+/* ------------------------- Menampilkan Total Biaya pada table ------------------------ */
       totalBiaya(){
         return this.tableBiaya.reduce(function(total, item){
           return total + item.amount; 
         },0);
       },
-
+/* ----------------------- End menampilkan Total Biaya pada table---------------------- */     
     },
 
 
     methods: {
+
+/* ------------ Menangkap user id dan merubahnya menjadi integer ------------ */
       userIdData(){
         this.id = parseInt(window.localStorage.getItem('id'),10);
       },
+/* ------------ End Menangkap user id dan merubahnya menjadi integer ------------ */
+ 
+      showModalTambahJumlahBiaya() {
+        this.$refs['tambahJumlahBiaya'].show()
+        this.formJumlahBiaya[0].model = null
+        this.formJumlahBiaya[1].model = ''
+        this.formJumlahBiaya[2].model = ''
+      },
       
+
+/* ------------------ Mengambil data Json untuk form select ----------------- */
       loadData(){
         let token = window.localStorage.getItem('token')
         let id = window.localStorage.getItem('id')
@@ -370,27 +395,30 @@ export default {
           console.log(err);
         })  
       },
+/* ------------------ End Mengambil data Json untuk form select ----------------- */
 
-      loadDataEdit(){
-        let token = window.localStorage.getItem('token')
-        let config = {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }
-        axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
-        console.log(res.data)
-        this.forms[0].model = res.data.fleet_id,
-        this.forms[1].model = res.data.helper.id,
-        this.forms[2].model = res.data.mileage,
-        this.forms[3].model = res.data.emoney_balance
-        this.forms[4].model = res.data.pocket_money
-        this.tableBiaya = res.data.costs
-        }).catch ((err) => {
-          console.log(err);
-        })  
-      },
+loadDataEdit(){
+  let token = window.localStorage.getItem('token')
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
+  console.log(res)
+  this.forms[0].model = res.data.fleet.id,
+  this.forms[1].model = res.data.helper.id,
+  this.forms[2].model = res.data.mileage,
+  this.forms[3].model = res.data.emoney_balance
+  this.forms[4].model = res.data.pocket_money
+  this.tableBiaya = res.data.costs
+  }).catch ((err) => {
+    console.log(err);
+  })  
+},
+      
 
+/* --------------------------- Menyimpan Data Form -------------------------- */
       addForm(){
         
         this.$refs.form.validate().then(success => {
@@ -440,7 +468,9 @@ export default {
               pocket_money : this.forms[4].model,
               emoney_balance : this.forms[3].model,
               costs: this.tableBiaya      
-            }            
+            }
+
+            
             if (isNaN(this.idEditForm)){
             let token = window.localStorage.getItem('token')
             let config = {
@@ -460,7 +490,7 @@ export default {
             })
 
             // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-            this.$router.push('/dashboard')
+            this.$router.push('dashboard')
             })
             console.log(this.dataForm);          
           
@@ -485,58 +515,37 @@ export default {
                 // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
                 return this.$router.push('/dashboard')
                 })
-            }           
+            }
+          
+            
           }
         });
-      },
 
-      showModalTambahJumlahBiaya() {
-        this.$refs['tambahJumlahBiaya'].show()
-        this.formJumlahBiaya[0].model = null
-        this.formJumlahBiaya[1].model = ''
-        this.formJumlahBiaya[2].model = ''
       },
+/* --------------------------- End Menyimpan Data Form -------------------------- */
 
+
+        /* --------------------------- Meengupdate Data Form -------------------------- */
+             
+        /* --------------------------- End Menyimpan Data Form -------------------------- */
+ 
+/* --------------------------- Menambah Data Biaya -------------------------- */
       tambahJumlahBiaya(){
-        if(this.updateTableBiaya == null){
-          this.tableBiaya.push({
+        this.tableBiaya.push({
           fleet_trip_cost_type_id: this.formJumlahBiaya[1].model,
           amount: this.formJumlahBiaya[0].model,
           description: this.formJumlahBiaya[2].model
-         })
-         this.tableBiayaId++
-         console.log(this.tableBiaya)
-        }else{
-          this.tableBiaya.splice(this.updateTableBiaya,1, 
-          {
-            amount:this.formJumlahBiaya[0].model,
-            fleet_trip_cost_type_id: this.formJumlahBiaya[1].model,
-            description: this.formJumlahBiaya[2].model
-          })
-          console.log(this.tableBiaya)
-          this.updateTableBiaya = null
-        }
-        
+        })
+        console.log(this.tableBiaya)
+        this.tableBiayaError = true
 
         return this.$refs['tambahJumlahBiaya'].hide()
 
       },       
-
+/* --------------------------- End Menambah Data Biaya -------------------------- */
 
       deleteJumlahBiaya(index){
-        console.log(index)
         this.tableBiaya.splice(index,1)
-      },
-
-      editJumlahBiaya(index){
-        this.updateTableBiaya = index
-        console.log(index)
-        console.log(this.updateTableBiaya)
-        this.$refs['tambahJumlahBiaya'].show()
-        
-        this.formJumlahBiaya[0].model = this.tableBiaya[index].amount
-        this.formJumlahBiaya[1].model = this.tableBiaya[index].fleet_trip_cost_type_id
-        this.formJumlahBiaya[2].model = this.tableBiaya[index].description
       },
 
       back(){
