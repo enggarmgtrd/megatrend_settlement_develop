@@ -2,14 +2,24 @@
 <template>
   <div>
     <navbar></navbar>
-
+    <div class="vld-parent">
+        <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="fullPage"
+        :width=200
+        :height=200
+        color="#2bb898"
+        backgroundColor="#fff"
+        :opacity= 0.5>
+        </loading>
+    </div>
     <b-container>
       <b-row class="justify-content-md-center mt-3">
         <b-col cols="12" > 
            <b-card>
             <b-card class="mt-3">
               <b-row align-h="between">
-                <b-col cols="8" class="text-right">
+                <b-col cols="8" class="text-right pl-0">
                   <b-form-group
                     class="mb-0"
                   >
@@ -27,25 +37,40 @@
                     </b-input-group>
                   </b-form-group>
                 </b-col>
-                <b-col cols="4" class="text-right"><b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button></b-col>
+                <b-col cols="4" class="text-right pr-0"><b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button></b-col>
               </b-row>
 
               <!-- Table Dashboard -->
               <b-row class="mt-3">      
-                  <b-table responsive :items="dataForm" class="text-center" hover :fields="fieldsTableDashboard" :filter="filter">
+                  <b-table responsive :items="dataForm" class="text-center table-bordered" hover :fields="fieldsTableDashboard" :filter="filter">
                     <template v-slot:cell(no)="data">
                       {{ data.index + 1 }}
                     </template>
-                    <template v-slot:cell(fleet)="data">
+                    <template v-slot:cell(no._mobil)="data">
                       {{ data.item.fleet.no}}
+                    </template>
+                    <template v-slot:cell(tanggal)="data">
+                      {{ data.item.date}}
                     </template>
                     <template v-slot:cell(helper)="data">
                       {{ data.item.helper.name}}
                     </template>
-                    <template v-slot:cell(costs)="data">
-                      {{ data.item.costs[0].amount}}
+                    <template v-slot:cell(kilometer_akhir)="data">
+                      {{ mileAgeFormat(data.item.mileage)}}
                     </template>
-                    <template v-slot:cell(action)="data">
+                    <template v-slot:cell(saldo_e-toll)="data">
+                      {{ data.item.emoney_balance | currency}}
+                    </template>
+                    <template v-slot:cell(uang_jalan)="data">
+                      {{ data.item.pocket_money | currency}}
+                    </template>
+                    <template v-slot:cell(total_biaya)="data">
+                      {{ data.item.totalCost | currency}}
+                    </template>
+                    <template v-slot:cell(sisa_uang_jalan)="data">
+                      {{data.item.pocket_money - data.item.totalCost | currency}}
+                    </template>
+                    <template v-slot:cell(actions)="data">
                       <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataSettlement(data.item.id)"><b-icon-pencil></b-icon-pencil></b-button>
                       <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
                     </template>                  
@@ -65,18 +90,24 @@
 import axios from 'axios'
 import Navbar from './navbar'
 import Swal from 'sweetalert2'
+import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
   components:{
-    Navbar
+    Navbar,
+    Loading
   },
   data(){
     return {
+      isLoading: false,
+      fullPage: true,
       filter: null,
       sortDesc: false,
       user:'',
       dataForm:[],
-      fieldsTableDashboardAdmin: ['no',{key: 'date', sortable: true},'fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost', 'action'],
-      fieldsTableDashboardSupir: ['no',{key: 'date', sortable: true},'date','fleet', 'helper', 'mileage', 'emoney_balance','pocket_money', 'costs', 'totalCost'],
+      fieldsTableDashboardAdmin: ['no',{key: 'tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan', 'actions'],
+      fieldsTableDashboardSupir: ['no',{key: 'tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
     }
   },
 
@@ -94,7 +125,8 @@ export default {
       }else{
         return this.fieldsTableDashboardSupir
       }
-    }  
+    },
+    
   },
 
   methods: {
@@ -108,7 +140,6 @@ export default {
     },
 
     loadDataDashboard(){
-      
       let token = window.localStorage.getItem('token')
       let id = window.localStorage.getItem('id')
       console.log(id)

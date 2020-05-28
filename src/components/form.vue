@@ -1,7 +1,16 @@
 <template>
   <div>
     <navbar></navbar>
-
+    <div class="vld-parent">
+        <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="fullPage"
+        :width=200
+        :height=200
+        color="#2bb898"
+        backgroundColor="#fff"
+        :opacity= 0.5></loading>
+    </div>
     <b-container>
       <b-row class="justify-content-md-center">
         <b-col lg="8" sm="12">
@@ -104,15 +113,18 @@
 
               <b-row class="mt-3">
                 <b-col class="table-responsive">
-                  <b-table responsive :items="tableBiaya" class="text-center" hover :fields="fieldsTableBiaya">
+                  <b-table responsive :items="tableBiaya" class="text-center table-bordered" hover :fields="fieldsTableBiaya">
                     <template v-slot:cell(no)="data">
                       {{ data.index + 1 }}
                     </template>
-                    <template v-slot:cell(fleet_trip_cost_type_id)="data">
+                    <template v-slot:cell(jenis_biaya)="data">
                       {{ data.item.fleet_trip_cost_type_id.name }}
                     </template>
-                    <template v-slot:cell(amount)="data">
+                    <template v-slot:cell(jumlah_biaya)="data">
                       {{ data.item.amount | currency}}
+                    </template>
+                    <template v-slot:cell(keterangan)="data">
+                      {{ data.item.description }}
                     </template>
                     <template v-slot:cell(actions)="data">
                       <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editJumlahBiaya(data.index)"><b-icon-pencil></b-icon-pencil></b-button>
@@ -226,10 +238,14 @@ import axios from 'axios'
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2'
 import Navbar from './navbar'
+import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   components:{
-    Navbar
+    Navbar,
+    Loading
   },
     data(){
       return {
@@ -238,6 +254,8 @@ export default {
         tableBiayaError: true,
         tableBiayaId : 0,
         updateTableBiaya: null,
+        isLoading: false,
+        fullPage: true,
         forms: [
           {
             'label': 'Mobil ',
@@ -314,7 +332,7 @@ export default {
           }
         ],
         dataForm:[],
-        fieldsTableBiaya: ['no','fleet_trip_cost_type_id', 'amount', 'description', 'actions'],
+        fieldsTableBiaya: ['no','jenis_biaya', 'jumlah_biaya', 'keterangan', 'actions'],
         tableBiaya: []
       }
     },
@@ -341,6 +359,7 @@ export default {
       },
       
       loadData(){
+        this.isLoading = true
         let token = window.localStorage.getItem('token')
         let id = window.localStorage.getItem('id')
         let config = {
@@ -373,13 +392,16 @@ export default {
               name: element.name
             }
           })
+          setTimeout(() => {
+                  this.isLoading = false
+          },1000)
           this.loadDataEdit()
         // console.log(res)
         }).catch ((err) => {
           console.log(err);
         })  
       },
-
+  
       loadDataEdit(){
         if(isNaN(this.idEditForm))return
           let token = window.localStorage.getItem('token')
@@ -450,6 +472,7 @@ export default {
           }
           
           else{
+            this.isLoading = true
             this.tableBiaya.forEach((element) => {
                 element.fleet_trip_cost_type_id = element.fleet_trip_cost_type_id.id
               })
@@ -472,7 +495,9 @@ export default {
             }
             axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
               console.log(res)
-
+              setTimeout(() => {
+                  this.isLoading = false
+              },1000)
               // Tampilkan Alert Jika data Berhasil Disimpan
               Swal.fire({
               icon: 'success',
@@ -488,6 +513,7 @@ export default {
           
             }
             else{
+            this.isLoading = true
             let token = window.localStorage.getItem('token')
             let config = {
               headers: {
@@ -496,6 +522,9 @@ export default {
             }
             axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, this.dataForm, config).then(res=>{
                 console.log(res)
+                setTimeout(() => {
+                  this.isLoading = false
+                },1000)
                 // Tampilkan Alert Jika data Berhasil Disimpan
                 Swal.fire({
                   icon: 'success',
@@ -562,6 +591,10 @@ export default {
       },
 
       back(){
+        this.isLoading = true
+        setTimeout(() => {
+              this.isLoading = false
+        },1000)
         this.$router.push('/dashboard')
       },
       

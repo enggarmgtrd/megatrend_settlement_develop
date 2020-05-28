@@ -1,5 +1,17 @@
 <template>
-  <b-card class="login-form ">
+  <div>
+    <div class="vld-parent">
+        <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="fullPage"
+        :width=200
+        :height=200
+        color="#2bb898"
+        backgroundColor="#fff"
+        :opacity= 0.5>
+        </loading>
+    </div>
+    <b-card class="login-form ">
     <div>
       <b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="login-logo"></b-img>
     </div>
@@ -55,19 +67,29 @@
       </form>
     </ValidationObserver>
   </b-card>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2'
+import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 export default {
+  components:{
+    Loading
+  },
   data() {
       return {
         form: {
           nip: '',
           password: '',      
-        }
+        },
+        isLoading: false,
+        fullPage: true,
         
       }
     },
@@ -83,6 +105,7 @@ export default {
       },
       
       login(){
+        this.isLoading = true
         axios.post('https://fleet.megatrend.xyz/api/login', this.form).then(res=>{
         console.log(res.data);
         if(res.data.nip == this.form.nip){
@@ -90,7 +113,7 @@ export default {
           window.localStorage.setItem('id', res.data.id);
           window.localStorage.setItem('name', res.data.name);
           window.localStorage.setItem('admin', res.data.is_admin);
-
+          this.loading = false
           Swal.fire({
           icon: 'success',
           title: 'Selamat Bekerja ' + res.data.name,

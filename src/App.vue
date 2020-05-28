@@ -8,13 +8,8 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-
-
-
 export default {
-  name: 'App',
-  components: {
-  }
+  name: 'App'
 }
 </script>
 
@@ -202,4 +197,9 @@ export default {
       }
     }
   }
+
+  .table-bordered{
+    border: 0px solid #dee2e6 !important;
+  }
+  
 </style>
