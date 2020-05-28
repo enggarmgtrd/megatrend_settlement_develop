@@ -319,10 +319,9 @@ export default {
       }
     },
 
-    mounted() {
+    created() {
       this.loadData(),
-      this.userIdData(),
-      this.loadDataEdit()
+      this.userIdData()
     },
 
     computed: {
@@ -374,6 +373,7 @@ export default {
               name: element.name
             }
           })
+          this.loadDataEdit()
         // console.log(res)
         }).catch ((err) => {
           console.log(err);
@@ -381,7 +381,7 @@ export default {
       },
 
       loadDataEdit(){
-        if(!isNaN(this.idEditForm)){
+        if(isNaN(this.idEditForm))return
           let token = window.localStorage.getItem('token')
           let config = {
             headers: {
@@ -390,23 +390,24 @@ export default {
           }
           axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
           console.log(res.data)
-           res.data.costs.forEach((element)=>{
-            element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
-              return option.id == element.fleet_trip_cost_type_id
-            })
-          })
+           
           this.forms[0].model = res.data.fleet_id,
           this.forms[1].model = res.data.helper.id,
           this.forms[2].model = res.data.mileage,
           this.forms[3].model = res.data.emoney_balance
           this.forms[4].model = res.data.pocket_money
+
+          res.data.costs.forEach((element)=>{
+            element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
+              return option.id == element.fleet_trip_cost_type_id
+            })
+          })
+
           this.tableBiaya = res.data.costs
          
           }).catch ((err) => {
             console.log(err);
           })  
-        }
-        return
       },
 
       addForm(){
