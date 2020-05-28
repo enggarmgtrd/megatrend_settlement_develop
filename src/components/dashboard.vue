@@ -13,13 +13,13 @@
         :opacity= 0.5>
         </loading>
     </div>
-    <b-container>
+    <b-container fluid>
       <b-row class="justify-content-md-center mt-3">
         <b-col cols="12" > 
            <b-card>
-            <b-card class="mt-3">
+            <b-card class="mt-3 dashboard">
               <b-row align-h="between">
-                <b-col cols="8" class="text-right pl-0">
+                <b-col md="12" lg="4" class="text-right pl-lg-0 pr-lg-3 px-0">
                   <b-form-group
                     class="mb-0"
                   >
@@ -32,17 +32,58 @@
                         style="height: 36px;"
                       ></b-form-input>
                       <b-input-group-append>
-                        <b-button :disabled="!filter" @click="filter = ''" class="rounded-0 btn-mega-2" style="height: 36px;"><b-icon icon="search" class="form-icon"></b-icon></b-button>
+                        <b-button :disabled="!filter" @click="filter = ''" class="rounded-0 btn-mega" style="height: 36px;"><b-icon icon="search" class="form-icon"></b-icon></b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                 </b-col>
-                <b-col cols="4" class="text-right pr-0"><b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button></b-col>
+
+                <b-col cols="6" lg="2" class="px-lg-3 px-0 pr-2 mt-3 mt-lg-0">
+                  <b-form-group
+                  label="Show"
+                  label-cols-sm="3"
+                  label-cols-lg="5"
+                  label-cols-xl="4"
+                  >
+                    <b-form-select
+                      v-model="perPage"
+                      id="perPageSelect"
+                      size="md"
+                      :options="pageOptions"
+                    ></b-form-select>
+                  </b-form-group>
+                </b-col>
+
+                <b-col cols="6" lg="3" class="px-lg-3 px-0 pl-2 mt-3 mt-lg-0">
+                  <b-pagination
+                    v-model="currentPage"
+                    :total-rows="totalRows"
+                    :per-page="perPage"
+                    align="fill"
+                    size="md"
+                    class="my-0"
+                  ></b-pagination>
+                </b-col>
+                
+                <b-col md="12" lg="3" class="text-right pr-lg-0 pl-lg-3 px-0 mt-lg-0">
+                  <b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button>
+                </b-col>
+                
               </b-row>
 
               <!-- Table Dashboard -->
               <b-row class="mt-3">      
-                  <b-table responsive :items="dataForm" class="text-center table-bordered" hover :fields="fieldsTableDashboard" :filter="filter">
+                <div class="table-responsive mega-table-dashboard">
+                  <b-table 
+                  stacked="md"
+                  :items="dataForm" 
+                  class=" text-center table-bordered " 
+                  hover 
+                  :fields="fieldsTableDashboard" 
+                  :filter="filter"
+                  :per-page="perPage"
+                  :current-page="currentPage"
+                  >
                     <template v-slot:cell(no)="data">
                       {{ data.index + 1 }}
                     </template>
@@ -75,12 +116,18 @@
                       <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
                     </template>                  
                                       
-                  </b-table>               
+                  </b-table>        
+                  </div>       
               </b-row>             
             </b-card>
             <!-- END Table Dashboard -->            
            </b-card>
         </b-col>        
+      </b-row>
+      <b-row>
+        <div class="mx-auto mt-2 text-light">
+          <span>Megatrend Form Settlement App ver 1.0</span>
+        </div>
       </b-row>
     </b-container>
   </div>
@@ -108,6 +155,10 @@ export default {
       dataForm:[],
       fieldsTableDashboardAdmin: ['no',{key: 'tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan', 'actions'],
       fieldsTableDashboardSupir: ['no',{key: 'tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
+      perPage: 5,
+      pageOptions: [5, 10, 15],
+      currentPage: 1,
+      totalRows: 6,
     }
   },
 
@@ -199,7 +250,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 .navbar{
   padding-top: 0 !important;
@@ -207,6 +258,11 @@ export default {
   background: #fff !important;
 }
 
+.dashboard{
+  min-height: 75vh;
+  max-height: 75vh;
+  overflow-y: auto;
+}
 .form-logo{
   width: 10rem;
 }
@@ -216,5 +272,32 @@ export default {
   font-weight: 800;
   cursor: pointer;
 }
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #2bb898;
+    border-color: #2bb898;
+    
+}
+.page-item .page-link{
+  outline: none;
+    box-shadow: none !important;
+}
+@media (min-width: 767.98px) and (max-width: 1280px) {
+  .mega-table-dashboard table{
+    width: 1200px !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .mega-table-dashboard table tr{
+    margin-top: 20px;
+    -webkit-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+    -moz-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+    box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29); 
+    }
+}
+
 
 </style>

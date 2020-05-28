@@ -94,6 +94,7 @@ export default {
       }
     },
     created(){
+      
       this.checkUserLogin()
     },
     methods: {
@@ -113,15 +114,16 @@ export default {
           window.localStorage.setItem('id', res.data.id);
           window.localStorage.setItem('name', res.data.name);
           window.localStorage.setItem('admin', res.data.is_admin);
-          this.loading = false
+          this.islLoading = false
           Swal.fire({
           icon: 'success',
           title: 'Selamat Bekerja ' + res.data.name,
           showConfirmButton: false,
           timer: 1500
         })
-          this.$router.push('dashboard').catch(err => {console.log(err)});
+          this.$router.push('/dashboard').catch(err => {console.log(err)});
         } else{
+          this.isLoading = false
           Swal.fire(
           'Login Gagal !',
           'Username atau password yang kamu masukkan salah !',

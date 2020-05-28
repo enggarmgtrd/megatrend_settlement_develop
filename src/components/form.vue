@@ -112,8 +112,8 @@
               </b-row>
 
               <b-row class="mt-3">
-                <b-col class="table-responsive">
-                  <b-table responsive :items="tableBiaya" class="text-center table-bordered" hover :fields="fieldsTableBiaya">
+                <b-col class="table-responsive mega-table-biaya">
+                  <b-table :items="tableBiaya" class="text-center table-bordered" hover :fields="fieldsTableBiaya" stacked="md">
                     <template v-slot:cell(no)="data">
                       {{ data.index + 1 }}
                     </template>
@@ -241,7 +241,6 @@ import Navbar from './navbar'
 import Loading from 'vue-loading-overlay';
     // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
-
 export default {
   components:{
     Navbar,
@@ -280,7 +279,7 @@ export default {
             'model': null
           },
           {
-            'label': 'Total Uang Jalan ',
+            'label': 'Uang Jalan ',
             'type': 'number',
             'model': null
           },
@@ -312,7 +311,6 @@ export default {
             'type': 'table'
           }
         ],
-
         formJumlahBiaya:[
           {
             'label': 'Jumlah Biaya',
@@ -336,23 +334,17 @@ export default {
         tableBiaya: []
       }
     },
-
     created() {
       this.loadData(),
       this.userIdData()
     },
-
     computed: {
-
       totalBiaya(){
         return this.tableBiaya.reduce(function(total, item){
           return total + item.amount; 
         },0);
       },
-
     },
-
-
     methods: {
       userIdData(){
         this.id = parseInt(window.localStorage.getItem('id'),10);
@@ -418,20 +410,17 @@ export default {
           this.forms[2].model = res.data.mileage,
           this.forms[3].model = res.data.emoney_balance
           this.forms[4].model = res.data.pocket_money
-
           res.data.costs.forEach((element)=>{
             element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
               return option.id == element.fleet_trip_cost_type_id
             })
           })
-
           this.tableBiaya = res.data.costs
          
           }).catch ((err) => {
             console.log(err);
           })  
       },
-
       addForm(){
         
         this.$refs.form.validate().then(success => {
@@ -446,7 +435,6 @@ export default {
             })         
             return;
           }
-
           // Jika Form Kosong TAPI Table Biaya ada isinya, GAGALKAN
           else if(!success && this.tableBiaya.length > 0){
             this.tableBiayaError =true
@@ -458,7 +446,6 @@ export default {
             })
             return;
           }
-
           // Jika Form ada isinya TAPI Table Biaya Kosong, GAGALKAN
           else if(success && this.tableBiaya.length == 0){
             this.tableBiayaError =false
@@ -468,6 +455,16 @@ export default {
               showConfirmButton: false,
               timer: 1500
             })
+            return;
+          }
+
+          // Jika Total Biaya melebihi uang jalan, GAGALKAN
+          else if(this.forms[4].model < this.totalBiaya){
+            Swal.fire(
+             'Data gagal disimpan',
+             'Total Biaya tidak boleh melebihi Uang Jalan',
+             'error'
+            )
             return;
           }
           
@@ -487,67 +484,64 @@ export default {
               costs: this.tableBiaya
             }            
             if (isNaN(this.idEditForm)){
-            let token = window.localStorage.getItem('token')
-            let config = {
-              headers: {
-                'Authorization': 'Bearer ' + token
-              }
-            }
-            axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
-              console.log(res)
-              setTimeout(() => {
-                  this.isLoading = false
-              },1000)
-              // Tampilkan Alert Jika data Berhasil Disimpan
-              Swal.fire({
-              icon: 'success',
-              title: 'Data berhasil disimpan',
-              showConfirmButton: false,
-              timer: 1500
-            })
-
-            // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-            this.$router.push('/dashboard')
-            })
-            console.log(this.dataForm);          
-          
-            }
-            else{
-            this.isLoading = true
-            let token = window.localStorage.getItem('token')
-            let config = {
-              headers: {
-                'Authorization': 'Bearer ' + token
-              }
-            }
-            axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, this.dataForm, config).then(res=>{
-                console.log(res)
-                setTimeout(() => {
-                  this.isLoading = false
-                },1000)
-                // Tampilkan Alert Jika data Berhasil Disimpan
-                Swal.fire({
+                let token = window.localStorage.getItem('token')
+                let config = {
+                  headers: {
+                    'Authorization': 'Bearer ' + token
+                  }
+                }
+                axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
+                  console.log(res)
+                  setTimeout(() => {
+                      this.isLoading = false
+                  },1000)
+                  // Tampilkan Alert Jika data Berhasil Disimpan
+                  Swal.fire({
                   icon: 'success',
                   title: 'Data berhasil disimpan',
                   showConfirmButton: false,
                   timer: 1500
                 })
-        
                 // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-                return this.$router.push('/dashboard')
+                this.$router.push('/dashboard')
                 })
+                console.log(this.dataForm);          
+              
+            }
+            else{
+                this.isLoading = true
+                let token = window.localStorage.getItem('token')
+                let config = {
+                  headers: {
+                    'Authorization': 'Bearer ' + token
+                  }
+                }
+                axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, this.dataForm, config).then(res=>{
+                    console.log(res)
+                    setTimeout(() => {
+                      this.isLoading = false
+                    },1000)
+                    // Tampilkan Alert Jika data Berhasil Disimpan
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Data berhasil disimpan',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+            
+                    // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
+                    return this.$router.push('/dashboard')
+                  })
             }           
           }
         });
       },
-
       showModalTambahJumlahBiaya() {
         this.$refs['tambahJumlahBiaya'].show()
         this.formJumlahBiaya[0].model = null
         this.formJumlahBiaya[1].model = ''
         this.formJumlahBiaya[2].model = ''
       },
-
       tambahJumlahBiaya(){
         if(this.updateTableBiaya == null){
           this.tableBiaya.push({
@@ -568,28 +562,28 @@ export default {
           this.updateTableBiaya = null
         }
         
-
         return this.$refs['tambahJumlahBiaya'].hide()
-
       },       
-
-
       deleteJumlahBiaya(index){
         console.log(index)
         this.tableBiaya.splice(index,1)
       },
-
       editJumlahBiaya(index){
         this.updateTableBiaya = index
         console.log(index)
         console.log(this.updateTableBiaya)
         this.$refs['tambahJumlahBiaya'].show()
-        
-        this.formJumlahBiaya[0].model = this.tableBiaya[index].amount
-        this.formJumlahBiaya[1].model = this.tableBiaya[index].fleet_trip_cost_type_id.value
-        this.formJumlahBiaya[2].model = this.tableBiaya[index].description
-      },
 
+        this.formJumlahBiaya[0].model = this.tableBiaya[index].amount
+        this.formJumlahBiaya[2].model = this.tableBiaya[index].description
+        if(isNaN(this.idEditForm)){
+          this.formJumlahBiaya[1].model = this.tableBiaya[index].fleet_trip_cost_type_id
+        }
+        else{
+          this.formJumlahBiaya[1].model = this.tableBiaya[index].fleet_trip_cost_type_id.value
+        }
+        
+      },
       back(){
         this.isLoading = true
         setTimeout(() => {
@@ -603,20 +597,17 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
 .navbar{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   background: #fff !important;
 }
-
 .delete-row{
   color:red;
   font-weight: 800;
   cursor: pointer;
 }
-
 .control{
     width: 100%
     span{
@@ -642,7 +633,6 @@ export default {
         border: 1px #045929 solid
       }
     }
-
     select{
       padding: 5px 10px
     }
@@ -664,4 +654,13 @@ export default {
       }
     }
   }
+  @media (max-width: 767.98px) {
+  .mega-table-biaya tr{
+    margin-top: 20px;
+    -webkit-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+    -moz-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+    box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29); 
+    }
+}
+
 </style>

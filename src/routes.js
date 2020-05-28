@@ -36,6 +36,10 @@ const routes = [
       name: 'profile', 
       component: Profile
     },
+    {
+      path: '*',
+      component: Login
+    }
 ];
 
 export default routes;

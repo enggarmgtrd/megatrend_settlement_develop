@@ -1,5 +1,16 @@
 <template>
     <div>
+      <div class="vld-parent">
+        <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="fullPage"
+        :width=200
+        :height=200
+        color="#2bb898"
+        backgroundColor="#fff"
+        :opacity= 0.5>
+        </loading>
+    </div>
     <b-navbar toggleable="lg" type="light" variant="light" class="fixed-top border-bottom">
         <b-navbar-brand href="#">
             <router-link to="/dashboard"><b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="logo"></b-img> </router-link>
@@ -30,13 +41,21 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
+  components:{
+    Loading
+  },
     name: 'navbar',
     data(){
         return{
             user: '',
             noHp: '0813-2554-2555',
-            status: 'Supir'
+            status: 'Supir',
+            isLoading: false,
+            fullPage: true,
         }
     },
     created(){
@@ -45,13 +64,19 @@ export default {
     },
     methods:{
       checkUserNotLogin(){
-        if( !window.localStorage.getItem('token')){
+        if( !window.localStorage.getItem('token') && !window.localStorage.getItem('id')){
           this.$router.push('login'); 
         }
       },
       logout(){ 
+        this.isLoading = true
         localStorage.clear();
-        this.$router.push('/login');  
+        setTimeout(() => {
+            this.isLoading = false
+            this.$router.push('/login'); 
+        },1000)
+         
+        
       },
       userData(){
         this.user = window.localStorage.getItem('name');
@@ -102,7 +127,7 @@ export default {
   }
   }
   
-  @media only screen and (max-width: 993px) {
+  @media only screen and (max-width: 991px) {
   .profile .nav-link{
     padding-bottom: 0px !important;
   }
