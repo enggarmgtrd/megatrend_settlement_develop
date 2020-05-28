@@ -105,7 +105,7 @@
               <b-row class="mt-3">
                 <b-col class="table-responsive">
                   <b-table responsive :items="tableBiaya" class="text-center" hover :fields="fieldsTableBiaya">
-                    <template v-slot:cell(index)="data">
+                    <template v-slot:cell(no)="data">
                       {{ data.index + 1 }}
                     </template>
                     <template v-slot:cell(fleet_trip_cost_type_id)="data">
@@ -314,7 +314,7 @@ export default {
           }
         ],
         dataForm:[],
-        fieldsTableBiaya: ['fleet_trip_cost_type_id', 'amount', 'description', 'actions'],
+        fieldsTableBiaya: ['no','fleet_trip_cost_type_id', 'amount', 'description', 'actions'],
         tableBiaya: []
       }
     },
