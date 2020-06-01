@@ -17,7 +17,7 @@
       <b-row class="justify-content-md-center mt-3">
         <b-col cols="12" > 
            <b-card>
-            <b-card class="mt-3 dashboard">
+            <b-card class="dashboard">
               <b-row align-h="between">
                 <b-col md="12" lg="4" class="text-right pl-lg-0 pr-lg-3 px-0">
                   <b-form-group
@@ -38,7 +38,7 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col cols="6" lg="2" class="px-lg-3 px-0 pr-2 mt-3 mt-lg-0">
+                <b-col cols="12" md="6" lg="2" class="px-lg-3 px-0 pr-md-2 mt-2 mt-md-3 mt-lg-0">
                   <b-form-group
                   label="Show"
                   label-cols-sm="3"
@@ -54,7 +54,7 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col cols="6" lg="3" class="px-lg-3 px-0 pl-2 mt-3 mt-lg-0">
+                <b-col cols="12" md="6" lg="3" class="px-lg-3 px-0 pl-md-2 mt-1 mt-md-3 mt-lg-0">
                   <b-pagination
                     v-model="currentPage"
                     :total-rows="totalRows"
@@ -65,7 +65,7 @@
                   ></b-pagination>
                 </b-col>
                 
-                <b-col md="12" lg="3" class="text-right pr-lg-0 pl-lg-3 px-0 mt-lg-0">
+                <b-col cols="12" lg="3" class="text-right pr-lg-0 pl-lg-3 px-0 mt-3 mt-md-1 mt-lg-0">
                   <b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button>
                 </b-col>
                 

@@ -29,7 +29,10 @@
                 <span> {{noHp}} | {{status}}</span>
               </b-nav-item>
               <b-nav-item class="text-mega">
-                  <b-icon-columns-gap class="text-bold"></b-icon-columns-gap><span class="font-weight-bold"> Scan Barcode</span>
+                  <router-link to="/form-user"><b-icon-plus class="text-bold"></b-icon-plus><span class="font-weight-bold"> Add User</span></router-link>
+              </b-nav-item>
+              <b-nav-item class="text-mega">
+                  <router-link to="/form-user"><b-icon-columns-gap class="text-bold"></b-icon-columns-gap><span class="font-weight-bold"> Scan Barcode</span></router-link>
               </b-nav-item>
               <b-nav-item @click="logout()">
                   <b-icon-box-arrow-right class="text-bold"></b-icon-box-arrow-right><span class="font-weight-bold"> Logout</span>
@@ -94,8 +97,9 @@ export default {
   padding-bottom: 0 !important;
   background: #fff !important;
 
-  .text-mega .nav-link {
+  .text-mega .nav-link a{
     color:#2bb898 !important;
+    text-decoration: none;
     transition: .3s;
     &:hover{
       color: #1e816a !important;
