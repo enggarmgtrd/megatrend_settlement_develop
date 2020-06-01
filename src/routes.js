@@ -3,6 +3,7 @@ import Form from './components/form.vue';
 import Dashboard from './components/dashboard.vue';
 import Profile from './components/profile.vue';
 import FormUser from './components/formUser.vue';
+import Master from './components/master.vue';
 import Val from './components/val.vue';
 
 const routes = [
@@ -31,10 +32,15 @@ const routes = [
       component: Val
     },
 
-    { path: '/',
+    { path: '/aa',
       alias: '/dashboard',
       name: 'dashboard', 
       component: Dashboard
+    },
+    
+    { path: '/',
+      name: 'master', 
+      component: Master
     },
 
     { path: '/profile',
