@@ -1,6 +1,5 @@
 <template>
   <div>
-    <navbar></navbar>
     <div class="vld-parent">
         <loading :active.sync="isLoading" 
         :can-cancel="true" 
@@ -113,7 +112,7 @@
 
               <b-row class="mt-3">
                 <b-col class="table-responsive mega-table-biaya">
-                  <b-table :items="tableBiaya" class="text-center table-bordered" hover :fields="fieldsTableBiaya" stacked="md">
+                  <b-table :items="tableBiaya" class="text-center table-bordered" hover :fields="fieldsTableBiaya" stacked="md" show-empty>
                     <template v-slot:cell(no)="data">
                       {{ data.index + 1 }}
                     </template>
@@ -237,13 +236,11 @@
 import axios from 'axios'
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2'
-import Navbar from './navbar'
 import Loading from 'vue-loading-overlay';
     // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
   components:{
-    Navbar,
     Loading
   },
     data(){
@@ -598,11 +595,6 @@ export default {
 </script>
 
 <style lang="scss">
-.navbar{
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  background: #fff !important;
-}
 .delete-row{
   color:red;
   font-weight: 800;

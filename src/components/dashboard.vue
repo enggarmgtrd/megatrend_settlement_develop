@@ -1,7 +1,6 @@
   
 <template>
   <div>
-    <navbar></navbar>
     <div class="vld-parent">
         <loading :active.sync="isLoading" 
         :can-cancel="true" 
@@ -13,136 +12,124 @@
         :opacity= 0.5>
         </loading>
     </div>
-    <b-container fluid>
-      <b-row class="justify-content-md-center mt-3">
-        <b-col cols="12" > 
-           <b-card>
-            <b-card class="dashboard">
-              <b-row align-h="between">
-                <b-col md="12" lg="4" class="text-right pl-lg-0 pr-lg-3 px-0">
-                  <b-form-group
-                    class="mb-0"
-                  >
-                    <b-input-group size="md">
-                      <b-form-input
-                        v-model="filter"
-                        type="search"
-                        id="filterInput"
-                        placeholder="Cari Data Settlement"
-                        style="height: 36px;"
-                      ></b-form-input>
-                      <b-input-group-append>
-                        <b-button :disabled="!filter" @click="filter = ''" class="rounded-0 btn-mega" style="height: 36px;"><b-icon icon="search" class="form-icon"></b-icon></b-button>
-                      </b-input-group-append>
-                    </b-input-group>
-                  </b-form-group>
-                </b-col>
 
-                <b-col cols="12" md="6" lg="2" class="px-lg-3 px-0 pr-md-2 mt-2 mt-md-3 mt-lg-0">
-                  <b-form-group
-                  label="Show"
-                  label-cols-sm="3"
-                  label-cols-lg="5"
-                  label-cols-xl="4"
-                  >
-                    <b-form-select
-                      v-model="perPage"
-                      id="perPageSelect"
-                      size="md"
-                      :options="pageOptions"
-                    ></b-form-select>
-                  </b-form-group>
-                </b-col>
+    <b-card class="mega-dashboard">
+      <template v-slot:header>
+        <h1 class="mb-0"><b-icon icon="table"></b-icon> Data Settlement</h1>
+      </template>
+      <b-row align-h="between">
+        <b-col md="12" lg="4" class="text-right">
+          <b-form-group
+            class="mb-0"
+          >
+            <b-input-group size="md">
+              <b-form-input
+                v-model="filter"
+                type="search"
+                id="filterInput"
+                placeholder="Cari Data Settlement"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''" class="rounded-0 btn-mega"><b-icon icon="search" class="form-icon"></b-icon></b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
 
-                <b-col cols="12" md="6" lg="3" class="px-lg-3 px-0 pl-md-2 mt-1 mt-md-3 mt-lg-0">
-                  <b-pagination
-                    v-model="currentPage"
-                    :total-rows="totalRows"
-                    :per-page="perPage"
-                    align="fill"
-                    size="md"
-                    class="my-0"
-                  ></b-pagination>
-                </b-col>
-                
-                <b-col cols="12" lg="3" class="text-right pr-lg-0 pl-lg-3 px-0 mt-3 mt-md-1 mt-lg-0">
-                  <b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button>
-                </b-col>
-                
-              </b-row>
+        <b-col cols="12" md="6" lg="2" class=" mt-2 mt-md-3 mt-lg-0">
+          <b-form-group
+          label="Show"
+          label-cols-sm="3"
+          label-cols-lg="5"
+          label-cols-xl="4"
+          >
+            <b-form-select
+              v-model="perPage"
+              id="perPageSelect"
+              size="md"
+              :options="pageOptions"
+            ></b-form-select>
+          </b-form-group>
+        </b-col>
 
-              <!-- Table Dashboard -->
-              <b-row class="mt-3">      
-                <div class="table-responsive mega-table-dashboard">
-                  <b-table 
-                  stacked="md"
-                  :items="dataForm" 
-                  class=" text-center table-bordered " 
-                  hover 
-                  :fields="fieldsTableDashboard" 
-                  :filter="filter"
-                  :per-page="perPage"
-                  :current-page="currentPage"
-                  >
-                    <template v-slot:cell(no)="data">
-                      {{ data.index + 1 }}
-                    </template>
-                    <template v-slot:cell(no._mobil)="data">
-                      {{ data.item.fleet.no}}
-                    </template>
-                    <template v-slot:cell(tanggal)="data">
-                      {{ data.item.date}}
-                    </template>
-                    <template v-slot:cell(helper)="data">
-                      {{ data.item.helper.name}}
-                    </template>
-                    <template v-slot:cell(kilometer_akhir)="data">
-                      {{ mileAgeFormat(data.item.mileage)}}
-                    </template>
-                    <template v-slot:cell(saldo_e-toll)="data">
-                      {{ data.item.emoney_balance | currency}}
-                    </template>
-                    <template v-slot:cell(uang_jalan)="data">
-                      {{ data.item.pocket_money | currency}}
-                    </template>
-                    <template v-slot:cell(total_biaya)="data">
-                      {{ data.item.totalCost | currency}}
-                    </template>
-                    <template v-slot:cell(sisa_uang_jalan)="data">
-                      {{data.item.pocket_money - data.item.totalCost | currency}}
-                    </template>
-                    <template v-slot:cell(actions)="data">
-                      <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataSettlement(data.item.id)"><b-icon-pencil></b-icon-pencil></b-button>
-                      <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
-                    </template>                  
-                                      
-                  </b-table>        
-                  </div>       
-              </b-row>             
-            </b-card>
-            <!-- END Table Dashboard -->            
-           </b-card>
-        </b-col>        
+        <b-col cols="12" md="6" lg="3" class=" mt-1 mt-md-3 mt-lg-0">
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="totalRows"
+            :per-page="perPage"
+            align="fill"
+            size="md"
+            class="my-0"
+          ></b-pagination>
+        </b-col>
+        
+        <b-col cols="12" lg="3" class="text-right  mt-3 mt-md-1 mt-lg-0">
+          <b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button>
+        </b-col>
+        
       </b-row>
-      <b-row>
-        <div class="mx-auto mt-2 text-light">
-          <span>Megatrend Form Settlement App ver 1.0</span>
-        </div>
-      </b-row>
-    </b-container>
+
+      <!-- Table Dashboard -->
+      <b-row class="mt-3 px-4">      
+        <div class="table-responsive mega-table-dashboard">
+          <b-table 
+          stacked="md"
+          :items="dataForm" 
+          class=" text-center table-bordered " 
+          hover 
+          :fields="fieldsTableDashboard" 
+          :filter="filter"
+          :per-page="perPage"
+          :current-page="currentPage"
+          >
+            <template v-slot:cell(no)="data">
+              {{ data.index + 1 }}
+            </template>
+            <template v-slot:cell(no._mobil)="data">
+              {{ data.item.fleet.no}}
+            </template>
+            <template v-slot:cell(tanggal)="data">
+              {{ data.item.date}}
+            </template>
+            <template v-slot:cell(helper)="data">
+              {{ data.item.helper.name}}
+            </template>
+            <template v-slot:cell(kilometer_akhir)="data">
+              {{ mileAgeFormat(data.item.mileage)}}
+            </template>
+            <template v-slot:cell(saldo_e-toll)="data">
+              {{ data.item.emoney_balance | currency}}
+            </template>
+            <template v-slot:cell(uang_jalan)="data">
+              {{ data.item.pocket_money | currency}}
+            </template>
+            <template v-slot:cell(total_biaya)="data">
+              {{ data.item.totalCost | currency}}
+            </template>
+            <template v-slot:cell(sisa_uang_jalan)="data">
+              {{data.item.pocket_money - data.item.totalCost | currency}}
+            </template>
+            <template v-slot:cell(actions)="data">
+              <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataSettlement(data.item.id)"><b-icon-pencil></b-icon-pencil></b-button>
+              <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
+            </template>                  
+                              
+          </b-table>        
+          </div>       
+      </b-row>             
+    </b-card>
+    <!-- END Table Dashboard -->                
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import Navbar from './navbar'
 import Swal from 'sweetalert2'
 import Loading from 'vue-loading-overlay';
     // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
   components:{
-    Navbar,
     Loading
   },
   data(){
@@ -250,18 +237,14 @@ export default {
 }
 </script>
 
-<style>
-
-.navbar{
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  background: #fff !important;
-}
-
-.dashboard{
-  min-height: 75vh;
-  max-height: 75vh;
-  overflow-y: auto;
+<style lang="scss">
+.mega-dashboard{
+  .card-header{
+    background: #fff;
+    h1 {
+      color: #535a61 !important;
+    }
+  }
 }
 .form-logo{
   width: 10rem;

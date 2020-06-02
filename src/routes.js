@@ -13,10 +13,11 @@ const routes = [
     },
     
     
-    { path: '/form',
-      name: 'form', 
-      component: Form
-    },
+    // { path: '/form',
+    //   name: 'form', 
+    //   component: Form
+    // },
+    
     { path: '/form-user',
       name: 'formUser', 
       component: FormUser
@@ -32,15 +33,29 @@ const routes = [
       component: Val
     },
 
-    { path: '/aa',
-      alias: '/dashboard',
-      name: 'dashboard', 
-      component: Dashboard
-    },
+    // { path: '/aa',
+    //   alias: '/dashboard',
+    //   name: 'dashboard', 
+    //   component: Dashboard
+    // },
     
     { path: '/',
       name: 'master', 
-      component: Master
+      component: Master,
+      children: [
+        {
+          // UserProfile will be rendered inside User's <router-view>
+          // when /user/:id/profile is matched
+          path: '/dashboard',
+          component: Dashboard
+        },
+        {
+          // UserPosts will be rendered inside User's <router-view>
+          // when /user/:id/posts is matched
+          path: '/form',
+          component: Form
+        }
+      ]
     },
 
     { path: '/profile',
