@@ -12,144 +12,100 @@
         :opacity= 0.5></loading>
     </div>
 
-    <b-card>
-      <template v-slot:header>
-        <h1 class="mb-0"><b-icon icon="pencil-square"></b-icon> {{titleForm}}</h1>
-      </template>
-      <ValidationObserver ref="form">
-        <form @submit.prevent="addForm">
-          <b-row>
 
-            <b-col cols="12" lg="6">
+          <!-- FORM SETTLEMENT -->
+          <ValidationObserver ref="form">
+            <form @submit.prevent="addForm">
+          <div v-for="form in forms" :key= "form.index">
+
+            <!-- FORM SELECT -->
+            <b-card class="mt-2" v-if ="form.type == 'select'">              
               <b-form-group  
-                :label="form_mobil.label + '*'" 
+                :label="form.label + '*'" 
                 >
-                <ValidationProvider rules="required" :name="form_mobil.label" v-slot="{ classes,errors }" :bails="false">
+                <ValidationProvider rules="required" :name="form.label" v-slot="{ classes,errors }" :bails="false">
                   <div class="control" :class="classes">
                     <b-form-select
                       id="input-3"             
-                      :options="form_mobil.options"
-                      v-model="form_mobil.model"
+                      :options="form.options"
+                      v-model="form.model"
                     >
                     <template v-slot:first>
-                      <b-form-select-option value="" disabled>--Pilih {{form_mobil.label}} --</b-form-select-option>
+                      <b-form-select-option value="" disabled>--Pilih {{form.label}} --</b-form-select-option>
                     </template>
                     </b-form-select>
                     <span>{{ errors[0] }}</span>
                   </div>
                 </ValidationProvider>
               </b-form-group>
-            </b-col>
+            </b-card>
+            <!-- FORM SELECT -->
 
-            <b-col cols="12" lg="6">
-              <b-form-group  
-                :label="form_helper.label + '*'" 
-                >
-                <ValidationProvider rules="required" :name="form_helper.label" v-slot="{ classes,errors }" :bails="false">
-                  <div class="control" :class="classes">
-                    <b-form-select
-                      id="input-3"             
-                      :options="form_helper.options"
-                      v-model="form_helper.model"
-                    >
-                    <template v-slot:first>
-                      <b-form-select-option value="" disabled>--Pilih {{form_helper.label}} --</b-form-select-option>
-                    </template>
-                    </b-form-select>
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
-
-            <b-col cols="12" lg="4">
+            <!-- FORM INPUT -->
+            <b-card class="mt-3" v-if ="form.type == 'number'">
               <b-form-group
                 id="input-group-1"
-                :label="form_mileage.label + '*'"
+                :label="form.label + '*'"
                 label-for="input-1"
                 description=""
               >
-                <ValidationProvider rules="required" :name="form_mileage.label" v-slot="{ classes,errors }" :bails="false">
-                <!-- Currency without prefix & suffix -->
-                  <div class="control" :class="classes">
-                    <currency-input            
-                      class="form-control"
-                      :class="classes"
-                      v-model.number="form_mileage.model"
-                      :currency="null"
-                      locale="de"
-                      :distraction-free="false"
-                      placeholder="0"
-                      :precision="{min: 0,max: 20}"
-                    />
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                  <!-- END Currency without prefix & suffix -->
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
+              <ValidationProvider rules="required" :name="form.label" v-slot="{ classes,errors }" :bails="false"  v-if="form.label == 'Kilometer Akhir '">
+              <!-- Currency without prefix & suffix -->
+              <div class="control" :class="classes">
+                <currency-input            
+                  class="form-control"
+                  :class="classes"
+                  v-model.number="form.model"
+                  :currency="null"
+                  locale="de"
+                  :distraction-free="false"
+                  placeholder="0"
+                  :precision="{min: 0,max: 20}"
+                />
+                <span>{{ errors[0] }}</span>
+              </div>
+              <!-- END Currency without prefix & suffix -->
+              </ValidationProvider>
 
-            <b-col cols="12" lg="4">
-              <b-form-group
-                id="input-group-1"
-                :label="form_emoney.label + '*'"
-                label-for="input-1"
-                description=""
-              >
-                <ValidationProvider rules="required" :name="form_emoney.label" v-slot="{ classes,errors }" :bails="false">
-                <!-- Currency with prefix & suffix -->
-                <div class="control" :class="classes">
-                  <currency-input
-                    class="form-control"
-                    v-model.number="form_emoney.model"
-                    :currency="{prefix:'Rp. ', suffix:null}"
-                    locale="de"
-                    :distraction-free="false"
-                    placeholder="0"
-                    :precision="{min: 0,max: 20}"
-                  />
-                  <span>{{ errors[0] }}</span>
+              <ValidationProvider rules="required" :name="form.label" v-slot="{ classes,errors }" :bails="false"  v-if="form.label != 'Kilometer Akhir '">
+              <!-- Currency with prefix & suffix -->
+              <div class="control" :class="classes">
+                <currency-input v-if="form.label != 'Kilometer Akhir '"
+                  class="form-control"
+                  v-model.number="form.model"
+                  :currency="{prefix:'Rp. ', suffix:null}"
+                  locale="de"
+                  :distraction-free="false"
+                  placeholder="0"
+                  :precision="{min: 0,max: 20}"
+                />
+                <span>{{ errors[0] }}</span>
+              </div>
+              <!-- END Currency with prefix & suffix -->
+               </ValidationProvider>
+              </b-form-group>
+            </b-card>
+            <!-- END FORM INPUT -->
+            
+            <!-- FORM RADIO -->
+            <b-card class="mt-3" v-if ="form.type == 'radio'">
+              <b-form-group :label="form.label + '*'">
+                <div v-for="rit in form.options" :key="rit.index">
+                    <b-form-radio v-model="form.model" name="some-radios" :value="rit.value">{{rit.name}}</b-form-radio>
                 </div>
-                <!-- END Currency with prefix & suffix -->
-                </ValidationProvider>
               </b-form-group>
-            </b-col>
+            </b-card>
+            <!-- END FORM RADIO -->
 
-            <b-col cols="12" lg="4">
-              <b-form-group
-                id="input-group-1"
-                :label="form_pocketMoney.label + '*'"
-                label-for="input-1"
-                description=""
-              >
-                <ValidationProvider rules="required" :name="form_pocketMoney.label" v-slot="{ classes,errors }" :bails="false">
-                <!-- Currency with prefix & suffix -->
-                <div class="control" :class="classes">
-                  <currency-input
-                    class="form-control"
-                    v-model.number="form_pocketMoney.model"
-                    :currency="{prefix:'Rp. ', suffix:null}"
-                    locale="de"
-                    :distraction-free="false"
-                    placeholder="0"
-                    :precision="{min: 0,max: 20}"
-                  />
-                  <span>{{ errors[0] }}</span>
-                </div>
-                <!-- END Currency with prefix & suffix -->
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
+            <!-- TABLE BIAYA -->
+            <b-card class="mt-3" v-if ="form.type =='table'">
 
-            <b-col cols="12" class="">
               <b-row>
                 <b-col class="text-left py-1">
-                  <span>Table Biaya *</span>
+                  <h4>Table Biaya</h4>
                 </b-col>
-              </b-row>
-              <b-row>
-                <b-col>
-                  <b-button class="btn-mega-3" @click="showModalTambahJumlahBiaya()">Tambah Jumlah Biaya</b-button>
+                <b-col class="text-right">
+                  <b-button class="btn-mega" @click="showModalTambahJumlahBiaya()">Tambah Jumlah Biaya</b-button>
                 </b-col>
               </b-row>
 
@@ -178,95 +134,96 @@
 
               <b-row>
                 <b-col class="text-right">
-                    <h1>Total Biaya : {{totalBiaya | currency}}</h1>
+                    <h4>Total Biaya : {{totalBiaya | currency}}</h4>
                 </b-col>
               </b-row>              
               <b-row v-if="!tableBiayaError">
-                <h5 class="pl-3 text-danger">*Table Biaya tidak boleh kosong</h5>
+                <h6 class="pl-3 text-danger">*Table Biaya tidak boleh kosong</h6>
               </b-row>
-            </b-col>
-
-            <b-col cols="8">
-              <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block btn-mega">Simpan</b-button> 
-            </b-col>
-            <b-col cols="4">
-              <b-button type="submit" variant="warning" class="my-3 btn-lg btn-mega-2 btn-block" @click="back()">Kembali</b-button> 
-            </b-col>
-
-          </b-row>
-        </form>
-      </ValidationObserver>
-
-    </b-card>
-
-    <!-- MODAL -->
-    <div>
-      <b-modal ref="tambahJumlahBiaya" hide-footer>
-        <template v-slot:modal-title>
-          Tambah Jumlah Biaya
-        </template>
-        <ValidationObserver v-slot="{ handleSubmit }">
-        <form @submit.prevent="handleSubmit(tambahJumlahBiaya)">
-          <div v-for="formJB in formJumlahBiaya" :key="formJB.index">
-            <b-col v-if="formJB.type == 'number'">
-              <b-form-group id="input-group-2" :label="formJB.label" label-for="input-2">
-                <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false" >
-                  <!-- Currency with prefix & suffix -->
-                  <div class="control" :class="classes">
-                    <currency-input
-                      class="form-control"
-                      v-model.number="formJB.model"
-                      :currency="{prefix:'Rp. ',suffix:null}"
-                      :distraction-free="false"
-                      locale="de"
-                      :precision="{min: 0,max: 20}"
-                      placeholder="0"
-                    />
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="formJB.type == 'select'">
-              <label>{{formJB.label}}</label>
-              <b-form-group>
-                <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false">
-                  <div class="control" :class="classes">
-                    <b-form-select
-                      id="input-3"
-                      v-model="formJB.model"
-                      :options="formJB.options"
-                      style="width: 100%"
-                    >
-                    
-                    <template v-slot:first>
-                        <b-form-select-option value="" disabled>--Pilih Biaya--</b-form-select-option>
-                    </template>
-                    </b-form-select>
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="formJB.type == 'textArea'">
-              <label>Keterangan:</label>
-              <b-form-textarea
-                id="textarea"
-                label="Keterangan"
-                v-model="formJB.model"
-                placeholder="Keterangan"
-                rows="3"
-                max-rows="6"
-              ></b-form-textarea>
-              <b-button type="submit" class="mt-3 btn btn-block btn-lg btn-mega">Tambahkan</b-button>
-          </b-col>
+            </b-card>
+            <!-- END TABLE BIAYA -->            
           </div>
+            <b-row>
+              <b-col cols="8">
+                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block btn-mega">Simpan</b-button> 
+              </b-col>
+              <b-col cols="4">
+                <b-button type="submit" variant="warning" class="my-3 btn-lg btn-mega-2 btn-block" @click="back()">Kembali</b-button> 
+              </b-col>
+            </b-row>
+            </form>
+          </ValidationObserver>   
+          <!-- END FORM SETTLEMENT -->     
         
-        </form>
-        </ValidationObserver>
-      </b-modal>
-    </div>
+
+        <!-- MODAL -->
+        <div>
+          <b-modal ref="tambahJumlahBiaya" hide-footer>
+            <template v-slot:modal-title>
+              Tambah Jumlah Biaya
+            </template>
+            <ValidationObserver v-slot="{ handleSubmit }">
+            <form @submit.prevent="handleSubmit(tambahJumlahBiaya)">
+              <div v-for="formJB in formJumlahBiaya" :key="formJB.index">
+                <b-col v-if="formJB.type == 'number'">
+                  <b-form-group id="input-group-2" :label="formJB.label" label-for="input-2">
+                    <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false" >
+                      <!-- Currency with prefix & suffix -->
+                      <div class="control" :class="classes">
+                        <currency-input
+                          class="form-control"
+                          v-model.number="formJB.model"
+                          :currency="{prefix:'Rp. ',suffix:null}"
+                          :distraction-free="false"
+                          locale="de"
+                          :precision="{min: 0,max: 20}"
+                          placeholder="0"
+                        />
+                        <span>{{ errors[0] }}</span>
+                      </div>
+                    </ValidationProvider>
+                  </b-form-group>
+                </b-col>
+                <b-col v-if="formJB.type == 'select'">
+                  <b-form-group  label="Jenis Biaya" >
+                    <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false">
+                      <div class="control" :class="classes">
+                        <b-form-select
+                          id="input-3"
+                          v-model="formJB.model"
+                          :options="formJB.options"
+                          style="width: 100%"
+                        >
+                        
+                        <template v-slot:first>
+                            <b-form-select-option value="" disabled>--Pilih Biaya--</b-form-select-option>
+                        </template>
+                        </b-form-select>
+                        <span>{{ errors[0] }}</span>
+                      </div>
+                    </ValidationProvider>
+                  </b-form-group>
+                </b-col>
+                <b-col v-if="formJB.type == 'textArea'">
+                  <label>Keterangan:</label>
+                  <b-form-textarea
+                    id="textarea"
+                    label="Keterangan"
+                    v-model="formJB.model"
+                    placeholder="Keterangan"
+                    rows="3"
+                    max-rows="6"
+                  ></b-form-textarea>
+                  <b-button type="submit" class="mt-3 btn btn-block btn-lg btn-mega">Tambahkan</b-button>
+              </b-col>
+              </div>
+            
+            </form>
+            </ValidationObserver>
+          </b-modal>
+        </div>
   </div>
+
 </template>
 
 <script>
@@ -282,7 +239,6 @@ export default {
   },
     data(){
       return {
-        titleForm: 'Tambah Form Settlement',
         id: 0,
         driver:'',
         idEditForm: parseInt(this.$route.params.dataForm_id, 10),
@@ -291,33 +247,6 @@ export default {
         updateTableBiaya: null,
         isLoading: false,
         fullPage: true,
-        form_mobil:{
-          'label': 'Mobil ',
-          'type' : 'select',
-          'model': '',
-          'options': []
-        },
-        form_helper:{
-          'label': 'Helper ',
-          'type' : 'select',
-          'model': '',
-          'options': []
-        },
-        form_mileage:{
-            'label': 'Kilometer Akhir ',
-            'type': 'number',
-            'model': null
-        },
-        form_emoney:{
-            'label': 'Saldo E-Toll ',
-            'type': 'number',
-            'model': null
-        },
-        form_pocketMoney:{
-            'label': 'Uang Jalan ',
-            'type': 'number',
-            'model': null
-        },
         forms: [
           {
             'label': 'Mobil ',
@@ -426,18 +355,18 @@ export default {
         axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
           console.log(res.data);
           
-          this.form_mobil.options = res.data.fleets
-          this.form_helper.options = res.data.helpers 
+          this.forms[0].options = res.data.fleets
+          this.forms[1].options = res.data.helpers 
           this.formJumlahBiaya[1].options = res.data.costTypes
           console.log(this.formJumlahBiaya);
           
         
-          this.form_mobil.options.forEach((element) => {
+          this.forms[0].options.forEach((element) => {
             element.text = element.no, 
             element.value = element.id
           })
               
-          this.form_helper.options.forEach((element) => {
+          this.forms[1].options.forEach((element) => {
             element.text = element.name, 
             element.value = element.id
           })
@@ -460,7 +389,6 @@ export default {
   
       loadDataEdit(){
         if(isNaN(this.idEditForm))return
-          this.titleForm = 'Edit Form Settlement'
           let token = window.localStorage.getItem('token')
           let config = {
             headers: {
@@ -470,11 +398,11 @@ export default {
           axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
           console.log(res.data)
            
-          this.form_mobil.model = res.data.fleet_id,
-          this.form_helper.model = res.data.helper.id,
-          this.form_mileage.model = res.data.mileage,
-          this.form_emoney.model = res.data.emoney_balance
-          this.form_pocketMoney.model = res.data.pocket_money
+          this.forms[0].model = res.data.fleet_id,
+          this.forms[1].model = res.data.helper.id,
+          this.forms[2].model = res.data.mileage,
+          this.forms[3].model = res.data.emoney_balance
+          this.forms[4].model = res.data.pocket_money
           res.data.costs.forEach((element)=>{
             element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
               return option.id == element.fleet_trip_cost_type_id
@@ -524,7 +452,7 @@ export default {
           // }
 
           // Jika Total Biaya melebihi uang jalan, GAGALKAN
-          else if(this.form_pocketMoney.model < this.totalBiaya){
+          else if(this.forms[4].model < this.totalBiaya){
             Swal.fire(
              'Data gagal disimpan',
              'Total Biaya tidak boleh melebihi Uang Jalan',
@@ -541,13 +469,13 @@ export default {
             
             // Simpan data ke database
             this.dataForm = {
-              fleet_id : this.form_mobil.model,
+              fleet_id : this.forms[0].model,
               user_id: this.id,
-              helper_id : this.form_helper.model,
-              mileage : this.form_mileage.model,
-              pocket_money : this.form_pocketMoney.model,
-              emoney_balance : this.form_emoney.model,
-              // driver : this.forms[3].model,
+              helper_id : this.forms[1].model,
+              mileage : this.forms[2].model,
+              pocket_money : this.forms[4].model,
+              emoney_balance : this.forms[3].model,
+              driver : this.forms[3].model,
               costs: this.tableBiaya
             }            
             if (isNaN(this.idEditForm)){
@@ -673,16 +601,16 @@ export default {
 </script>
 
 <style lang="scss">
-
-
-.mega-table-biaya{
-  min-height: 20rem;
+.navbar{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background: #fff !important;
 }
-
-.modal-body{
-  padding: 1rem 0 2rem 0;
+.delete-row{
+  color:red;
+  font-weight: 800;
+  cursor: pointer;
 }
-
 .control{
     width: 100%
     span{

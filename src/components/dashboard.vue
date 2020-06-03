@@ -238,14 +238,7 @@ export default {
 </script>
 
 <style lang="scss">
-.mega-dashboard{
-  .card-header{
-    background: #fff;
-    h1 {
-      color: #535a61 !important;
-    }
-  }
-}
+
 .form-logo{
   width: 10rem;
 }

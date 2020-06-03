@@ -40,7 +40,6 @@ html{
   .btn-mega{
   color: #fff;
   font-weight: 500 !important;
-  color: #fff !important;
   background: #2bb898 !important;
   border-radius: 0px !important;
   border: none !important;
@@ -60,7 +59,6 @@ html{
 .btn-mega-2{
   color: #fff;
   font-weight: 500 !important;
-  color: #fff !important;
   background: rgb(255, 94, 0) !important;
   border-radius: 0px !important;
   border: none !important;
@@ -80,7 +78,6 @@ html{
 .btn-mega-3{
   color: #fff;
   font-weight: 500 !important;
-  color: #fff !important;
   background: #35495e !important;
   border-radius: 0px !important;
   border: none !important;
@@ -88,6 +85,25 @@ html{
   
   &:hover{
      background: #243241!important;
+     transition: .5s;
+    
+  }
+  &:focus{
+    outline: none;
+    box-shadow: none !important;
+  }
+}
+
+.btn-mega-4{
+  font-weight: 500 !important;
+  color: #535a61 !important;
+  background: #e9edf1 !important;
+  border-radius: 0px !important;
+  border: none !important;
+  
+  
+  &:hover{
+     background: #d3d3d3!important;
      transition: .5s;
     
   }

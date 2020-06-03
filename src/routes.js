@@ -23,11 +23,6 @@ const routes = [
       component: FormUser
     },
 
-    { path: '/form-update/:dataForm_id',
-      name: 'form-update', 
-      component: Form
-    },
-
     { path: '/val',
       name: 'val', 
       component: Val
@@ -53,6 +48,10 @@ const routes = [
           // UserPosts will be rendered inside User's <router-view>
           // when /user/:id/posts is matched
           path: '/form',
+          component: Form
+        },
+        { path: '/form-update/:dataForm_id',
+          name: 'form-update', 
           component: Form
         }
       ]

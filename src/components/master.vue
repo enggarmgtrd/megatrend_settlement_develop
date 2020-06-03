@@ -6,10 +6,10 @@
                     <router-link to="/dashboard"><b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="mega-logo"></b-img> </router-link>
             </b-navbar-brand>
             <b-navbar-nav class="mega-navbar__link"> 
-                <b-nav-item v-if="sidebarVisible == true" @click="sidebarVisible = false">
+                <b-nav-item v-if="sidebarVisible == true" @click="sidebarSet()">
                     <b-icon icon="x" class="mega-navbar__icon" scale="1.5"></b-icon>
                 </b-nav-item>
-                <b-nav-item v-else @click="sidebarVisible = true">
+                <b-nav-item v-if="sidebarVisible == false" @click="sidebarSet()">
                     <b-icon icon="list" class="mega-navbar__icon" scale="1.5"></b-icon>
                 </b-nav-item>
             </b-navbar-nav>
@@ -53,7 +53,7 @@
       </div>
     </b-sidebar>
   </div>
-  
+  <div  :class="{'mega-sidebar-backdrop': sidebarBackdrop == true}"></div>
   <div class="mega-content" :class="{active: !sidebarVisible}">     
           <router-view></router-view>
   </div>
@@ -69,6 +69,7 @@ export default {
             contentTitle:'',
             cardTitle: '',
             sidebarVisible: true,
+            sidebarBackdrop: false,
             sidebarMenu:[
                 {
                     'name': 'Data',
@@ -88,7 +89,7 @@ export default {
                 {
                     'name': 'Tambah Data',
                     'id': 'tambah-data',
-                    'icon': 'plus-square-fill',
+                    'icon': 'pencil-square',
                     'options': [
                         {
                             'name': 'Tambah Data Settlement',
@@ -102,6 +103,37 @@ export default {
                 }
             ]
         }
+    },
+    
+    created() {
+        window.addEventListener('resize', this.onResize)
+    },
+
+    beforeDestroy() {
+        window.removeEventListener('resize', this.onResize)
+    },
+
+    methods:{
+        
+        onResize() {
+            if (window.innerWidth < 768) {
+                this.sidebarVisible = false
+            }
+            else if(window.innerWidth > 768){
+                this.sidebarVisible = true
+            }
+        },
+
+        sidebarSet(){
+            this.sidebarVisible = !this.sidebarVisible
+            if (window.innerWidth < 768 ) {
+                if(this.sidebarVisible == true){
+                    this.sidebarBackdrop = true
+                }else {
+                    this.sidebarBackdrop = false
+                }
+            }
+        }
     }
 }
 </script>
@@ -113,6 +145,7 @@ export default {
     background: #fff;
     font-size: 1.6rem;
     height: 5rem;
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
 
     &__link {
         margin-left: 2.8rem;
@@ -137,6 +170,7 @@ export default {
 .mega-sidebar{
     background: #2bb898;
     background: linear-gradient(180deg, rgba(43,184,152,1) 0%, rgba(53,73,94,1) 100%, rgba(0,212,255,1) 100%);
+    
 
     &__link-dashboard{
         font-size: 1.6rem;
@@ -146,7 +180,7 @@ export default {
         padding-bottom: .7rem;
         border-top: solid 1px #eee;
         border-bottom: solid 1px #eee;
-        background: rgba(53, 73, 94, 0.6);
+        background: #35495e;
     }
 
     &__link{
@@ -205,14 +239,27 @@ export default {
 
     &.active{
         width: 100%;
-        transition: .45s;
+        transition: .5s;
+    }
+
+    .card{
+        box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
     }
 }
 
-
+.mega-sidebar-backdrop{
+    background: #000;
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height: 100vh;
+    opacity: .5;
+    z-index: 999;
+}
 
 // Overides
-input, select{
+input, select, textarea{
     border-radius: 0px !important;
     background: #e9edf1 !important;
     border: 0px !important;
@@ -224,7 +271,7 @@ input, select{
     }
 }
 
-button{
+button, label, ::placeholder{
     font-size: 1.4rem !important;
 }
 
@@ -236,6 +283,15 @@ button{
     top: 5rem !important;       
 }
 
+.card-header{
+    background: #fff;
+    h1 {
+        color: #535a61 !important;
+    }
+}
+
+
+  
 .collapse{
     a {
         text-decoration: none;
@@ -245,5 +301,15 @@ button{
 .table{
     color: #535a61 !important;
   }
+
+@media (max-width: 767.98px) {
+  .mega-content {
+      width: 100%;
+  }
+
+  .mega-table-biaya{
+  min-height: 10rem;
+}
+}
 
 </style>
