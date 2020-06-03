@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mega-login">
     <div class="vld-parent">
         <loading :active.sync="isLoading" 
         :can-cancel="true" 
@@ -49,7 +49,7 @@
               id="input-1"
               v-model="form.password"
               type="password"
-              class="mt-3"
+              class="mt-3 "
               placeholder="Masukkan Password"
               v-on:keyup.enter="login()"
             ></b-form-input>
@@ -95,7 +95,7 @@ export default {
     },
     created(){
       
-      this.checkUserLogin()
+      // this.checkUserLogin()
     },
     methods: {
      
@@ -136,8 +136,13 @@ export default {
   }
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss" >
+.mega-login{
+  width:100vw;
+  height: 100vh;
+  background: #2bb898;
+  background: linear-gradient(180deg, rgba(43,184,152,1) 0%, rgba(53,73,94,1) 100%, rgba(0,212,255,1) 100%);
+}
 .login-logo{
   position: absolute;
   left: 50%;
@@ -147,10 +152,12 @@ export default {
 
 
 .login-form{
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   border-radius: 0px !important;
   position: absolute;
   background: #fff;
-  width: 25rem;
+  width: 35rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); 
@@ -162,8 +169,7 @@ export default {
 }
 
 .login-form-input{
-  margin-top: 6rem;
-  margin-bottom: .1rem;
+  margin-top: 8rem;
 }
 
 .login-btn{

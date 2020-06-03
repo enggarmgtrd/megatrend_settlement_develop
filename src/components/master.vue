@@ -29,7 +29,6 @@
     <div class="mega-sidebar">
     <b-sidebar 
         id="sidebar-1" 
-        shadow="false"
         :visible= "sidebarVisible"
         width="22rem"
         sidebar-class="mega-sidebar"
@@ -39,21 +38,21 @@
       <div class=" py-2">
         <div>
             <div class="mega-sidebar__link mega-sidebar__link-dashboard ">
-                Dashboard <b-icon icon ="display-fill" class="mega-sidebar__link-icon-dashboard" scale="1.2"></b-icon>
+                Dashboard <b-icon icon ="house-door-fill" class="mega-sidebar__link-icon-dashboard" scale="1.2"></b-icon>
             </div>
             <div v-for ="(sbm, index) in sidebarMenu" :key="index">
                 <div class="mega-sidebar__link" v-b-toggle="sbm.id">
                     <b-icon :icon ="sbm.icon" class="mega-sidebar__link-icon" scale="1.2"></b-icon> {{sbm.name}}
                 </div>
                 <b-collapse :id="sbm.id" v-for="(sb, index) in sbm.options" :key="index">
-                    <router-link :to="sb.link"> <b-card class="mega-sidebar__link-collapse" @click="cardTitle = sb.name"><b-icon icon="circle-fill" scale=".3"></b-icon> {{sb.name}}</b-card> </router-link>
+                    <router-link :to="sb.link"> <b-card class="mega-sidebar__link-collapse" @click="sidebarSetRoute()"><b-icon icon="circle-fill" scale=".3"></b-icon> {{sb.name}}</b-card> </router-link>
                 </b-collapse>
             </div>
         </div>
       </div>
     </b-sidebar>
   </div>
-  <div  :class="{'mega-sidebar-backdrop': sidebarBackdrop == true}"></div>
+  <div  :class="{'mega-sidebar-backdrop': sidebarBackdrop == true}" @click ="sidebarSet()"></div>
   <div class="mega-content" :class="{active: !sidebarVisible}">     
           <router-view></router-view>
   </div>
@@ -67,7 +66,7 @@ export default {
     data(){
         return{
             contentTitle:'',
-            cardTitle: '',
+            sidebarRoute: false,
             sidebarVisible: true,
             sidebarBackdrop: false,
             sidebarMenu:[
@@ -93,11 +92,11 @@ export default {
                     'options': [
                         {
                             'name': 'Tambah Data Settlement',
-                            'link': '/data-settlement'
+                            'link': '/form-settlement'
                         },
                         {
                             'name': 'Tambah Data User',
-                            'link': '/data-user'
+                            'link': '/form-user'
                         }
                     ]
                 }
@@ -106,6 +105,10 @@ export default {
     },
     
     created() {
+        this.onResize()
+    },
+
+    mounted(){
         window.addEventListener('resize', this.onResize)
     },
 
@@ -118,9 +121,11 @@ export default {
         onResize() {
             if (window.innerWidth < 768) {
                 this.sidebarVisible = false
+                
             }
             else if(window.innerWidth > 768){
                 this.sidebarVisible = true
+                this.sidebarBackdrop = false
             }
         },
 
@@ -133,12 +138,21 @@ export default {
                     this.sidebarBackdrop = false
                 }
             }
+        },
+
+        sidebarSetRoute(){
+            if(window.innerWidth < 768){
+                this.sidebarVisible = false
+                this.sidebarBackdrop = false
+            } 
+            return
         }
     }
 }
 </script>
 
 <style lang="scss">
+
 
 .mega-navbar{
     margin-left: auto;
@@ -149,9 +163,10 @@ export default {
 
     &__link {
         margin-left: 2.8rem;
+        transition: .4s;
 
         a{
-        padding: 1.4rem .5rem;
+        padding: 1.4rem .5rem 0 .5rem;
         color: #555;
         }
     }
@@ -159,6 +174,7 @@ export default {
     .mega-logo{
         height: 4rem;
         padding: .2rem 1rem 0 1rem;
+        transition: .4s;
     }
 
     .mega-logout{
@@ -229,7 +245,7 @@ export default {
 
 .mega-content{
     width: calc(100% - 22rem);
-    max-height: calc(100vh - 5rem) !important;
+    min-height: calc(100vh - 5rem) !important;
     margin-left: auto;
     top: 5rem;
     position: relative;
@@ -249,24 +265,104 @@ export default {
 
 .mega-sidebar-backdrop{
     background: #000;
-    position: absolute;
+    position: fixed;
     top:0;
     left:0;
     width:100%;
-    height: 100vh;
+    min-height: 100vh;
     opacity: .5;
     z-index: 999;
 }
 
+// STYLE
+.btn-mega{
+  color: #fff;
+  font-weight: 500 !important;
+  background: #2bb898 !important;
+  border-radius: 0px !important;
+  border: none !important;
+  
+  
+  &:hover{
+     background: #1e816a !important;
+     color: #fff;
+     transition: .5s;
+    
+  }
+  &:focus{
+    outline: none;
+    box-shadow: none !important;
+  }
+}
+
+.btn-mega-2{
+  color: #fff;
+  font-weight: 500 !important;
+  background: rgb(255, 94, 0) !important;
+  border-radius: 0px !important;
+  border: none !important;
+  
+  
+  &:hover{
+     background: rgb(202, 75, 2) !important;
+     color: #fff;
+     transition: .5s;
+    
+  }
+  &:focus{
+    outline: none;
+    box-shadow: none !important;
+  }
+}
+
+.btn-mega-3{
+  color: #fff;
+  background: #35495e !important;
+  border-radius: 0px !important;
+  border: none !important;
+  
+  
+  &:hover{
+     background: #2a394b!important;
+     color: #fff;
+     transition: .5s;
+    
+  }
+  &:focus{
+    outline: none;
+    box-shadow: none !important;
+  }
+}
+
+.btn-mega-4{
+  color: #535a61 !important;
+  background: #e9edf1 !important;
+  border-radius: 0px !important;
+  border: none !important;
+  
+  
+  &:hover{
+     background: #d3d3d3!important;
+     color: #fff;
+     transition: .5s;
+    
+  }
+  &:focus{
+    outline: none;
+    box-shadow: none !important;
+  }
+}
+// END STYLE
+
 // Overides
-input, select, textarea{
+input, select, textarea, .bg-transparent{
     border-radius: 0px !important;
     background: #e9edf1 !important;
     border: 0px !important;
     font-size: 1.4rem !important;
 
     &:focus{
-    outline: none !important;
+    outline: 1px solid #2bb898 !important;
     box-shadow: none !important;
     }
 }
@@ -290,8 +386,6 @@ button, label, ::placeholder{
     }
 }
 
-
-  
 .collapse{
     a {
         text-decoration: none;
@@ -302,7 +396,25 @@ button, label, ::placeholder{
     color: #535a61 !important;
   }
 
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #dbf0eb;
+}
+
+// END OVERRIDES
+
+
 @media (max-width: 767.98px) {
+    .megac-content{
+        min-height: 100vh !important;
+    }
+  .mega-logo{
+        height: 4rem;
+        padding: .2rem 1rem 0 1rem !important;
+        margin-left: 3.5rem;
+  }
+  .mega-navbar__link{
+      margin-left: -19.2rem !important;
+  }
   .mega-content {
       width: 100%;
   }

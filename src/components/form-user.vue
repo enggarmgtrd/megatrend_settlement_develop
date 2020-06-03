@@ -3,7 +3,7 @@
 
     <div class="vld-parent">
         <loading :active.sync="isLoading" 
-        :can-cancel="true" 
+        :can-cancel="true"
         :is-full-page="fullPage"
         :width=200
         :height=200
@@ -20,19 +20,133 @@
         <form @submit.prevent="addForm">
           <b-row>
 
-            <b-col cols="12" lg="6">
-              <b-form-group  
-                :label="form_mobil.label + '*'" 
+            <b-col cols="12" lg="4">
+              <b-form-group
+                class="mb-3"
+                id="input-group-1"
+                :label="form_namaDepan.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+              <ValidationProvider rules="required" :name="form_namaDepan.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-input        
+                  class="form-control"
+                  :class="classes"
+                  v-model="form_namaDepan.model"
+                  :placeholder="form_namaDepan.placeholder + form_namaDepan.label"
                 >
-                <ValidationProvider rules="required" :name="form_mobil.label" v-slot="{ classes,errors }" :bails="false">
+                </b-form-input>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
+              </b-form-group>
+            </b-col>
+
+            <b-col cols="12" lg="4">
+              <b-form-group
+                class="mb-3"
+                id="input-group-1"
+                :label="form_namaBelakang.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+              <ValidationProvider rules="required" :name="form_namaBelakang.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-input        
+                  class="form-control"
+                  :class="classes"
+                  v-model="form_namaBelakang.model"
+                  :placeholder="form_namaBelakang.placeholder + form_namaBelakang.label"
+                >
+                </b-form-input>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
+              </b-form-group>
+            </b-col>
+
+            <b-col cols="12" lg="4" class="form-date">
+              <b-form-group
+                class="mb-3"
+                id="input-group-1"
+                :label="form_tglLahir.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+              <ValidationProvider rules="required" :name="form_tglLahir.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-datepicker 
+                  id="example-datepicker" 
+                  v-model="form_tglLahir.model" 
+                  class="mb-2"
+                  :placeholder="form_tglLahir.placeholder + form_tglLahir.label"
+                >
+                </b-form-datepicker>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
+              </b-form-group>
+            </b-col>
+
+            <b-col cols="12" lg="12" class="form-date">
+              <b-form-group
+                class="mb-3"
+                :label="form_alamatLengkap.label + '*'"
+                description="Alamat wajib sesuai KTP"
+              >
+              <ValidationProvider rules="required" :name="form_alamatLengkap.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-textarea
+                  id="textarea-formatter"
+                  v-model="form_alamatLengkap.model"
+                  :placeholder="form_alamatLengkap.placeholder + form_alamatLengkap.label"
+                >
+                </b-form-textarea>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
+              </b-form-group>
+            </b-col>
+
+             <b-col cols="12" lg="6">
+              <b-form-group
+                class="mb-3"
+                id="input-group-1"
+                :label="form_noHp.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+              <ValidationProvider rules="required" :name="form_noHp.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-input        
+                  class="form-control"
+                  type="number"
+                  :class="classes"
+                  v-model="form_noHp.model"
+                  :placeholder="form_noHp.placeholder + form_noHp.label"
+                >
+                </b-form-input>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
+              </b-form-group>
+            </b-col>
+
+            <b-col cols="12" lg="6">
+              <b-form-group
+                class="mb-3"  
+                :label="form_jabatan.label + '*'" 
+                >
+                <ValidationProvider rules="required" :name="form_jabatan.label" v-slot="{ classes,errors }" :bails="false">
                   <div class="control" :class="classes">
                     <b-form-select
                       id="input-3"             
-                      :options="form_mobil.options"
-                      v-model="form_mobil.model"
+                      :options="form_jabatan.options"
+                      v-model="form_jabatan.model"
                     >
                     <template v-slot:first>
-                      <b-form-select-option value="" disabled>--Pilih {{form_mobil.label}} --</b-form-select-option>
+                      <b-form-select-option value="" disabled>--Pilih {{form_jabatan.label}} --</b-form-select-option>
                     </template>
                     </b-form-select>
                     <span>{{ errors[0] }}</span>
@@ -42,148 +156,97 @@
             </b-col>
 
             <b-col cols="12" lg="6">
-              <b-form-group  
-                :label="form_helper.label + '*'" 
+              <b-form-group
+                class="mb-3"
+                id="input-group-1"
+                :label="form_fotoProfile.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+              <ValidationProvider rules="required" :name="form_fotoProfile.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-file       
+                  class="form-control"
+                  type="number"
+                  :class="classes"
+                  v-model="form_fotoProfile.model"
+                  :placeholder="form_fotoProfile.placeholder + form_fotoProfile.label"
                 >
-                <ValidationProvider rules="required" :name="form_helper.label" v-slot="{ classes,errors }" :bails="false">
-                  <div class="control" :class="classes">
-                    <b-form-select
-                      id="input-3"             
-                      :options="form_helper.options"
-                      v-model="form_helper.model"
-                    >
-                    <template v-slot:first>
-                      <b-form-select-option value="" disabled>--Pilih {{form_helper.label}} --</b-form-select-option>
-                    </template>
-                    </b-form-select>
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
+                </b-form-file>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
               </b-form-group>
             </b-col>
 
-            <b-col cols="12" lg="4">
+            <b-col cols="12" lg="6">
               <b-form-group
+                class="mb-3"
                 id="input-group-1"
-                :label="form_mileage.label + '*'"
+                :label="form_scanKtp.label + '*'"
                 label-for="input-1"
                 description=""
               >
-                <ValidationProvider rules="required" :name="form_mileage.label" v-slot="{ classes,errors }" :bails="false">
-                <!-- Currency without prefix & suffix -->
-                  <div class="control" :class="classes">
-                    <currency-input            
-                      class="form-control"
-                      :class="classes"
-                      v-model.number="form_mileage.model"
-                      :currency="null"
-                      locale="de"
-                      :distraction-free="false"
-                      placeholder="0"
-                      :precision="{min: 0,max: 20}"
-                    />
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                  <!-- END Currency without prefix & suffix -->
-                </ValidationProvider>
+              <ValidationProvider rules="required" :name="form_scanKtp.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-file       
+                  class="form-control"
+                  type="number"
+                  :class="classes"
+                  v-model="form_scanKtp.model"
+                  :placeholder="form_scanKtp.placeholder + form_scanKtp.label"
+                >
+                </b-form-file>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
               </b-form-group>
             </b-col>
 
-            <b-col cols="12" lg="4">
+            <b-col cols="12" lg="6">
               <b-form-group
+                class="mb-3"
                 id="input-group-1"
-                :label="form_emoney.label + '*'"
+                :label="form_username.label + '*'"
                 label-for="input-1"
                 description=""
               >
-                <ValidationProvider rules="required" :name="form_emoney.label" v-slot="{ classes,errors }" :bails="false">
-                <!-- Currency with prefix & suffix -->
-                <div class="control" :class="classes">
-                  <currency-input
-                    class="form-control"
-                    v-model.number="form_emoney.model"
-                    :currency="{prefix:'Rp. ', suffix:null}"
-                    locale="de"
-                    :distraction-free="false"
-                    placeholder="0"
-                    :precision="{min: 0,max: 20}"
-                  />
-                  <span>{{ errors[0] }}</span>
-                </div>
-                <!-- END Currency with prefix & suffix -->
-                </ValidationProvider>
+              <ValidationProvider rules="required" :name="form_username.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-input        
+                  class="form-control"
+                  :class="classes"
+                  v-model="form_username.model"
+                  :placeholder="form_username.placeholder + form_username.label"
+                >
+                </b-form-input>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
               </b-form-group>
             </b-col>
 
-            <b-col cols="12" lg="4">
+            <b-col cols="12" lg="6">
               <b-form-group
+                class="mb-3"
                 id="input-group-1"
-                :label="form_pocketMoney.label + '*'"
+                :label="form_password.label + '*'"
                 label-for="input-1"
                 description=""
               >
-                <ValidationProvider rules="required" :name="form_pocketMoney.label" v-slot="{ classes,errors }" :bails="false">
-                <!-- Currency with prefix & suffix -->
-                <div class="control" :class="classes">
-                  <currency-input
-                    class="form-control"
-                    v-model.number="form_pocketMoney.model"
-                    :currency="{prefix:'Rp. ', suffix:null}"
-                    locale="de"
-                    :distraction-free="false"
-                    placeholder="0"
-                    :precision="{min: 0,max: 20}"
-                  />
-                  <span>{{ errors[0] }}</span>
-                </div>
-                <!-- END Currency with prefix & suffix -->
-                </ValidationProvider>
+              <ValidationProvider rules="required" :name="form_password.label" v-slot="{ classes,errors }" :bails="false">
+              <div class="control" :class="classes">
+                <b-form-input        
+                  class="form-control"
+                  :class="classes"
+                  v-model="form_password.model"
+                  :placeholder="form_password.placeholder + form_password.label"
+                >
+                </b-form-input>
+                <span>{{ errors[0] }}</span>
+              </div>
+              </ValidationProvider>
               </b-form-group>
-            </b-col>
-
-            <b-col cols="12" class="">
-              <b-row>
-                <b-col class="text-left py-1">
-                  <span>Table Biaya *</span>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col>
-                  <b-button class="btn-mega-3" @click="showModalTambahJumlahBiaya()">Tambah Jumlah Biaya</b-button>
-                </b-col>
-              </b-row>
-
-              <b-row class="mt-3">
-                <b-col class="table-responsive mega-table-biaya">
-                  <b-table :items="tableBiaya" class="text-center table-bordered" hover :fields="fieldsTableBiaya" stacked="md" show-empty>
-                    <template v-slot:cell(no)="data">
-                      {{ data.index + 1 }}
-                    </template>
-                    <template v-slot:cell(jenis_biaya)="data">
-                      {{ data.item.fleet_trip_cost_type_id.name }}
-                    </template>
-                    <template v-slot:cell(jumlah_biaya)="data">
-                      {{ data.item.amount | currency}}
-                    </template>
-                    <template v-slot:cell(keterangan)="data">
-                      {{ data.item.description }}
-                    </template>
-                    <template v-slot:cell(actions)="data">
-                      <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editJumlahBiaya(data.index)"><b-icon-pencil></b-icon-pencil></b-button>
-                      <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteJumlahBiaya(data.index)"><b-icon-trash></b-icon-trash></b-button>
-                    </template>   
-                  </b-table>
-                </b-col>
-              </b-row>
-
-              <b-row>
-                <b-col class="text-right">
-                    <h1>Total Biaya : {{totalBiaya | currency}}</h1>
-                </b-col>
-              </b-row>              
-              <b-row v-if="!tableBiayaError">
-                <h5 class="pl-3 text-danger">*Table Biaya tidak boleh kosong</h5>
-              </b-row>
             </b-col>
 
             <b-col cols="8">
@@ -199,73 +262,6 @@
 
     </b-card>
 
-    <!-- MODAL -->
-    <div>
-      <b-modal ref="tambahJumlahBiaya" hide-footer>
-        <template v-slot:modal-title>
-          Tambah Jumlah Biaya
-        </template>
-        <ValidationObserver v-slot="{ handleSubmit }">
-        <form @submit.prevent="handleSubmit(tambahJumlahBiaya)">
-          <div v-for="formJB in formJumlahBiaya" :key="formJB.index">
-            <b-col v-if="formJB.type == 'number'">
-              <b-form-group id="input-group-2" :label="formJB.label" label-for="input-2">
-                <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false" >
-                  <!-- Currency with prefix & suffix -->
-                  <div class="control" :class="classes">
-                    <currency-input
-                      class="form-control"
-                      v-model.number="formJB.model"
-                      :currency="{prefix:'Rp. ',suffix:null}"
-                      :distraction-free="false"
-                      locale="de"
-                      :precision="{min: 0,max: 20}"
-                      placeholder="0"
-                    />
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="formJB.type == 'select'">
-              <label>{{formJB.label}}</label>
-              <b-form-group>
-                <ValidationProvider rules="required" :name="formJB.label" v-slot="{ classes,errors }" :bails="false">
-                  <div class="control" :class="classes">
-                    <b-form-select
-                      id="input-3"
-                      v-model="formJB.model"
-                      :options="formJB.options"
-                      style="width: 100%"
-                    >
-                    
-                    <template v-slot:first>
-                        <b-form-select-option value="" disabled>--Pilih Biaya--</b-form-select-option>
-                    </template>
-                    </b-form-select>
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="formJB.type == 'textArea'">
-              <label>Keterangan:</label>
-              <b-form-textarea
-                id="textarea"
-                label="Keterangan"
-                v-model="formJB.model"
-                placeholder="Keterangan"
-                rows="3"
-                max-rows="6"
-              ></b-form-textarea>
-              <b-button type="submit" class="mt-3 btn btn-block btn-lg btn-mega">Tambahkan</b-button>
-          </b-col>
-          </div>
-        
-        </form>
-        </ValidationObserver>
-      </b-modal>
-    </div>
   </div>
 </template>
 
@@ -282,42 +278,70 @@ export default {
   },
     data(){
       return {
-        titleForm: 'Tambah Form Settlement',
+        titleForm: 'Tambah Data User',
         id: 0,
-        driver:'',
         idEditForm: parseInt(this.$route.params.dataForm_id, 10),
-        tableBiayaError: true,
-        tableBiayaId : 0,
-        updateTableBiaya: null,
         isLoading: false,
         fullPage: true,
-        form_mobil:{
-          'label': 'Mobil ',
+        form_namaDepan:{
+          'label': 'Nama Depan ',
+          'type' : 'text',
+          'model': '',
+          'placeholder': 'Masukkan '
+        },
+        form_namaBelakang:{
+          'label': 'Nama Belakang ',
+          'type' : 'text',
+          'model': '',
+          'placeholder': 'Masukkan '
+        },
+        form_tglLahir:{
+            'label': 'Tanggal Lahir ',
+            'type' : 'date',
+            'model': '',
+            'placeholder': 'Masukkan '
+        },
+        form_alamatLengkap:{
+          'label': 'Alamat Lengkap ',
+          'type' : 'text',
+          'model': '',
+          'placeholder': 'Masukkan '
+        },
+        form_noHp:{
+          'label': 'Nomor Handphone ',
+          'type' : 'text',
+          'model': '',
+          'placeholder': 'Masukkan '
+        },
+        form_jabatan:{
+          'label': 'Jabatan ',
           'type' : 'select',
           'model': '',
           'options': []
         },
-        form_helper:{
-          'label': 'Helper ',
-          'type' : 'select',
+        form_fotoProfile:{
+            'label': 'Foto Profil ',
+            'model': null,
+            'placeholder': 'Masukkan '
+        },
+        form_scanKtp:{
+            'label': 'Scan KTP ',
+            'model': null,
+            'placeholder': 'Masukkan '
+        },
+        form_username:{
+          'label': 'Username ',
+          'type' : 'text',
           'model': '',
-          'options': []
+          'placeholder': 'Masukkan '
         },
-        form_mileage:{
-            'label': 'Kilometer Akhir ',
-            'type': 'number',
-            'model': null
+        form_password:{
+          'label': 'Password ',
+          'type' : 'text',
+          'model': '',
+          'placeholder': 'Masukkan '
         },
-        form_emoney:{
-            'label': 'Saldo E-Toll ',
-            'type': 'number',
-            'model': null
-        },
-        form_pocketMoney:{
-            'label': 'Uang Jalan ',
-            'type': 'number',
-            'model': null
-        },
+
         forms: [
           {
             'label': 'Mobil ',
@@ -398,7 +422,7 @@ export default {
       }
     },
     created() {
-      this.loadData(),
+      // this.loadData(),
       this.userIdData()
     },
     computed: {
@@ -414,49 +438,49 @@ export default {
         this.driver = window.localStorage.getItem('name')
       },
       
-      loadData(){
-        this.isLoading = true
-        let token = window.localStorage.getItem('token')
-        let id = window.localStorage.getItem('id')
-        let config = {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }
-        axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
-          console.log(res.data);
+      // loadData(){
+      //   this.isLoading = true
+      //   let token = window.localStorage.getItem('token')
+      //   let id = window.localStorage.getItem('id')
+      //   let config = {
+      //     headers: {
+      //       'Authorization': 'Bearer ' + token
+      //     }
+      //   }
+      //   axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
+      //     console.log(res.data);
           
-          this.form_mobil.options = res.data.fleets
-          this.form_helper.options = res.data.helpers 
-          this.formJumlahBiaya[1].options = res.data.costTypes
-          console.log(this.formJumlahBiaya);
+      //     this.form_mobil.options = res.data.fleets
+      //     this.form_helper.options = res.data.helpers 
+      //     this.formJumlahBiaya[1].options = res.data.costTypes
+      //     console.log(this.formJumlahBiaya);
           
         
-          this.form_mobil.options.forEach((element) => {
-            element.text = element.no, 
-            element.value = element.id
-          })
+      //     this.form_mobil.options.forEach((element) => {
+      //       element.text = element.no, 
+      //       element.value = element.id
+      //     })
               
-          this.form_helper.options.forEach((element) => {
-            element.text = element.name, 
-            element.value = element.id
-          })
-          this.formJumlahBiaya[1].options.forEach((element) => {
-            element.text = element.name,
-            element.value = {
-              id: element.id,
-              name: element.name
-            }
-          })
-          setTimeout(() => {
-                  this.isLoading = false
-          },1000)
-          this.loadDataEdit()
-        // console.log(res)
-        }).catch ((err) => {
-          console.log(err);
-        })  
-      },
+      //     this.form_helper.options.forEach((element) => {
+      //       element.text = element.name, 
+      //       element.value = element.id
+      //     })
+      //     this.formJumlahBiaya[1].options.forEach((element) => {
+      //       element.text = element.name,
+      //       element.value = {
+      //         id: element.id,
+      //         name: element.name
+      //       }
+      //     })
+      //     setTimeout(() => {
+      //             this.isLoading = false
+      //     },500)
+      //     this.loadDataEdit()
+      //   // console.log(res)
+      //   }).catch ((err) => {
+      //     console.log(err);
+      //   })  
+      // },
   
       loadDataEdit(){
         if(isNaN(this.idEditForm))return
@@ -683,6 +707,35 @@ export default {
   padding: 1rem 0 2rem 0;
 }
 
+.form-date{
+  button {
+    font-weight: 500 !important;
+    color: #535a61 !important;
+    background: #e9edf1 !important;
+    border-radius: 0px !important;
+    border: none !important;
+  
+  
+    &:hover{
+      background: #d3d3d3!important;
+      color: #fff;
+      transition: .5s;
+      
+    }
+  }
+
+  .form-control{
+    border-radius: 0px !important;
+    background: #e9edf1 !important;
+    border: 0px !important;
+    font-size: 1.4rem !important;
+
+    &.focus{
+    outline: 1px solid #2bb898 !important;
+    box-shadow: none !important;
+    }
+  }
+}
 .control{
     width: 100%
     span{

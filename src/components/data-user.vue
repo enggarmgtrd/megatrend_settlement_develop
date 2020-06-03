@@ -15,7 +15,7 @@
 
     <b-card class="mega-dashboard">
       <template v-slot:header>
-        <h1 class="mb-0"><b-icon icon="table"></b-icon> Data Settlement</h1>
+        <h1 class="mb-0"><b-icon icon="people-fill"></b-icon> Data Users</h1>
       </template>
       <b-row align-h="between">
         <b-col md="12" lg="4" class="text-right">
@@ -74,45 +74,16 @@
         <div class="table-responsive mega-table-dashboard">
           <b-table 
           stacked="md"
-          :items="dataForm" 
+          items="" 
           class=" text-center table-bordered " 
           hover 
           :fields="fieldsTableDashboard" 
           :filter="filter"
           :per-page="perPage"
           :current-page="currentPage"
+          show-empty
           >
-            <template v-slot:cell(no)="data">
-              {{ data.index + 1 }}
-            </template>
-            <template v-slot:cell(no._mobil)="data">
-              {{ data.item.fleet.no}}
-            </template>
-            <template v-slot:cell(tanggal)="data">
-              {{ data.item.date}}
-            </template>
-            <template v-slot:cell(helper)="data">
-              {{ data.item.helper.name}}
-            </template>
-            <template v-slot:cell(kilometer_akhir)="data">
-              {{ mileAgeFormat(data.item.mileage)}}
-            </template>
-            <template v-slot:cell(saldo_e-toll)="data">
-              {{ data.item.emoney_balance | currency}}
-            </template>
-            <template v-slot:cell(uang_jalan)="data">
-              {{ data.item.pocket_money | currency}}
-            </template>
-            <template v-slot:cell(total_biaya)="data">
-              {{ data.item.totalCost | currency}}
-            </template>
-            <template v-slot:cell(sisa_uang_jalan)="data">
-              {{data.item.pocket_money - data.item.totalCost | currency}}
-            </template>
-            <template v-slot:cell(actions)="data">
-              <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataSettlement(data.item.id)"><b-icon-pencil></b-icon-pencil></b-button>
-              <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
-            </template>                  
+                        
                               
           </b-table>        
           </div>       
@@ -140,8 +111,8 @@ export default {
       sortDesc: false,
       user:'',
       dataForm:[],
-      fieldsTableDashboardAdmin: ['no',{key: 'date',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan', 'actions'],
-      fieldsTableDashboardSupir: ['no',{key: 'date,',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
+      fieldsTableDashboardAdmin: ['no','nama', 'no_handphone', 'jabatan', 'username','password', 'alamat', 'tanggal_lahir', 'foto_profil','scan_ktp'],
+      fieldsTableDashboardSupir: ['no','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
       perPage: 5,
       pageOptions: [5, 10, 15],
       currentPage: 1,
