@@ -105,6 +105,7 @@ export default {
     },
     
     created() {
+        this.checkUserNotLogin(),
         this.onResize()
     },
 
@@ -146,7 +147,13 @@ export default {
                 this.sidebarBackdrop = false
             } 
             return
-        }
+        },
+
+        checkUserNotLogin(){
+            if( !window.localStorage.getItem('token') && !window.localStorage.getItem('id')){
+            this.$router.push('login'); 
+            }
+        },
     }
 }
 </script>
@@ -304,7 +311,7 @@ export default {
   
   
   &:hover{
-     background: rgb(202, 75, 2) !important;
+     background: #ca4b02 !important;
      color: #fff;
      transition: .5s;
     
@@ -397,7 +404,8 @@ button, label, ::placeholder{
   }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #dbf0eb;
+  background-color: rgba(53, 73, 94, .1);
+  transition: .2s;
 }
 
 // END OVERRIDES

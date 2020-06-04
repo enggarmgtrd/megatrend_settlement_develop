@@ -475,12 +475,16 @@ export default {
           this.form_mileage.model = res.data.mileage,
           this.form_emoney.model = res.data.emoney_balance
           this.form_pocketMoney.model = res.data.pocket_money
+
           res.data.costs.forEach((element)=>{
             element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
               return option.id == element.fleet_trip_cost_type_id
             })
           })
+          
           this.tableBiaya = res.data.costs
+          console.log('cek')
+          console.log(this.tableBiaya)
          
           }).catch ((err) => {
             console.log(err);
@@ -613,7 +617,8 @@ export default {
         this.formJumlahBiaya[2].model = ''
       },
       tambahJumlahBiaya(){
-        if(this.updateTableBiaya == null){
+        if(this.updateTableBiaya == null && this.formJumlahBiaya[2].model == ''){
+          this.formJumlahBiaya[2].model = 'Tidak ada keterangan'
           this.tableBiaya.push({
           fleet_trip_cost_type_id: this.formJumlahBiaya[1].model,
           amount: this.formJumlahBiaya[0].model,
@@ -621,7 +626,17 @@ export default {
          })
          this.tableBiayaId++
          console.log(this.tableBiaya)
-        }else{
+        }
+        else if(this.updateTableBiaya == null){
+          this.tableBiaya.push({
+          fleet_trip_cost_type_id: this.formJumlahBiaya[1].model,
+          amount: this.formJumlahBiaya[0].model,
+          description: this.formJumlahBiaya[2].model
+         })
+         this.tableBiayaId++
+         console.log(this.tableBiaya)
+        }
+        else{
           this.tableBiaya.splice(this.updateTableBiaya,1, 
           {
             amount:this.formJumlahBiaya[0].model,

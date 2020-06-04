@@ -112,8 +112,28 @@
             <template v-slot:cell(actions)="data">
               <b-button class="btn-sm btn-mega-3 mr-1 mb-1" @click="editDataSettlement(data.item.id)"><b-icon-pencil></b-icon-pencil></b-button>
               <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
-            </template>                  
-                              
+            </template>              
+            <template v-slot:cell(detail_biaya)="row">
+              <b-button class="btn-mega" size="sm" @click="row.toggleDetails">
+                {{ row.detailsShowing ? 'Sembunyikan' : 'Tampilkan' }}
+              </b-button>
+            </template>    
+              
+            <template v-slot:row-details="row">
+              <div class="table-responsive">
+                <table class="table-bordered ml-auto text-left" width="100%">
+                  <h3>Jenis Biaya</h3>
+                <tr>
+                  <td v-for="(a,index) in row.item.costs" :key="index">{{index + 1}}. {{a.fleet_trip_cost_type_id.name}}</td>
+                </tr>
+                <h3>Keterangan</h3>
+                <tr>
+                  <td v-for="(a,index) in row.item.costs" :key="index">{{index + 1}}. {{a.description}}</td>
+                </tr>
+              </table>
+              </div>
+            </template> 
+            
           </b-table>        
           </div>       
       </b-row>             
@@ -140,7 +160,9 @@ export default {
       sortDesc: false,
       user:'',
       dataForm:[],
-      fieldsTableDashboardAdmin: ['no',{key: 'date',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan', 'actions'],
+      dataCost:[],
+      dataCostTypes:'',
+      fieldsTableDashboardAdmin: ['actions','no',{key: 'date',label: 'Tanggal', sortable: true},'supir','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan', 'detail_biaya'],
       fieldsTableDashboardSupir: ['no',{key: 'date,',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
       perPage: 5,
       pageOptions: [5, 10, 15],
@@ -187,13 +209,30 @@ export default {
           'Authorization': 'Bearer ' + token
         }
       }
+
+      axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
+          console.log(res.data);
+          this.dataCost = res.data;
+          console.log('cek');
+          console.log(this.dataCost)
+      })
+          
       axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
       console.log(res)
+
+      
       this.dataForm = res.data.fleet_trips.reverse()
+
+      res.data.fleet_trips.forEach((element) => element.costs.forEach((el) => el.fleet_trip_cost_type_id = this.dataCost.costTypes.find((e)=>{
+        return e.id == el.fleet_trip_cost_type_id
+      })))
+ 
+      console.log('cek')
+      console.log(this.dataForm)
+      console.log('cek')
       setTimeout(() => {
                   this.isLoading = false
       },500)
-      console.log(this.dataForm)
       }).catch ((err) => {
       console.log(err);
       })  
@@ -243,6 +282,10 @@ export default {
 
 <style lang="scss">
 
+.b-table-details{
+  background-color: rgba(53, 73, 94, .1);
+}
+
 .form-logo{
   width: 10rem;
 }
@@ -264,9 +307,9 @@ export default {
   outline: none;
     box-shadow: none !important;
 }
-@media (min-width: 767.98px) and (max-width: 1280px) {
+@media (min-width: 767.98px) and (max-width: 1200px) {
   .mega-table-dashboard table{
-    width: 1200px !important;
+    min-width: 1200px !important;
   }
 }
 

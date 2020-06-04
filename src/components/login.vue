@@ -95,7 +95,7 @@ export default {
     },
     created(){
       
-      // this.checkUserLogin()
+      this.checkUserLogin()
     },
     methods: {
      

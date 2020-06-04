@@ -3,9 +3,7 @@ import FormSettlement from './components/form-settlement.vue';
 import Dashboard from './components/dashboard.vue';
 import FormUser from './components/form-user.vue';
 import DataUser from './components/data-user.vue';
-import Profile from './components/profile.vue';
 import Master from './components/master.vue';
-import Val from './components/val.vue';
 
 const routes = [
     { path: '/login',
@@ -13,22 +11,6 @@ const routes = [
       component: Login 
     },
     
-    
-    // { path: '/form',
-    //   name: 'form', 
-    //   component: Form
-    // },
-
-    { path: '/val',
-      name: 'val', 
-      component: Val
-    },
-
-    // { path: '/aa',
-    //   alias: '/dashboard',
-    //   name: 'dashboard', 
-    //   component: Dashboard
-    // },
     
     { path: '/',
       name: 'master', 
@@ -62,10 +44,6 @@ const routes = [
       ]
     },
 
-    { path: '/profile',
-      name: 'profile', 
-      component: Profile
-    },
     {
       path: '*',
       component: Login
