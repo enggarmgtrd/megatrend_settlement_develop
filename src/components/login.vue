@@ -101,7 +101,7 @@ export default {
      
       checkUserLogin(){
         if( window.localStorage.getItem('token')){
-          this.$router.push('form'); 
+          this.$router.push('/dashboard'); 
         }
       },
       
@@ -121,7 +121,7 @@ export default {
           showConfirmButton: false,
           timer: 1500
         })
-          this.$router.push('/dashboard').catch(err => {console.log(err)});
+          this.$router.push('/').catch(err => {console.log(err)});
         } else{
           this.isLoading = false
           Swal.fire(

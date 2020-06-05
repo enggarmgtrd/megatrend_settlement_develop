@@ -1,9 +1,21 @@
 <template>
 <div>
+    <div class="vld-parent">
+        <loading 
+        :active.sync="isLoading" 
+        :can-cancel="false" 
+        :is-full-page="fullPage"
+        :width=200
+        :height=200
+        color="#2bb898"
+        backgroundColor="#fff"
+        :opacity= 0.5>
+        </loading>
+    </div>
     <div class="mega-navbar fixed-top">
         <b-nav>
             <b-navbar-brand href="#">
-                    <router-link to="/dashboard"><b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="mega-logo"></b-img> </router-link>
+                    <router-link to="/"><b-img :src="require('../assets/logo-mega.png')" fluid alt="Responsive image" class="mega-logo"></b-img> </router-link>
             </b-navbar-brand>
             <b-navbar-nav class="mega-navbar__link"> 
                 <b-nav-item v-if="sidebarVisible == true" @click="sidebarSet()">
@@ -14,14 +26,27 @@
                 </b-nav-item>
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
+                
                 <b-nav-item-dropdown
-                class="mega-logout"
-                id="my-nav-dropdown"
-                text="Vidya"
-                toggle-class="nav-link-custom"
+                    class="mega-logout pt-1"
+                    id="my-nav-dropdown"
+                    toggle-class="nav-link-custom"
+                    no-caret
                 >
-                    <b-dropdown-item>Logout</b-dropdown-item>
+                <template v-slot:button-content>
+                    <div class="media py-0 mr-2">
+                        <img src="../assets/profile.jpg" class="mr-3 rounded-circle" height="35" alt="...">
+                        <div class="media-body pt-1">
+                            <h5 class="my-0 mt-1 text-dark">Vidya Megatrend</h5>
+                            <h6 class="my-0 text-dark">Admin</h6>
+                        </div>
+                    </div>
+                </template>
+                    <b-dropdown-item @click="logout()"><b-icon icon="box-arrow-right"></b-icon> Logout</b-dropdown-item>
                 </b-nav-item-dropdown>
+              
+            
+                
             </b-navbar-nav>
         </b-nav>
     </div>
@@ -30,7 +55,7 @@
     <b-sidebar 
         id="sidebar-1" 
         :visible= "sidebarVisible"
-        width="22rem"
+        width="24rem"
         sidebar-class="mega-sidebar"
         no-header
         no-close-on-route-change
@@ -52,9 +77,18 @@
       </div>
     </b-sidebar>
   </div>
+
   <div  :class="{'mega-sidebar-backdrop': sidebarBackdrop == true}" @click ="sidebarSet()"></div>
+
   <div class="mega-content" :class="{active: !sidebarVisible}">     
-          <router-view></router-view>
+    <router-view></router-view>
+    <div class="mega-content__logo">
+        <img src="../assets/logo-mega.png">
+        <h3 class="text-right" style="margin-top: -1rem; margin-right: .5rem;">App ver 2.0</h3>
+    </div>
+    <div class="mega-footer pb-3">
+        <h4 class="">Megatrend Settlement App ver 2.0</h4>
+    </div>
   </div>
 </div>
     
@@ -62,10 +96,15 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay';
 export default {
+    components:{
+        Loading
+    },
     data(){
         return{
-            contentTitle:'',
+            isLoading: false,
+            fullPage: true,
             sidebarRoute: false,
             sidebarVisible: true,
             sidebarBackdrop: false,
@@ -99,6 +138,11 @@ export default {
                             'link': '/form-user'
                         }
                     ]
+                },
+                {
+                    'name': 'Scan Barcode',
+                    'id': 'scan-barcode',
+                    'icon': 'columns-gap'
                 }
             ]
         }
@@ -154,6 +198,17 @@ export default {
             this.$router.push('login'); 
             }
         },
+
+        logout(){ 
+            this.isLoading = true
+            localStorage.clear();
+            setTimeout(() => {
+                this.isLoading = false
+                this.$router.push('/login'); 
+            },1000)
+            
+            
+        },
     }
 }
 </script>
@@ -169,7 +224,7 @@ export default {
     box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
 
     &__link {
-        margin-left: 2.8rem;
+        margin-left: 1.9rem;
         transition: .4s;
 
         a{
@@ -198,19 +253,19 @@ export default {
     &__link-dashboard{
         font-size: 1.6rem;
         font-weight: 500;
-        margin: 1rem 0 1rem 0;
-        padding-top: .7rem;
-        padding-bottom: .7rem;
-        border-top: solid 1px #eee;
-        border-bottom: solid 1px #eee;
-        background: #35495e;
+        margin: 1rem 1rem 1rem 0;
+        padding-top: .7rem !important;
+        padding-bottom: .7rem !important;
+        background: #35495e5a;
+        border-top-right-radius: 50px;
+        border-bottom-right-radius: 50px;  
     }
 
     &__link{
         cursor:pointer;
         font-size: 1.4rem;
         position: relative;
-        padding: .5rem 1rem;
+        padding: .5rem 1.5rem;
         transition: .2s;
         color: #fff;
 
@@ -228,7 +283,7 @@ export default {
 
         &-collapse{
             font-size: 1.4rem;
-            padding-left: 3.5rem;
+            padding-left: 2.2rem;
             padding-right: 1rem;
             border: none;
             color: #fff;
@@ -236,8 +291,10 @@ export default {
             
 
             .card-body{
-                padding: .5rem 0;
-                border-radius: .5rem;   
+                border-left: 1px solid #fff;
+                padding: .5rem 1.6rem;
+                border-top-right-radius: .5rem;
+                border-bottom-right-radius: .5rem;  
                 transition: .2s;
                 &:hover{
                     background: rgba(255, 255, 255, 0.1);
@@ -251,7 +308,7 @@ export default {
 }
 
 .mega-content{
-    width: calc(100% - 22rem);
+    width: calc(100% - 24rem);
     min-height: calc(100vh - 5rem) !important;
     margin-left: auto;
     top: 5rem;
@@ -265,9 +322,27 @@ export default {
         transition: .5s;
     }
 
+    &__logo{
+        position: absolute;
+        left:50%;
+        top:50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
     .card{
+        z-index: 9;
         box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
     }
+}
+
+.mega-footer{
+    position: fixed;
+    bottom: 0;
+    background: #e9edf1;
+    width: calc(100% - 24rem);
+    padding: .5rem 0;
+    text-align: center;
 }
 
 .mega-sidebar-backdrop{
@@ -305,7 +380,7 @@ export default {
 .btn-mega-2{
   color: #fff;
   font-weight: 500 !important;
-  background: rgb(255, 94, 0) !important;
+  background: #ff5e00 !important;
   border-radius: 0px !important;
   border: none !important;
   
@@ -369,7 +444,7 @@ input, select, textarea, .bg-transparent{
     font-size: 1.4rem !important;
 
     &:focus{
-    outline: 1px solid #2bb898 !important;
+    outline: 1px solid rgb(43, 184, 152) !important;
     box-shadow: none !important;
     }
 }
@@ -404,10 +479,13 @@ button, label, ::placeholder{
   }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: rgba(53, 73, 94, .1);
-  transition: .2s;
+  background-color: #e9edf11a;
 }
 
+
+.swal2-popup{
+    font-size: 1.2rem !important;
+}
 // END OVERRIDES
 
 
@@ -425,6 +503,12 @@ button, label, ::placeholder{
   }
   .mega-content {
       width: 100%;
+  }
+
+  .mega-footer{
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
   }
 
   .mega-table-biaya{

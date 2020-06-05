@@ -17,8 +17,8 @@
       <template v-slot:header>
         <h1 class="mb-0"><b-icon icon="table"></b-icon> Data Settlement</h1>
       </template>
-      <b-row align-h="between">
-        <b-col md="12" lg="4" class="text-right">
+      <b-row>
+        <b-col cols="8" md="8" class="text-right">
           <b-form-group
             class="mb-0"
           >
@@ -36,11 +36,12 @@
           </b-form-group>
         </b-col>
 
-        <b-col cols="12" md="6" lg="2" class=" mt-3 mt-md-3 mt-lg-0">
+        <b-col cols="4" offset-md="1" md="3"  class="">
           <b-form-group
           label="Show"
-          label-cols-sm="3"
-          label-cols-lg="5"
+          label-cols="4"
+          label-cols-md="6"
+          label-cols-lg="6"
           label-cols-xl="4"
           >
             <b-form-select
@@ -51,27 +52,17 @@
             ></b-form-select>
           </b-form-group>
         </b-col>
-
-        <b-col cols="12" md="6" lg="3" class=" mt-1 mt-md-3 mt-lg-0">
-          <b-pagination
-            v-model="currentPage"
-            :total-rows="totalRows"
-            :per-page="perPage"
-            align="fill"
-            size="md"
-            class="my-0"
-          ></b-pagination>
-        </b-col>
         
-        <b-col cols="12" lg="3" class="text-right  mt-3 mt-md-1 mt-lg-0">
+        <!-- <b-col cols="12" lg="3" class="text-right  mt-3 mt-md-1 mt-lg-0">
           <b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button>
-        </b-col>
+        </b-col> -->
         
       </b-row>
 
+      <div class="mega-dashboard-line"></div>   
       <!-- Table Dashboard -->
-      <b-row class="mt-3 px-4">      
-        <div class="table-responsive mega-table-dashboard">
+      <b-row class="mt-3 px-4 mega-table-dashboard">
+        <div class="table-responsive">
           <b-table 
           stacked="md"
           :items="dataForm" 
@@ -121,22 +112,43 @@
               
             <template v-slot:row-details="row">
               <div class="table-responsive">
-                <table class="table-bordered ml-auto text-left" width="100%">
-                  <h3>Jenis Biaya</h3>
-                <tr>
-                  <td v-for="(a,index) in row.item.costs" :key="index">{{index + 1}}. {{a.fleet_trip_cost_type_id.name}}</td>
-                </tr>
-                <h3>Keterangan</h3>
-                <tr>
-                  <td v-for="(a,index) in row.item.costs" :key="index">{{index + 1}}. {{a.description}}</td>
-                </tr>
-              </table>
+                <h3 class="text-left">* Detail Biaya </h3>
+                <table class="table-striped table-hover ml-auto text-center table-sm " width="100%">
+                  <thead style="background: #2bb898; color: #fff;">
+                    <tr>
+                      <th>No</th>
+                      <th>Jenis Biaya</th>
+                      <th>Keterangan</th>
+                      <th>Jumlah Biaya</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(tb_biaya, index) in row.item.costs" :key="index">
+                      <td>{{index+1}}</td>
+                      <td>{{tb_biaya.fleet_trip_cost_type_id.name}}</td>
+                      <td width="50%">{{tb_biaya.description}}</td>
+                      <td>{{tb_biaya.amount}}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </template> 
             
           </b-table>        
           </div>       
-      </b-row>             
+      </b-row>    
+      <div class="mega-dashboard-line mt-3"></div>     
+      <b-col cols="12" md="6" offset-md="6" offset-lg="9" lg="3" class=" mt-3 mt-md-3 mt-lg-3 px-0">
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="totalRows"
+            :per-page="perPage"
+            align="fill"
+            size="md"
+            class="my-0"
+          ></b-pagination>
+      </b-col>
+             
     </b-card>
     <!-- END Table Dashboard -->                
   </div>
@@ -162,8 +174,8 @@ export default {
       dataForm:[],
       dataCost:[],
       dataCostTypes:'',
-      fieldsTableDashboardAdmin: ['actions','no',{key: 'date',label: 'Tanggal', sortable: true},'supir','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan', 'detail_biaya'],
-      fieldsTableDashboardSupir: ['no',{key: 'date,',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
+      fieldsTableDashboardAdmin: ['no',{key: 'date',label: 'Tanggal', sortable: true},'supir','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya','detail_biaya', 'sisa_uang_jalan', 'actions'],
+      fieldsTableDashboardSupir: ['no',{key: 'date',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
       perPage: 5,
       pageOptions: [5, 10, 15],
       currentPage: 1,
@@ -201,8 +213,8 @@ export default {
 
     loadDataDashboard(){
       this.isLoading = true;
-      let token = window.localStorage.getItem('token')
-      let id = window.localStorage.getItem('id')
+      var token = window.localStorage.getItem('token')
+      var id = window.localStorage.getItem('id')
       console.log(id)
       let config = {
         headers: {
@@ -215,27 +227,28 @@ export default {
           this.dataCost = res.data;
           console.log('cek');
           console.log(this.dataCost)
-      })
+
+          axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
+          console.log(res)
+
           
-      axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
-      console.log(res)
+          this.dataForm = res.data.fleet_trips.reverse()
 
-      
-      this.dataForm = res.data.fleet_trips.reverse()
-
-      res.data.fleet_trips.forEach((element) => element.costs.forEach((el) => el.fleet_trip_cost_type_id = this.dataCost.costTypes.find((e)=>{
-        return e.id == el.fleet_trip_cost_type_id
-      })))
- 
-      console.log('cek')
-      console.log(this.dataForm)
-      console.log('cek')
-      setTimeout(() => {
-                  this.isLoading = false
-      },500)
-      }).catch ((err) => {
-      console.log(err);
-      })  
+          res.data.fleet_trips.forEach((element) => element.costs.forEach((el) => el.fleet_trip_cost_type_id = this.dataCost.costTypes.find((e)=>{
+            return e.id == el.fleet_trip_cost_type_id
+          })))
+    
+          console.log('cek')
+          console.log(this.dataForm)
+          console.log('cek')
+          setTimeout(() => {
+                      this.isLoading = false
+          },500)
+          }).catch ((err) => {
+          console.log(err);
+          })
+      })
+            
     },
 
     addDataSettlement(){
@@ -282,8 +295,14 @@ export default {
 
 <style lang="scss">
 
-.b-table-details{
-  background-color: rgba(53, 73, 94, .1);
+.mega-table-dashboard{
+  max-height: 63vh;
+  overflow-y: auto;
+  
+}
+.mega-dashboard-line{
+    width: 100%;
+    border-bottom: 1px solid #e9edf1;
 }
 
 .form-logo{
@@ -307,6 +326,20 @@ export default {
   outline: none;
     box-shadow: none !important;
 }
+
+.b-table-details{
+  background: #e9edf1 !important;
+  td{
+    border: 0px !important;
+  }
+  th{
+    border: 1px solid #fff !important;
+  }
+  .table-hover thead tr:hover th {
+  color: #fff;
+}
+}
+
 @media (min-width: 767.98px) and (max-width: 1200px) {
   .mega-table-dashboard table{
     min-width: 1200px !important;
@@ -314,12 +347,26 @@ export default {
 }
 
 @media (max-width: 767.98px) {
-  .mega-table-dashboard table tr{
-    margin-top: 20px;
-    -webkit-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
-    -moz-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
-    box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29); 
+  .mega-table-dashboard {
+    max-height: 57vh;
+    overflow-y: auto; 
+
+      table tr{
+      margin-top: 20px;
+      -webkit-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+      -moz-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+      box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29); 
     }
+  }
+
+    
+  .b-table-details{
+    table tr {
+      -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    } 
+  }
 }
 
 

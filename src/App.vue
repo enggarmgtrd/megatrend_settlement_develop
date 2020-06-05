@@ -100,7 +100,17 @@ html{
 
   .dropdown-menu{
     border: 0px !important;
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+    border-radius: 0px !important;
+    width: 99%;
+    top: .2rem!important;
+    left: 1.5rem !important;
+
+    .nav-link{
+        padding: 0px!important;
+      }
     .dropdown-item{
+      font-size: 1.4rem;  
       transition: .3s;
       color: #555;
       padding-left: 10px !important;
@@ -109,6 +119,8 @@ html{
         background: #2bb898 !important;
         color: #fff !important;
       }
+
+      
 
       a{
         text-decoration: none;
