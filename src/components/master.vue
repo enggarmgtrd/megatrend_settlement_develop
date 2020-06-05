@@ -37,8 +37,8 @@
                     <div class="media py-0 mr-2">
                         <img src="../assets/profile.jpg" class="mr-3 rounded-circle" height="35" alt="...">
                         <div class="media-body pt-1">
-                            <h5 class="my-0 mt-1 text-dark">Vidya Megatrend</h5>
-                            <h6 class="my-0 text-dark">Admin</h6>
+                            <h5 class="my-0 mt-1 text-dark">{{user}} Megatrend</h5>
+                            <h6 class="my-0 text-dark">{{user_jabatan}}</h6>
                         </div>
                     </div>
                 </template>
@@ -70,7 +70,16 @@
                     <b-icon :icon ="sbm.icon" class="mega-sidebar__link-icon" scale="1.2"></b-icon> {{sbm.name}}
                 </div>
                 <b-collapse :id="sbm.id" v-for="(sb, index) in sbm.options" :key="index">
-                    <router-link :to="sb.link"> <b-card class="mega-sidebar__link-collapse" @click="sidebarSetRoute()"><b-icon icon="circle-fill" scale=".3"></b-icon> {{sb.name}}</b-card> </router-link>
+                    <router-link :to="sb.link" v-if="sb.isAdmin == isAdmin || sb.isDriver == isDriver"> 
+                        <b-card class="mega-sidebar__link-collapse" @click="sidebarSetRoute()">
+                            <b-icon icon="circle-fill" scale=".3"></b-icon> {{sb.name}}
+                        </b-card> 
+                    </router-link>
+                    <router-link :to="sb.link" v-else-if="sb.isAdmin == isAdmin || sb.isDriver == isDriver"> 
+                        <b-card class="mega-sidebar__link-collapse" @click="sidebarSetRoute()">
+                            <b-icon icon="circle-fill" scale=".3"></b-icon> {{sb.name}}
+                        </b-card> 
+                    </router-link>
                 </b-collapse>
             </div>
         </div>
@@ -86,9 +95,10 @@
         <img src="../assets/logo-mega.png">
         <h3 class="text-right" style="margin-top: -1rem; margin-right: .5rem;">App ver 2.0</h3>
     </div>
-    <div class="mega-footer pb-3">
-        <h4 class="">Megatrend Settlement App ver 2.0</h4>
-    </div>
+  </div>
+
+  <div class="mega-footer pb-3">
+    <h4 class="">Megatrend Settlement App ver 2.0</h4>
   </div>
 </div>
     
@@ -103,7 +113,11 @@ export default {
     },
     data(){
         return{
+            user:'',
+            user_jabatan:'',
             isLoading: false,
+            isAdmin: window.localStorage.getItem('admin'),
+            isDriver: window.localStorage.getItem('driver'),
             fullPage: true,
             sidebarRoute: false,
             sidebarVisible: true,
@@ -116,11 +130,15 @@ export default {
                     'options': [
                         {
                             'name': 'Data Settlement',
-                            'link': '/dashboard'
+                            'link': '/data-settlement',
+                            'isAdmin': 'true',
+                            'isDriver': 'true'
                         },
                         {
                             'name': 'Data User',
-                            'link': '/data-user'
+                            'link': '/data-user',
+                            'isAdmin': 'true',
+                            'isDriver': 'false'
                         }
                     ]
                 },
@@ -131,11 +149,15 @@ export default {
                     'options': [
                         {
                             'name': 'Tambah Data Settlement',
-                            'link': '/form-settlement'
+                            'link': '/form-settlement',
+                            'isAdmin': 'true',
+                            'isDriver': 'true'
                         },
                         {
                             'name': 'Tambah Data User',
-                            'link': '/form-user'
+                            'link': '/form-user',
+                            'isAdmin': 'true',
+                            'isDriver': 'false'
                         }
                     ]
                 },
@@ -150,6 +172,7 @@ export default {
     
     created() {
         this.checkUserNotLogin(),
+        this.userData(),
         this.onResize()
     },
 
@@ -196,6 +219,18 @@ export default {
         checkUserNotLogin(){
             if( !window.localStorage.getItem('token') && !window.localStorage.getItem('id')){
             this.$router.push('login'); 
+            }
+        },
+
+        userData(){
+            this.user = window.localStorage.getItem('name');
+            
+            if(window.localStorage.getItem('admin') == 'false'){
+                this.user_jabatan = 'Supir'
+                
+            } else{
+                this.user_jabatan = 'Admin'
+                console.log(window.localStorage.getItem('admin'))
             }
         },
 
@@ -340,7 +375,7 @@ export default {
     position: fixed;
     bottom: 0;
     background: #e9edf1;
-    width: calc(100% - 24rem);
+    width: 100%;
     padding: .5rem 0;
     text-align: center;
 }
@@ -490,7 +525,7 @@ button, label, ::placeholder{
 
 
 @media (max-width: 767.98px) {
-    .megac-content{
+  .mega-content{
         min-height: 100vh !important;
     }
   .mega-logo{
@@ -512,8 +547,8 @@ button, label, ::placeholder{
   }
 
   .mega-table-biaya{
-  min-height: 10rem;
-}
+    min-height: 10rem;
+   }
 }
 
 </style>

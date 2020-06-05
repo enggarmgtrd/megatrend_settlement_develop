@@ -12,12 +12,12 @@
         :opacity= 0.5></loading>
     </div>
 
-    <b-card>
+    <b-card class="">
       <template v-slot:header>
         <h1 class="mb-0"><b-icon icon="pencil-square"></b-icon> {{titleForm}}</h1>
       </template>
       <ValidationObserver ref="form">
-        <form @submit.prevent="addForm">
+        <form @submit.prevent="addForm" class="mega-form-settlement">
           <b-row>
 
             <b-col cols="12" lg="6">
@@ -173,17 +173,18 @@
                       <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteJumlahBiaya(data.index)"><b-icon-trash></b-icon-trash></b-button>
                     </template>   
                   </b-table>
-                </b-col>
+                  <b-row v-if="!tableBiayaError">
+                <span class="pl-4 mt-1" style="color: #EB0600; font-size: 1.4ren;">*Table Biaya tidak boleh kosong</span>
+              </b-row>
+                </b-col>              
               </b-row>
 
+              
               <b-row>
                 <b-col class="text-right">
                     <h1>Total Biaya : {{totalBiaya | currency}}</h1>
                 </b-col>
               </b-row>              
-              <b-row v-if="!tableBiayaError">
-                <h5 class="pl-3 text-danger">*Table Biaya tidak boleh kosong</h5>
-              </b-row>
             </b-col>
 
             <b-col cols="8">
@@ -469,7 +470,8 @@ export default {
           }
           axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
           console.log(res.data)
-           
+          
+          this.driver = res.data.user_id
           this.form_mobil.model = res.data.fleet_id,
           this.form_helper.model = res.data.helper.id,
           this.form_mileage.model = res.data.mileage,
@@ -487,7 +489,7 @@ export default {
           console.log(this.tableBiaya)
          
           }).catch ((err) => {
-            console.log(err);
+            console.log(err.res);
           })  
       },
       addForm(){
@@ -562,7 +564,8 @@ export default {
                   }
                 }
                 axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
-                  console.log(res)
+                  console.log('cek')
+                  console.log(res.data)
                   setTimeout(() => {
                       this.isLoading = false
                   },1000)
@@ -574,7 +577,7 @@ export default {
                   timer: 1500
                 })
                 // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-                this.$router.push('/dashboard')
+                this.$router.push('/data-settlement')
                 }).catch ((err) => {
                   console.log(err.response);
                 }) 
@@ -582,6 +585,7 @@ export default {
             }
             else{
                 this.isLoading = true
+                this.dataForm.user_id = this.driver
                 let token = window.localStorage.getItem('token')
                 let config = {
                   headers: {
@@ -602,7 +606,7 @@ export default {
                     })
             
                     // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
-                    return this.$router.push('/dashboard')
+                    return this.$router.push('/data-settlement')
                 }).catch ((err) => {
                     console.log(err);
                   }) 
@@ -679,7 +683,7 @@ export default {
         setTimeout(() => {
               this.isLoading = false
         },1000)
-        this.$router.push('/dashboard')
+        this.$router.push('/data-settlement')
       },
       
      
@@ -689,6 +693,10 @@ export default {
 
 <style lang="scss">
 
+.mega-form-settlement{
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .mega-table-biaya{
   min-height: 20rem;
@@ -696,6 +704,44 @@ export default {
 
 .modal-body{
   padding: 1rem 0 2rem 0;
+}
+
+@media (min-width: 0px) and (max-width: 576px){
+  body{
+    overflow-y: hidden !important;
+  }
+  .mega-form-settlement {
+    max-height: 56vh;
+  }
+}
+
+@media (min-width: 576px){
+  .mega-form-settlement {
+    max-height: 75vh;
+  }
+}
+
+@media (min-width: 768px){
+  .mega-form-settlement {
+    max-height: 82vh;
+  }
+}
+
+@media (min-width: 1023.98px){
+  .mega-form-settlement {
+    max-height: 77vh;
+  }
+}
+@media (min-width: 1365.98px){
+  .mega-form-settlement {
+    max-height: 71vh;
+  }
+}
+
+@media (min-width: 1559.98px){
+  .mega-form-settlement {
+    max-height: 79vh;
+  }
 }
 
 .control{

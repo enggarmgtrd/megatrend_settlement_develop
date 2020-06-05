@@ -44,12 +44,18 @@
           label-cols-lg="6"
           label-cols-xl="4"
           >
+          <b-input-group size="md">
             <b-form-select
+              style="cursor: pointer;"
               v-model="perPage"
               id="perPageSelect"
               size="md"
               :options="pageOptions"
             ></b-form-select>
+            <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''" class="rounded-0 btn-mega"><b-icon icon="chevron-down"></b-icon></b-button>
+              </b-input-group-append>
+            </b-input-group>
           </b-form-group>
         </b-col>
         
@@ -81,6 +87,9 @@
             </template>
             <template v-slot:cell(tanggal)="data">
               {{ data.item.date}}
+            </template>
+            <template v-slot:cell(supir)="data">
+              {{ data.item.driver.name}}
             </template>
             <template v-slot:cell(helper)="data">
               {{ data.item.helper.name}}
@@ -176,10 +185,10 @@ export default {
       dataCostTypes:'',
       fieldsTableDashboardAdmin: ['no',{key: 'date',label: 'Tanggal', sortable: true},'supir','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya','detail_biaya', 'sisa_uang_jalan', 'actions'],
       fieldsTableDashboardSupir: ['no',{key: 'date',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
-      perPage: 5,
-      pageOptions: [5, 10, 15],
+      perPage: 10,
+      pageOptions: [10, 25, 50],
       currentPage: 1,
-      totalRows: 6,
+      totalRows: 20,
     }
   },
 
@@ -256,7 +265,7 @@ export default {
     },
 
     editDataSettlement(index){
-      this.$router.push('form-update/'+index)
+      this.$router.push('form-settlement-update/'+index)
     },
     
     deleteDataSettlement(id){
@@ -295,10 +304,32 @@ export default {
 
 <style lang="scss">
 
+.mega-dashboard{
+  .btn-mega{
+    color: #fff;
+    font-weight: 500 !important;
+    background: #2bb898 !important;
+    border-radius: 0px !important;
+    border: none !important;
+    cursor: default;
+    
+    
+    &:hover{
+      background: #2bb898 !important;
+      color: #fff;
+      transition: .5s;
+      
+    }
+    &:focus{
+      outline: none;
+      box-shadow: none !important;
+    }
+  }
+}
+
 .mega-table-dashboard{
-  max-height: 63vh;
   overflow-y: auto;
-  
+
 }
 .mega-dashboard-line{
     width: 100%;
@@ -340,9 +371,9 @@ export default {
 }
 }
 
-@media (min-width: 767.98px) and (max-width: 1200px) {
+@media (min-width: 768px) and (max-width: 2000px) {
   .mega-table-dashboard table{
-    min-width: 1200px !important;
+    min-width: 1000px !important;
   }
 }
 
@@ -366,6 +397,46 @@ export default {
     -moz-box-shadow: none !important;
     box-shadow: none !important;
     } 
+  }
+}
+
+
+
+@media (min-width: 0px) and (max-width: 576px){
+  body{
+    overflow-y: hidden !important;
+  }
+  .mega-table-dashboard {
+    max-height: 56vh;
+  }
+}
+
+@media (min-width: 576px){
+  .mega-table-dashboard {
+    max-height: 62vh;
+  }
+}
+
+@media (min-width: 768px){
+  .mega-table-dashboard {
+    max-height: 71vh;
+  }
+}
+
+@media (min-width: 1023.98px){
+  .mega-table-dashboard {
+    max-height: 77vh;
+  }
+}
+@media (min-width: 1365.98px){
+  .mega-table-dashboard {
+    max-height: 56vh;
+  }
+}
+
+@media (min-width: 1559.98px){
+  .mega-table-dashboard {
+    max-height: 68vh;
   }
 }
 

@@ -101,7 +101,7 @@ export default {
      
       checkUserLogin(){
         if( window.localStorage.getItem('token')){
-          this.$router.push('/dashboard'); 
+          this.$router.push('/'); 
         }
       },
       
@@ -114,6 +114,7 @@ export default {
           window.localStorage.setItem('id', res.data.id);
           window.localStorage.setItem('name', res.data.name);
           window.localStorage.setItem('admin', res.data.is_admin);
+          window.localStorage.setItem('driver', res.data.is_driver);
           this.islLoading = false
           Swal.fire({
           icon: 'success',

@@ -15,10 +15,10 @@
 
     <b-card class="mega-dashboard">
       <template v-slot:header>
-        <h1 class="mb-0"><b-icon icon="people-fill"></b-icon> Data Users</h1>
+        <h1 class="mb-0"><b-icon icon="table"></b-icon> Data User</h1>
       </template>
-      <b-row align-h="between">
-        <b-col md="12" lg="4" class="text-right">
+      <b-row>
+        <b-col cols="8" md="8" class="text-right">
           <b-form-group
             class="mb-0"
           >
@@ -27,7 +27,7 @@
                 v-model="filter"
                 type="search"
                 id="filterInput"
-                placeholder="Cari Data Settlement"
+                placeholder="Cari Data User"
               ></b-form-input>
               <b-input-group-append>
                 <b-button :disabled="!filter" @click="filter = ''" class="rounded-0 btn-mega"><b-icon icon="search" class="form-icon"></b-icon></b-button>
@@ -36,11 +36,12 @@
           </b-form-group>
         </b-col>
 
-        <b-col cols="12" md="6" lg="2" class=" mt-3 mt-md-3 mt-lg-0">
+        <b-col cols="4" offset-md="1" md="3"  class="">
           <b-form-group
           label="Show"
-          label-cols-sm="3"
-          label-cols-lg="5"
+          label-cols="4"
+          label-cols-md="6"
+          label-cols-lg="6"
           label-cols-xl="4"
           >
             <b-form-select
@@ -51,8 +52,31 @@
             ></b-form-select>
           </b-form-group>
         </b-col>
+        
+        <!-- <b-col cols="12" lg="3" class="text-right  mt-3 mt-md-1 mt-lg-0">
+          <b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button>
+        </b-col> -->
+        
+      </b-row>
 
-        <b-col cols="12" md="6" lg="3" class=" mt-1 mt-md-3 mt-lg-0">
+      <div class="mega-dashboard-line"></div>   
+      <!-- Table Dashboard -->
+      <b-row class="mt-3 px-4 mega-table-dashboard">
+        <div class="table-responsive">
+          <b-table 
+          stacked="md"
+          class=" text-center table-bordered " 
+          hover 
+          :fields="fieldsTableUser" 
+          :filter="filter"
+          :per-page="perPage"
+          :current-page="currentPage"
+          >            
+          </b-table>        
+          </div>       
+      </b-row>    
+      <div class="mega-dashboard-line mt-3"></div>     
+      <b-col cols="12" md="6" offset-md="6" offset-lg="9" lg="3" class=" mt-3 mt-md-3 mt-lg-3 px-0">
           <b-pagination
             v-model="currentPage"
             :total-rows="totalRows"
@@ -61,41 +85,16 @@
             size="md"
             class="my-0"
           ></b-pagination>
-        </b-col>
-        
-        <b-col cols="12" lg="3" class="text-right  mt-3 mt-md-1 mt-lg-0">
-          <b-button class="btn-mega btn-block" @click="addDataSettlement()">Add Form Settlement</b-button>
-        </b-col>
-        
-      </b-row>
-
-      <!-- Table Dashboard -->
-      <b-row class="mt-3 px-4">      
-        <div class="table-responsive mega-table-dashboard">
-          <b-table 
-          stacked="md"
-          items="" 
-          class=" text-center table-bordered " 
-          hover 
-          :fields="fieldsTableDashboard" 
-          :filter="filter"
-          :per-page="perPage"
-          :current-page="currentPage"
-          show-empty
-          >
-                        
-                              
-          </b-table>        
-          </div>       
-      </b-row>             
+      </b-col>
+             
     </b-card>
     <!-- END Table Dashboard -->                
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Swal from 'sweetalert2'
+// import axios from 'axios'
+// import Swal from 'sweetalert2'
 import Loading from 'vue-loading-overlay';
     // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -110,9 +109,8 @@ export default {
       filter: null,
       sortDesc: false,
       user:'',
-      dataForm:[],
-      fieldsTableDashboardAdmin: ['no','nama', 'no_handphone', 'jabatan', 'username','password', 'alamat', 'tanggal_lahir', 'foto_profil','scan_ktp'],
-      fieldsTableDashboardSupir: ['no','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
+      dataCostTypes:'',
+      fieldsTableUser: ['no','NIP','nama','jabatan','nomor_handphone','foto_profil','scan_KTP','username','password','alamat'],
       perPage: 5,
       pageOptions: [5, 10, 15],
       currentPage: 1,
@@ -121,98 +119,31 @@ export default {
   },
 
   mounted() {
-    this.userData(),
-    this.loadDataDashboard()
+    this.userData()
     
   },
 
   computed: {
-    fieldsTableDashboard(){
-      let isAdmin = window.localStorage.getItem('admin')
-      if(isAdmin == 'true'){
-        return this.fieldsTableDashboardAdmin
-      }else{
-        return this.fieldsTableDashboardSupir
-      }
-    },
-    
+
   },
 
   methods: {
     userData(){
       this.user = window.localStorage.getItem('name');
     },
-
-    mileAgeFormat(value) {
-        let val = (value/1).toFixed().replace('.', ',')
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    },
-
-    loadDataDashboard(){
-      this.isLoading = true;
-      let token = window.localStorage.getItem('token')
-      let id = window.localStorage.getItem('id')
-      console.log(id)
-      let config = {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }
-      axios.get('https://fleet.megatrend.xyz/api/user/'+id,config).then(res => {
-      console.log(res)
-      this.dataForm = res.data.fleet_trips.reverse()
-      setTimeout(() => {
-                  this.isLoading = false
-      },500)
-      console.log(this.dataForm)
-      }).catch ((err) => {
-      console.log(err);
-      })  
-    },
-
-    addDataSettlement(){
-      this.$router.push('/form-settlement')
-    },
-
-    editDataSettlement(index){
-      this.$router.push('form-update/'+index)
-    },
-    
-    deleteDataSettlement(id){
-      let token = window.localStorage.getItem('token')
-      let config = {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }
-      Swal.fire({
-        title: 'Kamu yakin ?',
-        text: "File yang telah dihapus tidak akan bisa muncul kembali !",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Hapus'
-      }).then((result) => {
-        if (result.value) {
-          axios.delete('https://fleet.megatrend.xyz/api/fleet-trip/'+id, config).then(res =>{
-          console.log(res)
-            Swal.fire({
-              icon: 'success',
-              title: 'Data Berhasil Dihapus',
-              showConfirmButton: false,
-              timer: 1500
-            })  
-          return this.loadDataDashboard()
-          });        
-        }
-       })    
-    },
   }
 }
 </script>
 
 <style lang="scss">
+
+.mega-table-dashboard{
+  overflow-y: auto;
+}
+.mega-dashboard-line{
+    width: 100%;
+    border-bottom: 1px solid #e9edf1;
+}
 
 .form-logo{
   width: 10rem;
@@ -235,19 +166,87 @@ export default {
   outline: none;
     box-shadow: none !important;
 }
-@media (min-width: 767.98px) and (max-width: 1280px) {
+
+.b-table-details{
+  background: #e9edf1 !important;
+  td{
+    border: 0px !important;
+  }
+  th{
+    border: 1px solid #fff !important;
+  }
+  .table-hover thead tr:hover th {
+  color: #fff;
+}
+}
+
+@media (min-width: 768px) and (max-width: 2000px) {
   .mega-table-dashboard table{
-    width: 1200px !important;
+    min-width: 1000px !important;
   }
 }
 
 @media (max-width: 767.98px) {
-  .mega-table-dashboard table tr{
-    margin-top: 20px;
-    -webkit-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
-    -moz-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
-    box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29); 
+  .mega-table-dashboard {
+    max-height: 57vh;
+    overflow-y: auto; 
+
+      table tr{
+      margin-top: 20px;
+      -webkit-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+      -moz-box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29);
+      box-shadow: -1px 6px 10px 0px rgba(43, 184, 152, 0.29); 
     }
+  }
+
+    
+  .b-table-details{
+    table tr {
+      -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    } 
+  }
+}
+
+
+
+@media (min-width: 0px) and (max-width: 576px){
+  body{
+    overflow-y: hidden !important;
+  }
+  .mega-table-dashboard {
+    max-height: 56vh;
+  }
+}
+
+@media (min-width: 576px){
+  .mega-table-dashboard {
+    max-height: 62vh;
+  }
+}
+
+@media (min-width: 768px){
+  .mega-table-dashboard {
+    max-height: 71vh;
+  }
+}
+
+@media (min-width: 1023.98px){
+  .mega-table-dashboard {
+    max-height: 77vh;
+  }
+}
+@media (min-width: 1365.98px){
+  .mega-table-dashboard {
+    max-height: 56vh;
+  }
+}
+
+@media (min-width: 1559.98px){
+  .mega-table-dashboard {
+    max-height: 68vh;
+  }
 }
 
 

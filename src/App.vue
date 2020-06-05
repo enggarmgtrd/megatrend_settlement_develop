@@ -19,9 +19,8 @@ html{
   font-size: 62.5%;  
 }
 
-.bg-mega{
+body{
   background: #e9edf1;
-  min-height: 100vh;
 }
   .card{
     border-radius: 0px !important;
@@ -36,12 +35,11 @@ html{
      color: #1e816a !important;
     }
   }
-  
-  
 
 .modal-content{
   border-radius: 0px !important;
 }
+
 .close{
   background: none !important;
   color: rgb(53, 73, 94) !important;
