@@ -252,9 +252,9 @@ export default {
 
 <style lang="scss">
 
-// body{
-//   background: #e9edf1 !important;
-// }
+body{
+  background: #e9edf1 !important;
+}
 
 .mega-navbar{
     margin-left: auto;

@@ -184,7 +184,7 @@ export default {
       dataForm:[],
       dataCost:[],
       dataCostTypes:'',
-      fieldsTableDashboardAdmin: ['no',{key: 'date',label: 'Tanggal', sortable: true},'supir','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya','detail_biaya', 'sisa_uang_jalan', 'actions'],
+      fieldsTableDashboardAdmin: ['no',{key: 'date',label: 'Tanggal', sortable: true},'supir','no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan','detail_biaya', 'actions'],
       fieldsTableDashboardSupir: ['no',{key: 'date',label: 'Tanggal', sortable: true},'no._mobil', 'helper', 'kilometer_akhir', 'saldo_e-toll','uang_jalan', 'total_biaya', 'sisa_uang_jalan'],
       perPage: 10,
       pageOptions: [10, 25, 50],
@@ -374,7 +374,14 @@ export default {
   }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 1024px) and (max-width: 1365.98px) {
+  .mega-table-dashboard table{
+    width: 1000px !important;
+    font-size: 90%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
   .mega-table-dashboard table{
     width: 1000px !important;
     font-size: 90%;

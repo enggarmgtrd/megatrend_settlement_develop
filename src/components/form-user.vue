@@ -167,7 +167,7 @@
               <div class="control" :class="classes">
                 <b-form-file       
                   class="form-control"
-                  type="number"
+                  type="file"
                   :class="classes"
                   v-model="form_fotoProfile.model"
                   :placeholder="form_fotoProfile.placeholder + form_fotoProfile.label"

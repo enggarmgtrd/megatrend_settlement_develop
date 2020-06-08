@@ -137,8 +137,8 @@ export default {
   }
 </script>
 
-<style lang="scss" >
-body{
+<style lang="scss">
+.mega-login{
   width:100vw;
   height: 100vh;
   background: #2bb898;
@@ -154,7 +154,7 @@ body{
 
 .login-form{
   padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
   border-radius: 0px !important;
   position: absolute;
   background: #fff;

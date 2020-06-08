@@ -18,9 +18,31 @@
       </template>
       <ValidationObserver ref="form">
         <form @submit.prevent="addForm" class="mega-form-settlement">
-          <b-row>
-
-            <b-col cols="12" lg="6">
+         
+            
+            <b-row>
+              <b-col>
+              <b-form-group  
+                :label="form_driver.label + '*'" 
+                >
+                <ValidationProvider rules="required" :name="form_driver.label" v-slot="{ classes,errors }" :bails="false">
+                  <div class="control" :class="classes">
+                    <b-form-select
+                      id="input-3"             
+                      :options="form_driver.options"
+                      v-model="form_driver.model"
+                    >
+                    <template v-slot:first>
+                      <b-form-select-option value="" disabled>--Pilih {{form_driver.label}} --</b-form-select-option>
+                    </template>
+                    </b-form-select>
+                    <span>{{ errors[0] }}</span>
+                  </div>
+                </ValidationProvider>
+              </b-form-group>
+            </b-col>
+            
+            <b-col>
               <b-form-group  
                 :label="form_mobil.label + '*'" 
                 >
@@ -41,7 +63,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col cols="12" lg="6">
+            <b-col>
               <b-form-group  
                 :label="form_helper.label + '*'" 
                 >
@@ -61,7 +83,9 @@
                 </ValidationProvider>
               </b-form-group>
             </b-col>
-
+            </b-row>
+            
+            <b-row>
             <b-col cols="12" lg="4">
               <b-form-group
                 id="input-group-1"
@@ -186,15 +210,17 @@
                 </b-col>
               </b-row>              
             </b-col>
+            </b-row>
 
+            <b-row>
             <b-col cols="8">
               <b-button type="submit" variant="warning" class="my-3 btn-lg btn-block btn-mega">Simpan</b-button> 
             </b-col>
             <b-col cols="4">
               <b-button type="submit" variant="warning" class="my-3 btn-lg btn-mega-2 btn-block" @click="back()">Kembali</b-button> 
             </b-col>
+            </b-row>
 
-          </b-row>
         </form>
       </ValidationObserver>
 
@@ -292,6 +318,12 @@ export default {
         updateTableBiaya: null,
         isLoading: false,
         fullPage: true,
+        form_driver:{
+          'label': 'Driver ',
+          'type' : 'select',
+          'model': '',
+          'options': []
+        },
         form_mobil:{
           'label': 'Mobil ',
           'type' : 'select',
