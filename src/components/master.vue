@@ -62,9 +62,11 @@
     >
       <div class=" py-2">
         <div>
-            <div class="mega-sidebar__link mega-sidebar__link-dashboard ">
-                Dashboard <b-icon icon ="house-door-fill" class="mega-sidebar__link-icon-dashboard" scale="1.2"></b-icon>
-            </div>
+            <router-link to="/">
+                <div class="mega-sidebar__link mega-sidebar__link-dashboard ">
+                    Dashboard <b-icon icon ="house-door-fill" class="mega-sidebar__link-icon-dashboard" scale="1.2"></b-icon>
+                </div>
+            </router-link>
             <div v-for ="(sbm, index) in sidebarMenu" :key="index">
                 <div class="mega-sidebar__link" v-b-toggle="sbm.id">
                     <b-icon :icon ="sbm.icon" class="mega-sidebar__link-icon" scale="1.2"></b-icon> {{sbm.name}}
@@ -250,6 +252,9 @@ export default {
 
 <style lang="scss">
 
+// body{
+//   background: #e9edf1 !important;
+// }
 
 .mega-navbar{
     margin-left: auto;
@@ -294,6 +299,10 @@ export default {
         background: #35495e5a;
         border-top-right-radius: 50px;
         border-bottom-right-radius: 50px;  
+        a{
+            text-decoration: none;
+            color: #fff;
+        }
     }
 
     &__link{
@@ -343,6 +352,7 @@ export default {
 }
 
 .mega-content{
+    position: relative;
     width: calc(100% - 24rem);
     min-height: calc(100vh - 5rem) !important;
     margin-left: auto;
@@ -351,6 +361,8 @@ export default {
     transition: .4s;
     padding: 1.5rem 1.5rem;
     font-size: 1.4rem;
+    margin-bottom: 3rem;
+   
 
     &.active{
         width: 100%;

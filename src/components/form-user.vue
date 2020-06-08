@@ -493,7 +493,7 @@ export default {
           }
           axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
           console.log(res.data)
-           
+           console.log(this.formJumlahBiaya[1].options)
           this.form_mobil.model = res.data.fleet_id,
           this.form_helper.model = res.data.helper.id,
           this.form_mileage.model = res.data.mileage,

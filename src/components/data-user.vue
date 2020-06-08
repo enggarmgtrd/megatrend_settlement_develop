@@ -137,9 +137,6 @@ export default {
 
 <style lang="scss">
 
-.mega-table-dashboard{
-  overflow-y: auto;
-}
 .mega-dashboard-line{
     width: 100%;
     border-bottom: 1px solid #e9edf1;
@@ -188,8 +185,6 @@ export default {
 
 @media (max-width: 767.98px) {
   .mega-table-dashboard {
-    max-height: 57vh;
-    overflow-y: auto; 
 
       table tr{
       margin-top: 20px;
@@ -203,51 +198,14 @@ export default {
   .b-table-details{
     table tr {
       -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
-    box-shadow: none !important;
+      -moz-box-shadow: none !important;
+      box-shadow: none !important;
     } 
   }
 }
 
 
 
-@media (min-width: 0px) and (max-width: 576px){
-  body{
-    overflow-y: hidden !important;
-  }
-  .mega-table-dashboard {
-    max-height: 56vh;
-  }
-}
-
-@media (min-width: 576px){
-  .mega-table-dashboard {
-    max-height: 62vh;
-  }
-}
-
-@media (min-width: 768px){
-  .mega-table-dashboard {
-    max-height: 71vh;
-  }
-}
-
-@media (min-width: 1023.98px){
-  .mega-table-dashboard {
-    max-height: 77vh;
-  }
-}
-@media (min-width: 1365.98px){
-  .mega-table-dashboard {
-    max-height: 56vh;
-  }
-}
-
-@media (min-width: 1559.98px){
-  .mega-table-dashboard {
-    max-height: 68vh;
-  }
-}
 
 
 </style>

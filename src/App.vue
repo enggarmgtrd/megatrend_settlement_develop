@@ -19,9 +19,7 @@ html{
   font-size: 62.5%;  
 }
 
-body{
-  background: #e9edf1;
-}
+
   .card{
     border-radius: 0px !important;
   }

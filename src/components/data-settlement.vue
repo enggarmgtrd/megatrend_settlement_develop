@@ -18,7 +18,7 @@
         <h1 class="mb-0"><b-icon icon="table"></b-icon> Data Settlement</h1>
       </template>
       <b-row>
-        <b-col cols="8" md="8" class="text-right">
+        <b-col cols="12" sm="8" md="6" lg="8" class="text-right">
           <b-form-group
             class="mb-0"
           >
@@ -36,12 +36,13 @@
           </b-form-group>
         </b-col>
 
-        <b-col cols="4" offset-md="1" md="3"  class="">
+        <b-col cols="12" sm="4" offset-md="1" md="5" lg="3" class="mt-2 mt-sm-0">
           <b-form-group
           label="Show"
-          label-cols="4"
-          label-cols-md="6"
-          label-cols-lg="6"
+          label-cols="2"
+          label-cols-sm="4"
+          label-cols-md="4"
+          label-cols-lg="5"
           label-cols-xl="4"
           >
           <b-input-group size="md">
@@ -136,7 +137,7 @@
                       <td>{{index+1}}</td>
                       <td>{{tb_biaya.fleet_trip_cost_type_id.name}}</td>
                       <td width="50%">{{tb_biaya.description}}</td>
-                      <td>{{tb_biaya.amount}}</td>
+                      <td>{{tb_biaya.amount | currency}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -327,10 +328,6 @@ export default {
   }
 }
 
-.mega-table-dashboard{
-  overflow-y: auto;
-
-}
 .mega-dashboard-line{
     width: 100%;
     border-bottom: 1px solid #e9edf1;
@@ -371,16 +368,21 @@ export default {
 }
 }
 
-@media (min-width: 768px) and (max-width: 2000px) {
+@media (min-width: 1600px) and (max-width: 2000px) {
   .mega-table-dashboard table{
-    min-width: 1000px !important;
+    min-width: 1280px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .mega-table-dashboard table{
+    width: 1000px !important;
+    font-size: 90%;
   }
 }
 
 @media (max-width: 767.98px) {
   .mega-table-dashboard {
-    max-height: 57vh;
-    overflow-y: auto; 
 
       table tr{
       margin-top: 20px;
@@ -402,43 +404,43 @@ export default {
 
 
 
-@media (min-width: 0px) and (max-width: 576px){
-  body{
-    overflow-y: hidden !important;
-  }
-  .mega-table-dashboard {
-    max-height: 56vh;
-  }
-}
+// @media (min-width: 0px) and (max-width: 576px){
+//   body{
+//     overflow-y: hidden !important;
+//   }
+//   .mega-table-dashboard {
+//     max-height: 56vh;
+//   }
+// }
 
-@media (min-width: 576px){
-  .mega-table-dashboard {
-    max-height: 62vh;
-  }
-}
+// @media (min-width: 576px){
+//   .mega-table-dashboard {
+//     max-height: 62vh;
+//   }
+// }
 
-@media (min-width: 768px){
-  .mega-table-dashboard {
-    max-height: 71vh;
-  }
-}
+// @media (min-width: 768px){
+//   .mega-table-dashboard {
+//     max-height: 71vh;
+//   }
+// }
 
-@media (min-width: 1023.98px){
-  .mega-table-dashboard {
-    max-height: 77vh;
-  }
-}
-@media (min-width: 1365.98px){
-  .mega-table-dashboard {
-    max-height: 56vh;
-  }
-}
+// @media (min-width: 1023.98px){
+//   .mega-table-dashboard {
+//     max-height: 77vh;
+//   }
+// }
+// @media (min-width: 1365.98px){
+//   .mega-table-dashboard {
+//     max-height: 56vh;
+//   }
+// }
 
-@media (min-width: 1559.98px){
-  .mega-table-dashboard {
-    max-height: 68vh;
-  }
-}
+// @media (min-width: 1559.98px){
+//   .mega-table-dashboard {
+//     max-height: 68vh;
+//   }
+// }
 
 
 </style>

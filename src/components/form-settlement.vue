@@ -174,14 +174,14 @@
                     </template>   
                   </b-table>
                   <b-row v-if="!tableBiayaError">
-                <span class="pl-4 mt-1" style="color: #EB0600; font-size: 1.4ren;">*Table Biaya tidak boleh kosong</span>
-              </b-row>
+                    <span class="pl-4 mt-1" style="color: #EB0600; font-size: 1.4ren;">*Table Biaya tidak boleh kosong</span>
+                  </b-row>
                 </b-col>              
               </b-row>
 
               
               <b-row>
-                <b-col class="text-right">
+                <b-col class="mega-form-settlement__total,">
                     <h1>Total Biaya : {{totalBiaya | currency}}</h1>
                 </b-col>
               </b-row>              
@@ -460,6 +460,7 @@ export default {
       },
   
       loadDataEdit(){
+        console.log(this.formJumlahBiaya[1].options)
         if(isNaN(this.idEditForm))return
           this.titleForm = 'Edit Data Settlement'
           let token = window.localStorage.getItem('token')
@@ -706,43 +707,40 @@ export default {
   padding: 1rem 0 2rem 0;
 }
 
-@media (min-width: 0px) and (max-width: 576px){
-  body{
-    overflow-y: hidden !important;
-  }
-  .mega-form-settlement {
-    max-height: 56vh;
-  }
-}
+// @media (min-width: 0px) and (max-width: 576px){
+//   .mega-form-settlement {
+//     max-height: 56vh;
+//   }
+// }
 
-@media (min-width: 576px){
-  .mega-form-settlement {
-    max-height: 75vh;
-  }
-}
+// @media (min-width: 576px){
+//   .mega-form-settlement {
+//     max-height: 75vh;
+//   }
+// }
 
-@media (min-width: 768px){
-  .mega-form-settlement {
-    max-height: 82vh;
-  }
-}
+// @media (min-width: 768px){
+//   .mega-form-settlement {
+//     max-height: 82vh;
+//   }
+// }
 
-@media (min-width: 1023.98px){
-  .mega-form-settlement {
-    max-height: 77vh;
-  }
-}
-@media (min-width: 1365.98px){
-  .mega-form-settlement {
-    max-height: 71vh;
-  }
-}
+// @media (min-width: 1023.98px){
+//   .mega-form-settlement {
+//     max-height: 77vh;
+//   }
+// }
+// @media (min-width: 1365.98px){
+//   .mega-form-settlement {
+//     max-height: 71vh;
+//   }
+// }
 
-@media (min-width: 1559.98px){
-  .mega-form-settlement {
-    max-height: 79vh;
-  }
-}
+// @media (min-width: 1559.98px){
+//   .mega-form-settlement {
+//     max-height: 79vh;
+//   }
+// }
 
 .control{
     width: 100%
