@@ -21,7 +21,7 @@
          
             
             <b-row>
-              <b-col>
+              <b-col v-if=" isAdmin == 'true'">
               <b-form-group  
                 :label="form_driver.label + '*'" 
                 >
@@ -162,6 +162,53 @@
                 </div>
                 <!-- END Currency with prefix & suffix -->
                 </ValidationProvider>
+              </b-form-group>
+            </b-col>
+
+            <b-col cols="12" lg="6">
+              <b-form-group
+                id="input-group-1"
+                :label="form_fuel_cost.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+                <ValidationProvider rules="required" :name="form_fuel_cost.label" v-slot="{ classes,errors }" :bails="false">
+                <!-- Currency with prefix & suffix -->
+                <div class="control" :class="classes">
+                  <currency-input
+                    class="form-control"
+                    v-model.number="form_fuel_cost.model"
+                    :currency="{prefix:'Rp. ', suffix:null}"
+                    locale="de"
+                    :distraction-free="false"
+                    placeholder="0"
+                    :precision="{min: 0,max: 20}"
+                  />
+                  <span>{{ errors[0] }}</span>
+                </div>
+                <!-- END Currency with prefix & suffix -->
+                </ValidationProvider>
+              </b-form-group>
+            </b-col>
+            
+            <b-col cols="12" lg="6">
+              <b-form-group
+                class="mb-3"
+                id="input-group-1"
+                :label="form_fuel_image.label + '*'"
+                label-for="input-1"
+                description=""
+              >
+             
+                <b-form-file       
+                  class="form-control"
+                  type="number"
+                  
+                  @change="fuelImageOnChange"
+                  :placeholder="'Masukkan '+ form_fuel_image.label"
+                >
+                </b-form-file>
+               
               </b-form-group>
             </b-col>
 
@@ -310,6 +357,7 @@ export default {
     data(){
       return {
         titleForm: 'Tambah Data Settlement',
+        isAdmin: window.localStorage.getItem('admin'),
         id: 0,
         driver:'',
         idEditForm: parseInt(this.$route.params.dataForm_id, 10),
@@ -350,6 +398,16 @@ export default {
             'label': 'Uang Jalan ',
             'type': 'number',
             'model': null
+        },
+        form_fuel_cost:{
+            'label': 'Uang BBM ',
+            'type': 'number',
+            'model': null
+        },
+        form_fuel_image:{
+            'label': 'Foto BBM ',
+            'type': 'file',
+            'model': {}
         },
         forms: [
           {
@@ -459,12 +517,18 @@ export default {
         axios.get('https://fleet.megatrend.xyz/api/fleet-trip/create?id=' + id,config).then(res => {
           console.log(res.data);
           
+          this.form_driver.options = res.data.drivers
           this.form_mobil.options = res.data.fleets
           this.form_helper.options = res.data.helpers 
           this.formJumlahBiaya[1].options = res.data.costTypes
           console.log(this.formJumlahBiaya);
           
         
+          this.form_driver.options.forEach((element) => {
+            element.text = element.name, 
+            element.value = element.id
+          })
+
           this.form_mobil.options.forEach((element) => {
             element.text = element.no, 
             element.value = element.id
@@ -574,29 +638,32 @@ export default {
           
           else{
             this.isLoading = true
+            // let fd = new FormData();
+            // fd.append('image', this.form_fuel_image.model, this.form_fuel_image.model.name)
+            // console.log(fd)
             this.tableBiaya.forEach((element) => {
                 element.fleet_trip_cost_type_id = element.fleet_trip_cost_type_id.id
-              })
-            
-            // Simpan data ke database
-            this.dataForm = {
-              fleet_id : this.form_mobil.model,
-              user_id: this.id,
-              helper_id : this.form_helper.model,
-              mileage : this.form_mileage.model,
-              pocket_money : this.form_pocketMoney.model,
-              emoney_balance : this.form_emoney.model,
-              // driver : this.forms[3].model,
-              costs: this.tableBiaya
-            }            
+              })        
+
+            const formData = new FormData();
+            formData.append('fleet_id', this.form_mobil.model)
+            formData.append('user_id', this.id)
+            formData.append('helper_id', this.form_helper.model)
+            formData.append('mileage', this.form_mileage.model)
+            formData.append('pocket_money', this.form_pocketMoney.model)
+            formData.append('emoney_balance', this.form_emoney.model)
+            formData.append('fuel_cost', this.form_fuel_cost.model)
+            formData.append('fuel_image', this.form_fuel_image.model)
+            formData.append('costs',JSON.stringify(this.tableBiaya))
+
             if (isNaN(this.idEditForm)){
                 let token = window.localStorage.getItem('token')
                 let config = {
                   headers: {
-                    'Authorization': 'Bearer ' + token
+                    'Authorization': 'Bearer ' + token,
                   }
                 }
-                axios.post('https://fleet.megatrend.xyz/api/fleet-trip',this.dataForm, config).then(res=>{
+                axios.post('https://fleet.megatrend.xyz/api/fleet-trip',formData, config).then(res=>{
                   console.log('cek')
                   console.log(res.data)
                   setTimeout(() => {
@@ -711,6 +778,12 @@ export default {
         }
         
       },
+
+      fuelImageOnChange(e){
+        this.form_fuel_image.model = e.target.files[0]
+        console.log(this.form_fuel_image.model)
+      },
+
       back(){
         this.isLoading = true
         setTimeout(() => {
