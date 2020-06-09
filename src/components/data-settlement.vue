@@ -115,12 +115,18 @@
               <b-button class="btn-sm btn-mega-2 mr-1 mb-1" @click="deleteDataSettlement(data.item.id)"><b-icon-trash></b-icon-trash></b-button>
             </template>              
             <template v-slot:cell(detail_biaya)="row">
-              <b-button class="btn-mega" size="sm" @click="row.toggleDetails">
+              <b-button class="btn-mega" style="cursor: pointer !important" size="sm" @click="row.toggleDetails">
                 {{ row.detailsShowing ? 'Sembunyikan' : 'Tampilkan' }}
               </b-button>
             </template>    
               
             <template v-slot:row-details="row">
+              <div class="mega-table-dashboard__bbm text-left mb-3 border-bottom pb-3" v-if="row.item.fuel_image_url != null ">
+                <h3 class="">* Jumlah Pengisian BBM :</h3>
+                <h1 class="pl-3">{{row.item.fuel_cost | currency}}</h1>
+                <h3 class="">* Dokumentasi Pengisian BBM :</h3>
+                <img class="pl-3" :src="row.item.fuel_image_url" alt="">
+              </div>
               <div class="table-responsive">
                 <h3 class="text-left">* Detail Biaya </h3>
                 <table class="table-striped table-hover ml-auto text-center table-sm " width="100%">

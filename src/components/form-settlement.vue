@@ -172,9 +172,6 @@
                 label-for="input-1"
                 description=""
               >
-                <ValidationProvider rules="required" :name="form_fuel_cost.label" v-slot="{ classes,errors }" :bails="false">
-                <!-- Currency with prefix & suffix -->
-                <div class="control" :class="classes">
                   <currency-input
                     class="form-control"
                     v-model.number="form_fuel_cost.model"
@@ -183,11 +180,7 @@
                     :distraction-free="false"
                     placeholder="0"
                     :precision="{min: 0,max: 20}"
-                  />
-                  <span>{{ errors[0] }}</span>
-                </div>
-                <!-- END Currency with prefix & suffix -->
-                </ValidationProvider>
+                  />               
               </b-form-group>
             </b-col>
             
@@ -366,6 +359,7 @@ export default {
         updateTableBiaya: null,
         isLoading: false,
         fullPage: true,
+
         form_driver:{
           'label': 'Driver ',
           'type' : 'select',
@@ -407,64 +401,9 @@ export default {
         form_fuel_image:{
             'label': 'Foto BBM ',
             'type': 'file',
-            'model': {}
+            'model': null
         },
-        forms: [
-          {
-            'label': 'Mobil ',
-            'type' : 'select',
-            'model': '',
-            'options': []
-          },
-          {
-            'label': 'Helper ',
-            'type' : 'select',
-            'model': '',
-            'options': []
-          },
-          {
-            'label': 'Kilometer Akhir ',
-            'type': 'number',
-            'model': null
-          },
-          {
-            'label': 'Saldo E-Toll',
-            'type': 'number',
-            'model': null
-          },
-          {
-            'label': 'Uang Jalan ',
-            'type': 'number',
-            'model': null
-          },
-          // {
-          //   'label': 'Jumlah Rit ',
-          //   'type': 'radio',
-          //   'model': null,
-          //   'options': [
-          //     {
-          //       name: '1',
-          //       value: 1
-          //     },
-          //     {
-          //       name: '2',
-          //       value: 2
-          //     },
-          //     {
-          //       name: '3',
-          //       value: 3
-          //     },
-          //   ]
-          // },
-          // {
-          //   'label': 'Uang Makan ',
-          //   'type': 'number',
-          //   'model': null
-          // },
-          {
-            'type': 'table'
-          }
-        ],
+        
         formJumlahBiaya:[
           {
             'label': 'Jumlah Biaya',
@@ -574,6 +513,7 @@ export default {
           this.form_mileage.model = res.data.mileage,
           this.form_emoney.model = res.data.emoney_balance
           this.form_pocketMoney.model = res.data.pocket_money
+          this.form_fuel_cost.model = res.data.fuel_cost
 
           res.data.costs.forEach((element)=>{
             element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
@@ -638,6 +578,9 @@ export default {
           
           else{
             this.isLoading = true
+            if(this.isAdmin == 'true'){
+              this.id = parseInt(this.form_driver.model)
+            }
             // let fd = new FormData();
             // fd.append('image', this.form_fuel_image.model, this.form_fuel_image.model.name)
             // console.log(fd)
@@ -652,8 +595,10 @@ export default {
             formData.append('mileage', this.form_mileage.model)
             formData.append('pocket_money', this.form_pocketMoney.model)
             formData.append('emoney_balance', this.form_emoney.model)
-            formData.append('fuel_cost', this.form_fuel_cost.model)
-            formData.append('fuel_image', this.form_fuel_image.model)
+            if (this.form_fuel_cost.model != null && this.form_fuel_image.model != null){
+              formData.append('fuel_cost', this.form_fuel_cost.model)
+              formData.append('fuel_image', this.form_fuel_image.model)
+            }
             formData.append('costs',JSON.stringify(this.tableBiaya))
 
             if (isNaN(this.idEditForm)){
@@ -692,7 +637,7 @@ export default {
                     'Authorization': 'Bearer ' + token
                   }
                 }
-                axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, this.dataForm, config).then(res=>{
+                axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, formData, config).then(res=>{
                     console.log(res)
                     setTimeout(() => {
                       this.isLoading = false
