@@ -1,5 +1,7 @@
-<template>
+<template> 
+  
   <div class="mega-login">
+    <div class="bg-login"></div>
     <div class="vld-parent">
         <loading :active.sync="isLoading" 
         :can-cancel="true" 
@@ -138,9 +140,12 @@ export default {
 </script>
 
 <style lang="scss">
-.mega-login{
-  width:100vw;
-  height: 100vh;
+.bg-login{
+  position: fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
   background: #2bb898;
   background: linear-gradient(180deg, rgba(43,184,152,1) 0%, rgba(53,73,94,1) 100%, rgba(0,212,255,1) 100%);
 }

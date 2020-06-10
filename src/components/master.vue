@@ -97,11 +97,12 @@
         <img src="../assets/logo-mega.png">
         <h3 class="text-right" style="margin-top: -1rem; margin-right: .5rem;">App ver 2.0</h3>
     </div>
+    <div class="mega-footer pb-3">
+        <h4 class="">Megatrend Settlement App ver 2.0</h4>
+    </div>
   </div>
 
-  <div class="mega-footer pb-3">
-    <h4 class="">Megatrend Settlement App ver 2.0</h4>
-  </div>
+  
 </div>
     
     
@@ -359,9 +360,8 @@ body{
     top: 5rem;
     position: relative;
     transition: .4s;
-    padding: 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 5rem 1.5rem;
     font-size: 1.4rem;
-    margin-bottom: 3rem;
    
 
     &.active{
@@ -384,10 +384,11 @@ body{
 }
 
 .mega-footer{
-    position: fixed;
+    position: absolute;
     bottom: 0;
+    left: 50%;
+    transform: translateX(-45%);
     background: #e9edf1;
-    width: 100%;
     padding: .5rem 0;
     text-align: center;
 }
@@ -539,7 +540,10 @@ button, label, ::placeholder{
 @media (max-width: 767.98px) {
   .mega-content{
         min-height: 100vh !important;
-    }
+        width: 100%;
+        padding: 0px 0px 5rem 0px;
+
+  }
   .mega-logo{
         height: 4rem;
         padding: .2rem 1rem 0 1rem !important;
@@ -547,20 +551,13 @@ button, label, ::placeholder{
   }
   .mega-navbar__link{
       margin-left: -19.2rem !important;
-  }
-  .mega-content {
-      width: 100%;
-  }
+  }     
 
   .mega-footer{
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
   }
-
-  .mega-table-biaya{
-    min-height: 10rem;
-   }
 }
 
 </style>

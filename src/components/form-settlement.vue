@@ -22,67 +22,67 @@
             
             <b-row>
               <b-col v-if=" isAdmin == 'true'">
-              <b-form-group  
-                :label="form_driver.label + '*'" 
-                >
-                <ValidationProvider rules="required" :name="form_driver.label" v-slot="{ classes,errors }" :bails="false">
-                  <div class="control" :class="classes">
-                    <b-form-select
-                      id="input-3"             
-                      :options="form_driver.options"
-                      v-model="form_driver.model"
-                    >
-                    <template v-slot:first>
-                      <b-form-select-option value="" disabled>--Pilih {{form_driver.label}} --</b-form-select-option>
-                    </template>
-                    </b-form-select>
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
-            
-            <b-col>
-              <b-form-group  
-                :label="form_mobil.label + '*'" 
-                >
-                <ValidationProvider rules="required" :name="form_mobil.label" v-slot="{ classes,errors }" :bails="false">
-                  <div class="control" :class="classes">
-                    <b-form-select
-                      id="input-3"             
-                      :options="form_mobil.options"
-                      v-model="form_mobil.model"
-                    >
-                    <template v-slot:first>
-                      <b-form-select-option value="" disabled>--Pilih {{form_mobil.label}} --</b-form-select-option>
-                    </template>
-                    </b-form-select>
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
+                <b-form-group  
+                  :label="form_driver.label + '*'" 
+                  >
+                  <ValidationProvider rules="required" :name="form_driver.label" v-slot="{ classes,errors }" :bails="false">
+                    <div class="control" :class="classes">
+                      <b-form-select
+                        id="input-3"             
+                        :options="form_driver.options"
+                        v-model="form_driver.model"
+                      >
+                      <template v-slot:first>
+                        <b-form-select-option value="" disabled>--Pilih {{form_driver.label}} --</b-form-select-option>
+                      </template>
+                      </b-form-select>
+                      <span>{{ errors[0] }}</span>
+                    </div>
+                  </ValidationProvider>
+                </b-form-group>
+              </b-col>
+              
+              <b-col>
+                <b-form-group  
+                  :label="form_mobil.label + '*'" 
+                  >
+                  <ValidationProvider rules="required" :name="form_mobil.label" v-slot="{ classes,errors }" :bails="false">
+                    <div class="control" :class="classes">
+                      <b-form-select
+                        id="input-3"             
+                        :options="form_mobil.options"
+                        v-model="form_mobil.model"
+                      >
+                      <template v-slot:first>
+                        <b-form-select-option value="" disabled>--Pilih {{form_mobil.label}} --</b-form-select-option>
+                      </template>
+                      </b-form-select>
+                      <span>{{ errors[0] }}</span>
+                    </div>
+                  </ValidationProvider>
+                </b-form-group>
+              </b-col>
 
-            <b-col>
-              <b-form-group  
-                :label="form_helper.label + '*'" 
-                >
-                <ValidationProvider rules="required" :name="form_helper.label" v-slot="{ classes,errors }" :bails="false">
-                  <div class="control" :class="classes">
-                    <b-form-select
-                      id="input-3"             
-                      :options="form_helper.options"
-                      v-model="form_helper.model"
-                    >
-                    <template v-slot:first>
-                      <b-form-select-option value="" disabled>--Pilih {{form_helper.label}} --</b-form-select-option>
-                    </template>
-                    </b-form-select>
-                    <span>{{ errors[0] }}</span>
-                  </div>
-                </ValidationProvider>
-              </b-form-group>
-            </b-col>
+              <b-col>
+                <b-form-group  
+                  :label="form_helper.label + '*'" 
+                  >
+                  <ValidationProvider rules="required" :name="form_helper.label" v-slot="{ classes,errors }" :bails="false">
+                    <div class="control" :class="classes">
+                      <b-form-select
+                        id="input-3"             
+                        :options="form_helper.options"
+                        v-model="form_helper.model"
+                      >
+                      <template v-slot:first>
+                        <b-form-select-option value="" disabled>--Pilih {{form_helper.label}} --</b-form-select-option>
+                      </template>
+                      </b-form-select>
+                      <span>{{ errors[0] }}</span>
+                    </div>
+                  </ValidationProvider>
+                </b-form-group>
+              </b-col>
             </b-row>
             
             <b-row>
@@ -164,47 +164,72 @@
                 </ValidationProvider>
               </b-form-group>
             </b-col>
+          </b-row>
 
-            <b-col cols="12" lg="6">
-              <b-form-group
-                id="input-group-1"
-                :label="form_fuel_cost.label + '*'"
-                label-for="input-1"
-                description=""
-              >
-                  <currency-input
-                    class="form-control"
-                    v-model.number="form_fuel_cost.model"
-                    :currency="{prefix:'Rp. ', suffix:null}"
-                    locale="de"
-                    :distraction-free="false"
-                    placeholder="0"
-                    :precision="{min: 0,max: 20}"
-                  />               
-              </b-form-group>
-            </b-col>
-            
-            <b-col cols="12" lg="6">
-              <b-form-group
-                class="mb-3"
-                id="input-group-1"
-                :label="form_fuel_image.label + '*'"
-                label-for="input-1"
-                description=""
-              >
-             
-                <b-form-file       
-                  class="form-control"
-                  type="number"
-                  
-                  @change="fuelImageOnChange"
-                  :placeholder="'Masukkan '+ form_fuel_image.label"
+          <b-row>
+            <b-col lg="8" class="p-0">
+              <b-col cols="12">
+                <b-form-group
+                  id="input-group-1"
+                  :label="form_fuel_cost.label + '*'"
+                  label-for="input-1"
+                  description=""
                 >
-                </b-form-file>
-               
-              </b-form-group>
+                    <currency-input
+                      class="form-control"
+                      v-model.number="form_fuel_cost.model"
+                      :currency="{prefix:'Rp. ', suffix:null}"
+                      locale="de"
+                      :distraction-free="false"
+                      placeholder="0"
+                      :precision="{min: 0,max: 20}"
+                    />               
+                </b-form-group>
+              </b-col>
+              
+              <b-col cols="12">
+                <b-form-group
+                  class="mb-3"
+                  id="input-group-1"
+                  :label="form_fuel_image.label + '*'"
+                  label-for="input-1"
+                  description=""
+                >
+              
+                  <b-form-file       
+                    class="form-control"
+                    type="number"
+                    
+                    @change="fuelImageOnChange"
+                    :placeholder="'Masukkan '+ form_fuel_image.label"
+                  >
+                  </b-form-file>
+                
+                </b-form-group>
+              </b-col>
             </b-col>
 
+            <b-col lg="4">
+              <b-form-group
+                  class="mb-3"
+                  id="input-group-1"
+                  label="Hasil Foto BBM *"
+                  label-for="input-1"
+                  description=""
+                >
+              
+                <div>
+                  <img v-if="urlFuelImage == null && urlFuelImageEdit == null" src="../assets/imagenotavailable.png" class="img-fluid">
+                  <img v-else-if="urlFuelImage != null" :src="urlFuelImage" class="img-fluid">
+                  <img v-else-if="urlFuelImageEdit != null" :src="urlFuelImageEdit" class="img-fluid">
+                </div>
+              
+              </b-form-group>
+              
+            </b-col>
+          </b-row>
+            
+          <b-row>
             <b-col cols="12" class="">
               <b-row>
                 <b-col class="text-left py-1">
@@ -250,7 +275,8 @@
                 </b-col>
               </b-row>              
             </b-col>
-            </b-row>
+          </b-row>
+           
 
             <b-row>
             <b-col cols="8">
@@ -359,6 +385,8 @@ export default {
         updateTableBiaya: null,
         isLoading: false,
         fullPage: true,
+        urlFuelImage:null,
+        urlFuelImageEdit: null,
 
         form_driver:{
           'label': 'Driver ',
@@ -507,13 +535,14 @@ export default {
           axios.get('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm+'/edit',config).then(res => {
           console.log(res.data)
           
-          this.driver = res.data.user_id
+          this.form_driver.model = res.data.user_id
           this.form_mobil.model = res.data.fleet_id,
           this.form_helper.model = res.data.helper.id,
           this.form_mileage.model = res.data.mileage,
           this.form_emoney.model = res.data.emoney_balance
           this.form_pocketMoney.model = res.data.pocket_money
-          this.form_fuel_cost.model = res.data.fuel_cost
+          this.form_fuel_cost.model = parseInt(res.data.fuel_cost)
+          this.urlFuelImageEdit = res.data.fuel_image_url
 
           res.data.costs.forEach((element)=>{
             element.fleet_trip_cost_type_id = this.formJumlahBiaya[1].options.find((option) => {
@@ -595,12 +624,13 @@ export default {
             formData.append('mileage', this.form_mileage.model)
             formData.append('pocket_money', this.form_pocketMoney.model)
             formData.append('emoney_balance', this.form_emoney.model)
-            if (this.form_fuel_cost.model != null && this.form_fuel_image.model != null){
+            if (this.form_fuel_cost.model != null){
               formData.append('fuel_cost', this.form_fuel_cost.model)
-              formData.append('fuel_image', this.form_fuel_image.model)
+              if(this.form_fuel_image.model != null){
+                formData.append('fuel_image', this.form_fuel_image.model)
+              }
             }
             formData.append('costs',JSON.stringify(this.tableBiaya))
-
             if (isNaN(this.idEditForm)){
                 let token = window.localStorage.getItem('token')
                 let config = {
@@ -608,6 +638,7 @@ export default {
                     'Authorization': 'Bearer ' + token,
                   }
                 }
+                
                 axios.post('https://fleet.megatrend.xyz/api/fleet-trip',formData, config).then(res=>{
                   console.log('cek')
                   console.log(res.data)
@@ -634,10 +665,13 @@ export default {
                 let token = window.localStorage.getItem('token')
                 let config = {
                   headers: {
-                    'Authorization': 'Bearer ' + token
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/x-www-form-urlencoded'
                   }
                 }
-                axios.patch('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, formData, config).then(res=>{
+
+                formData.append('_method', 'patch')
+                axios.post('https://fleet.megatrend.xyz/api/fleet-trip/'+this.idEditForm, formData, config).then(res=>{
                     console.log(res)
                     setTimeout(() => {
                       this.isLoading = false
@@ -653,7 +687,7 @@ export default {
                     // Jika data berhasil disimpan, pindahkan halaman ke halaman dashboard
                     return this.$router.push('/data-settlement')
                 }).catch ((err) => {
-                    console.log(err);
+                    console.log(err.response);
                   }) 
             }           
           }
@@ -726,6 +760,7 @@ export default {
 
       fuelImageOnChange(e){
         this.form_fuel_image.model = e.target.files[0]
+        this.urlFuelImage = URL.createObjectURL(this.form_fuel_image.model);
         console.log(this.form_fuel_image.model)
       },
 
@@ -747,10 +782,14 @@ export default {
 .mega-form-settlement{
   overflow-y: auto;
   overflow-x: hidden;
+
+  .img-fluid{
+    max-height: 96px !important;
+  }
 }
 
 .mega-table-biaya{
-  min-height: 20rem;
+  min-height: 5rem !important;
 }
 
 .modal-body{
