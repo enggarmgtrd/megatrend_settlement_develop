@@ -21,6 +21,7 @@
     "vue-axios": "^2.1.5",
     "vue-currency-filter": "^5.1.0",
     "vue-currency-input": "^1.18.3",
+    "vue-easy-lightbox": "^0.13.0",
     "vue-loading-overlay": "^3.3.2",
     "vue-loading-spinner": "^1.0.11",
     "vue-router": "^3.1.6",

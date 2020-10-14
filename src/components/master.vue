@@ -138,6 +138,12 @@ export default {
                             'isDriver': 'true'
                         },
                         {
+                            'name': 'Data Trip',
+                            'link': '/data-trip',
+                            'isAdmin': 'true',
+                            'isDriver': 'true'
+                        },
+                        {
                             'name': 'Data User',
                             'link': '/data-user',
                             'isAdmin': 'true',
@@ -153,6 +159,12 @@ export default {
                         {
                             'name': 'Tambah Data Settlement',
                             'link': '/form-settlement',
+                            'isAdmin': 'true',
+                            'isDriver': 'true'
+                        },
+                        {
+                            'name': 'Finalize Trip',
+                            'link': '/finalize-trip',
                             'isAdmin': 'true',
                             'isDriver': 'true'
                         },

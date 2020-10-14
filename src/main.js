@@ -8,6 +8,9 @@ import VueCurrencyInput from 'vue-currency-input'
 import VueCurrencyFilter from 'vue-currency-filter'
 import './validation.js'
 import VueSweetalert2 from 'vue-sweetalert2';
+import Lightbox from 'vue-easy-lightbox'
+
+Vue.use(Lightbox)
  
 //  SweetAlert2
 // If you don't need the styles, do not connect
