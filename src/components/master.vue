@@ -98,7 +98,7 @@
         <h3 class="text-right" style="margin-top: -1rem; margin-right: .5rem;">App ver 2.0</h3>
     </div>
     <div class="mega-footer pb-3">
-        <h4 class="">Megatrend Settlement App ver 2.0</h4>
+        <h4 class="">Megatrend Settlement App ver {{version}}</h4>
     </div>
   </div>
 
@@ -110,6 +110,8 @@
 
 <script>
 import Loading from 'vue-loading-overlay';
+import { version } from '../../package.json'
+
 export default {
     components:{
         Loading
@@ -125,6 +127,7 @@ export default {
             sidebarRoute: false,
             sidebarVisible: true,
             sidebarBackdrop: false,
+            version: version,
             sidebarMenu:[
                 {
                     'name': 'Data',

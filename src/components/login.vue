@@ -80,6 +80,7 @@ import Loading from 'vue-loading-overlay';
     // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
 
+
 export default {
   components:{
     Loading

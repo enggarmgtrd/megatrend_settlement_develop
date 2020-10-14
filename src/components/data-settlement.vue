@@ -186,6 +186,8 @@ import DataComponent from './data-component.vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Loading from 'vue-loading-overlay';
+
+
 export default {
     components:{
         DataComponent,
@@ -220,7 +222,8 @@ export default {
         fieldsTableDashboard(){
             let isAdmin = window.localStorage.getItem('admin')
             if(isAdmin == 'true'){
-                return this.fieldsTableDashboardAdmin
+                // return this.fieldsTableDashboardAdmin
+                return this.fieldsTableDashboardSupir
             }else{
                 return this.fieldsTableDashboardSupir
             }
@@ -228,7 +231,6 @@ export default {
     },
 
      methods: {
-
         userData(){
             this.user = window.localStorage.getItem('name');
         },
